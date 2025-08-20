@@ -182,7 +182,11 @@ export default function Home() {
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               console.error('Image load error:', photo.url);
+                              console.error('Full photo data:', photo);
                               e.currentTarget.style.display = 'none';
+                            }}
+                            onLoad={() => {
+                              console.log('Image loaded successfully:', photo.url);
                             }}
                             unoptimized
                           />
@@ -261,7 +265,11 @@ export default function Home() {
                             className="w-full h-full object-cover"
                             onError={(e) => {
                               console.error('Image load error:', photo.url);
+                              console.error('Full photo data:', photo);
                               e.currentTarget.style.display = 'none';
+                            }}
+                            onLoad={() => {
+                              console.log('Image loaded successfully:', photo.url);
                             }}
                             unoptimized
                           />
