@@ -66,7 +66,11 @@ export class R2Storage {
       console.log('R2 upload successful');
       
       // Return the public URL
-      return CDN_URL ? `${CDN_URL}/${key}` : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
+      const publicUrl = CDN_URL ? `${CDN_URL}/${key}` : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
+      
+      console.log('Generated image URL:', publicUrl);
+      
+      return publicUrl;
       
     } catch (error: any) {
       console.error('R2 upload failed:', error);
