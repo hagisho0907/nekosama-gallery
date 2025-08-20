@@ -21,11 +21,23 @@ if (hasR2Credentials()) {
       accessKeyId: process.env.R2_ACCESS_KEY_ID!,
       secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
     },
+    forcePathStyle: true, // Required for R2 compatibility
+    requestHandler: {
+      connectionTimeout: 30000,
+      socketTimeout: 30000,
+      httpsAgent: {
+        maxSockets: 25,
+        keepAlive: true,
+        keepAliveMsecs: 1000,
+        timeout: 30000,
+        rejectUnauthorized: true, // Keep SSL verification enabled
+      }
+    }
   });
 }
 
 const BUCKET_NAME = process.env.R2_BUCKET_NAME || '';
-const CDN_URL = process.env.R2_PUBLIC_URL; // Optional CDN URL
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL; // R2.dev subdomain for public access
 
 export class R2Storage {
   async uploadPhoto(
@@ -66,16 +78,14 @@ export class R2Storage {
       console.log('R2 upload successful');
       
       // Return the public URL
-      // For R2.dev subdomain, don't include bucket name in path
-      const isR2Dev = process.env.R2_ENDPOINT?.includes('.r2.dev');
-      const publicUrl = CDN_URL 
-        ? `${CDN_URL}/${key}` 
-        : isR2Dev 
-          ? `${process.env.R2_ENDPOINT}/${key}`
-          : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
+      // Use R2_PUBLIC_URL (R2.dev subdomain) for public access if available
+      const publicUrl = R2_PUBLIC_URL 
+        ? `${R2_PUBLIC_URL}/${key}`
+        : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
       
       console.log('Generated image URL:', publicUrl);
-      console.log('Using R2.dev format:', isR2Dev);
+      console.log('Using R2 public URL:', !!R2_PUBLIC_URL);
+      console.log('R2_PUBLIC_URL:', R2_PUBLIC_URL);
       
       return publicUrl;
       
@@ -131,7 +141,7 @@ export class R2Storage {
   }
 
   getPublicUrl(key: string): string {
-    return CDN_URL ? `${CDN_URL}/${key}` : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
+    return R2_PUBLIC_URL ? `${R2_PUBLIC_URL}/${key}` : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
   }
 }
 
