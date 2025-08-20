@@ -3,6 +3,15 @@ import { r2Storage } from '@/lib/r2';
 import { database } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
+  console.log('Upload API called - checking environment variables...');
+  console.log('Environment variables status:', {
+    hasAccessKey: !!process.env.R2_ACCESS_KEY_ID,
+    hasSecretKey: !!process.env.R2_SECRET_ACCESS_KEY,
+    hasEndpoint: !!process.env.R2_ENDPOINT,
+    hasBucketName: !!process.env.R2_BUCKET_NAME,
+    nodeEnv: process.env.NODE_ENV
+  });
+  
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
