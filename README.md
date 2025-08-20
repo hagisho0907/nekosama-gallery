@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐱 NekoSama Gallery
 
-## Getting Started
+猫の写真を共有できるギャラリーWebアプリケーション
 
-First, run the development server:
+## 📋 機能
 
+- 🗂️ **フォルダ管理**: 猫の名前別にフォルダを作成・管理
+- 📸 **写真アップロード**: 各フォルダに複数の写真をアップロード
+- 🎨 **レスポンシブUI**: スマホ・タブレット・PC対応
+- ⚙️ **管理者機能**: フォルダの作成・編集・削除
+- ☁️ **クラウドストレージ**: Cloudflare R2による高速配信
+
+## 🛠️ 技術スタック
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Styling**: Tailwind CSS
+- **Backend**: Next.js API Routes
+- **Database**: SQLite
+- **Storage**: Cloudflare R2
+- **Deployment**: Vercel
+
+## 🚀 開発環境セットアップ
+
+### 1. リポジトリクローン
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/hagisho0907/nekosama-gallery.git
+cd nekosama-gallery
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. 依存関係インストール
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. 環境変数設定
+`.env.local` ファイルを作成:
+```bash
+# Cloudflare R2設定
+R2_ACCESS_KEY_ID=your_access_key_id
+R2_SECRET_ACCESS_KEY=your_secret_access_key  
+R2_BUCKET_NAME=nekosama-gallery
+R2_ENDPOINT=https://your_account_id.r2.cloudflarestorage.com
+R2_REGION=auto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# データベース設定
+DATABASE_PATH=./data/gallery.db
+```
 
-## Learn More
+### 4. 開発サーバー起動
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+ブラウザで [http://localhost:3000](http://localhost:3000) を開く
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📁 プロジェクト構造
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+nekosama-gallery/
+├── app/
+│   ├── api/              # API Routes
+│   ├── admin/           # 管理者ページ
+│   ├── globals.css      # グローバルスタイル
+│   ├── layout.tsx       # レイアウトコンポーネント
+│   └── page.tsx         # メインページ
+├── lib/
+│   ├── db.ts           # データベースクライアント
+│   └── r2.ts           # R2ストレージクライアント
+├── public/             # 静的ファイル
+└── data/               # SQLiteデータベース
+```
 
-## Deploy on Vercel
+## 🌐 デプロイ
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Vercelでのデプロイ
+1. [Vercel](https://vercel.com) にログイン
+2. GitHubリポジトリをインポート
+3. 環境変数を設定
+4. デプロイ実行
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 必要な環境変数
+- `R2_ACCESS_KEY_ID`
+- `R2_SECRET_ACCESS_KEY`
+- `R2_BUCKET_NAME`
+- `R2_ENDPOINT`
+- `R2_REGION`
+- `DATABASE_PATH`
+
+## 📝 ライセンス
+
+MIT License
+
+## 🤝 コントリビューション
+
+プルリクエストやイシューを歓迎します！
+
+---
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
