@@ -66,9 +66,16 @@ export class R2Storage {
       console.log('R2 upload successful');
       
       // Return the public URL
-      const publicUrl = CDN_URL ? `${CDN_URL}/${key}` : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
+      // For R2.dev subdomain, don't include bucket name in path
+      const isR2Dev = process.env.R2_ENDPOINT?.includes('.r2.dev');
+      const publicUrl = CDN_URL 
+        ? `${CDN_URL}/${key}` 
+        : isR2Dev 
+          ? `${process.env.R2_ENDPOINT}/${key}`
+          : `${process.env.R2_ENDPOINT}/${BUCKET_NAME}/${key}`;
       
       console.log('Generated image URL:', publicUrl);
+      console.log('Using R2.dev format:', isR2Dev);
       
       return publicUrl;
       
