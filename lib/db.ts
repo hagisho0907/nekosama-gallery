@@ -1,13 +1,22 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
+import { memoryDatabase } from './memory-db';
 
 const dbPath = process.env.DATABASE_PATH || './data/gallery.db';
 const dbDir = path.dirname(dbPath);
 
-if (!fs.existsSync(dbDir)) {
-  fs.mkdirSync(dbDir, { recursive: true });
-}
+// Check if we can use file system (for local development) or need to use memory DB (for Vercel)
+const canUseFileSystem = () => {
+  try {
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true });
+    }
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 export interface CatFolder {
   id: string;
@@ -27,13 +36,26 @@ export interface CatPhoto {
 
 class DatabaseManager {
   private db: Database.Database | null = null;
+  private useMemoryDB = false;
 
   init() {
-    if (!this.db) {
-      this.db = new Database(dbPath);
-      this.createTables();
+    try {
+      if (!canUseFileSystem()) {
+        console.log('Using memory database (Vercel serverless environment)');
+        this.useMemoryDB = true;
+        return null; // We'll use memoryDatabase instead
+      }
+
+      if (!this.db) {
+        this.db = new Database(dbPath);
+        this.createTables();
+      }
+      return this.db;
+    } catch (error) {
+      console.log('Failed to initialize file database, falling back to memory database:', error);
+      this.useMemoryDB = true;
+      return null;
     }
-    return this.db;
   }
 
   private createTables() {
@@ -68,8 +90,15 @@ class DatabaseManager {
   }
 
   getFolders(): CatFolder[] {
-    const db = this.init();
-    const stmt = db.prepare(`
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.getFolders();
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
+    const stmt = this.db.prepare(`
       SELECT id, name, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       ORDER BY created_at DESC
@@ -78,8 +107,15 @@ class DatabaseManager {
   }
 
   getFolder(id: string): CatFolder | null {
-    const db = this.init();
-    const stmt = db.prepare(`
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.getFolder(id);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
+    const stmt = this.db.prepare(`
       SELECT id, name, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       WHERE id = ?
@@ -88,11 +124,18 @@ class DatabaseManager {
   }
 
   createFolder(name: string): CatFolder {
-    const db = this.init();
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.createFolder(name);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
     const id = Date.now().toString();
     const now = new Date().toISOString();
     
-    const stmt = db.prepare(`
+    const stmt = this.db.prepare(`
       INSERT INTO folders (id, name, created_at, updated_at) 
       VALUES (?, ?, ?, ?)
     `);
@@ -107,10 +150,17 @@ class DatabaseManager {
   }
 
   updateFolder(id: string, name: string): boolean {
-    const db = this.init();
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.updateFolder(id, name);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
     const now = new Date().toISOString();
     
-    const stmt = db.prepare(`
+    const stmt = this.db.prepare(`
       UPDATE folders 
       SET name = ?, updated_at = ? 
       WHERE id = ?
@@ -121,15 +171,29 @@ class DatabaseManager {
   }
 
   deleteFolder(id: string): boolean {
-    const db = this.init();
-    const stmt = db.prepare('DELETE FROM folders WHERE id = ?');
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.deleteFolder(id);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
+    const stmt = this.db.prepare('DELETE FROM folders WHERE id = ?');
     const result = stmt.run(id);
     return result.changes > 0;
   }
 
   getPhotos(folderId: string): CatPhoto[] {
-    const db = this.init();
-    const stmt = db.prepare(`
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.getPhotos(folderId);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
+    const stmt = this.db.prepare(`
       SELECT id, folder_id as folderId, filename, original_name as originalName, 
              url, uploaded_at as uploadedAt
       FROM photos 
@@ -140,11 +204,18 @@ class DatabaseManager {
   }
 
   addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): CatPhoto {
-    const db = this.init();
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.addPhoto(photo);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
     const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
     const uploadedAt = new Date().toISOString();
 
-    const stmt = db.prepare(`
+    const stmt = this.db.prepare(`
       INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at)
       VALUES (?, ?, ?, ?, ?, ?)
     `);
@@ -158,8 +229,15 @@ class DatabaseManager {
   }
 
   deletePhoto(id: string): boolean {
-    const db = this.init();
-    const stmt = db.prepare('DELETE FROM photos WHERE id = ?');
+    this.init();
+    
+    if (this.useMemoryDB) {
+      return memoryDatabase.deletePhoto(id);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
+    const stmt = this.db.prepare('DELETE FROM photos WHERE id = ?');
     const result = stmt.run(id);
     return result.changes > 0;
   }
