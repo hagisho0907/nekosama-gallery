@@ -1,5 +1,4 @@
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 
@@ -26,23 +25,21 @@ export interface CatPhoto {
   uploadedAt: string;
 }
 
-class Database {
-  private db: any = null;
+class DatabaseManager {
+  private db: Database.Database | null = null;
 
-  async init() {
+  init() {
     if (!this.db) {
-      this.db = await open({
-        filename: dbPath,
-        driver: sqlite3.Database
-      });
-
-      await this.createTables();
+      this.db = new Database(dbPath);
+      this.createTables();
     }
     return this.db;
   }
 
-  private async createTables() {
-    await this.db.exec(`
+  private createTables() {
+    if (!this.db) return;
+
+    this.db.exec(`
       CREATE TABLE IF NOT EXISTS folders (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL UNIQUE,
@@ -51,7 +48,7 @@ class Database {
       )
     `);
 
-    await this.db.exec(`
+    this.db.exec(`
       CREATE TABLE IF NOT EXISTS photos (
         id TEXT PRIMARY KEY,
         folder_id TEXT NOT NULL,
@@ -63,40 +60,43 @@ class Database {
       )
     `);
 
-    await this.db.exec(`
+    this.db.exec(`
       INSERT OR IGNORE INTO folders (id, name) VALUES 
       ('1', 'ミケ'),
       ('2', 'しろ')
     `);
   }
 
-  async getFolders(): Promise<CatFolder[]> {
-    const db = await this.init();
-    return await db.all(`
+  getFolders(): CatFolder[] {
+    const db = this.init();
+    const stmt = db.prepare(`
       SELECT id, name, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       ORDER BY created_at DESC
     `);
+    return stmt.all() as CatFolder[];
   }
 
-  async getFolder(id: string): Promise<CatFolder | null> {
-    const db = await this.init();
-    return await db.get(`
+  getFolder(id: string): CatFolder | null {
+    const db = this.init();
+    const stmt = db.prepare(`
       SELECT id, name, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       WHERE id = ?
-    `, [id]);
+    `);
+    return stmt.get(id) as CatFolder | null;
   }
 
-  async createFolder(name: string): Promise<CatFolder> {
-    const db = await this.init();
+  createFolder(name: string): CatFolder {
+    const db = this.init();
     const id = Date.now().toString();
     const now = new Date().toISOString();
     
-    await db.run(`
+    const stmt = db.prepare(`
       INSERT INTO folders (id, name, created_at, updated_at) 
       VALUES (?, ?, ?, ?)
-    `, [id, name, now, now]);
+    `);
+    stmt.run(id, name, now, now);
 
     return {
       id,
@@ -106,45 +106,49 @@ class Database {
     };
   }
 
-  async updateFolder(id: string, name: string): Promise<boolean> {
-    const db = await this.init();
+  updateFolder(id: string, name: string): boolean {
+    const db = this.init();
     const now = new Date().toISOString();
     
-    const result = await db.run(`
+    const stmt = db.prepare(`
       UPDATE folders 
       SET name = ?, updated_at = ? 
       WHERE id = ?
-    `, [name, now, id]);
+    `);
+    const result = stmt.run(name, now, id);
 
     return result.changes > 0;
   }
 
-  async deleteFolder(id: string): Promise<boolean> {
-    const db = await this.init();
-    const result = await db.run('DELETE FROM folders WHERE id = ?', [id]);
+  deleteFolder(id: string): boolean {
+    const db = this.init();
+    const stmt = db.prepare('DELETE FROM folders WHERE id = ?');
+    const result = stmt.run(id);
     return result.changes > 0;
   }
 
-  async getPhotos(folderId: string): Promise<CatPhoto[]> {
-    const db = await this.init();
-    return await db.all(`
+  getPhotos(folderId: string): CatPhoto[] {
+    const db = this.init();
+    const stmt = db.prepare(`
       SELECT id, folder_id as folderId, filename, original_name as originalName, 
              url, uploaded_at as uploadedAt
       FROM photos 
       WHERE folder_id = ? 
       ORDER BY uploaded_at DESC
-    `, [folderId]);
+    `);
+    return stmt.all(folderId) as CatPhoto[];
   }
 
-  async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): Promise<CatPhoto> {
-    const db = await this.init();
+  addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): CatPhoto {
+    const db = this.init();
     const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
     const uploadedAt = new Date().toISOString();
 
-    await db.run(`
+    const stmt = db.prepare(`
       INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at)
       VALUES (?, ?, ?, ?, ?, ?)
-    `, [id, photo.folderId, photo.filename, photo.originalName, photo.url, uploadedAt]);
+    `);
+    stmt.run(id, photo.folderId, photo.filename, photo.originalName, photo.url, uploadedAt);
 
     return {
       id,
@@ -153,11 +157,12 @@ class Database {
     };
   }
 
-  async deletePhoto(id: string): Promise<boolean> {
-    const db = await this.init();
-    const result = await db.run('DELETE FROM photos WHERE id = ?', [id]);
+  deletePhoto(id: string): boolean {
+    const db = this.init();
+    const stmt = db.prepare('DELETE FROM photos WHERE id = ?');
+    const result = stmt.run(id);
     return result.changes > 0;
   }
 }
 
-export const database = new Database();
+export const database = new DatabaseManager();

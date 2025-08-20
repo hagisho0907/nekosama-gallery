@@ -4,12 +4,12 @@ import { r2Storage } from '@/lib/r2';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
-    const folder = await database.getFolder(id);
+    const folder = database.getFolder(id);
     if (!folder) {
       return NextResponse.json(
         { error: 'Folder not found' },
@@ -17,7 +17,7 @@ export async function GET(
       );
     }
 
-    const photos = await database.getPhotos(id);
+    const photos = database.getPhotos(id);
     
     return NextResponse.json({ 
       folder: {
@@ -37,10 +37,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { name } = await request.json();
 
     if (!name || !name.trim()) {
@@ -50,7 +50,7 @@ export async function PUT(
       );
     }
 
-    const success = await database.updateFolder(id, name.trim());
+    const success = database.updateFolder(id, name.trim());
     
     if (!success) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export async function PUT(
       );
     }
 
-    const updatedFolder = await database.getFolder(id);
+    const updatedFolder = database.getFolder(id);
     
     return NextResponse.json({ 
       success: true, 
@@ -85,13 +85,13 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
     // Get all photos in the folder before deleting
-    const photos = await database.getPhotos(id);
+    const photos = database.getPhotos(id);
     
     // Delete photos from R2 storage
     await Promise.all(
@@ -99,7 +99,7 @@ export async function DELETE(
     );
 
     // Delete folder from database (photos will be deleted due to CASCADE)
-    const success = await database.deleteFolder(id);
+    const success = database.deleteFolder(id);
     
     if (!success) {
       return NextResponse.json(

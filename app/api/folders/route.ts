@@ -3,19 +3,17 @@ import { database } from '@/lib/db';
 
 export async function GET() {
   try {
-    const folders = await database.getFolders();
+    const folders = database.getFolders();
     
     // Get photo counts for each folder
-    const foldersWithCounts = await Promise.all(
-      folders.map(async (folder) => {
-        const photos = await database.getPhotos(folder.id);
-        return {
-          ...folder,
-          photoCount: photos.length,
-          photos: photos.slice(0, 3) // Get first 3 photos for thumbnails
-        };
-      })
-    );
+    const foldersWithCounts = folders.map((folder) => {
+      const photos = database.getPhotos(folder.id);
+      return {
+        ...folder,
+        photoCount: photos.length,
+        photos: photos.slice(0, 3) // Get first 3 photos for thumbnails
+      };
+    });
 
     return NextResponse.json({ folders: foldersWithCounts });
   } catch (error) {
@@ -38,7 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const folder = await database.createFolder(name.trim());
+    const folder = database.createFolder(name.trim());
     
     return NextResponse.json({ 
       success: true, 

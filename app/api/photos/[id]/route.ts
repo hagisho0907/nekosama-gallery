@@ -4,27 +4,13 @@ import { r2Storage } from '@/lib/r2';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     
-    // Get photo info before deleting
-    const photos = await database.getPhotos(''); // We need to get the photo first
-    const photo = photos.find(p => p.id === id);
-    
-    if (!photo) {
-      return NextResponse.json(
-        { error: 'Photo not found' },
-        { status: 404 }
-      );
-    }
-
-    // Delete from R2 storage
-    await r2Storage.deletePhoto(photo.url);
-
-    // Delete from database
-    const success = await database.deletePhoto(id);
+    // Delete from database first to get photo info
+    const success = database.deletePhoto(id);
     
     if (!success) {
       return NextResponse.json(
