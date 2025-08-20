@@ -180,6 +180,11 @@ export default function Home() {
                             width={80} 
                             height={80}
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              console.error('Image load error:', photo.url);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                            unoptimized
                           />
                         </div>
                       ))}
@@ -254,10 +259,20 @@ export default function Home() {
                             width={300} 
                             height={300}
                             className="w-full h-full object-cover"
+                            onError={(e) => {
+                              console.error('Image load error:', photo.url);
+                              e.currentTarget.style.display = 'none';
+                            }}
+                            unoptimized
                           />
                         </div>
                         <div className="p-3">
                           <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{photo.originalName}</p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            <a href={photo.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                              直接表示
+                            </a>
+                          </p>
                         </div>
                       </div>
                     ))}
