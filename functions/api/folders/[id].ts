@@ -118,7 +118,7 @@ export async function onRequestDelete(context: any): Promise<Response> {
     d1Database.setDatabase(env.DB);
     
     // Initialize R2 storage
-    const r2Storage = new R2Storage();
+    const r2Storage = new R2Storage(env);
     
     // Get all photos in the folder before deleting
     const photos = await d1Database.getPhotos(id);
