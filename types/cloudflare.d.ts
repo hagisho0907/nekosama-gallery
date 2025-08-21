@@ -35,6 +35,7 @@ export interface CloudflareEnv {
   R2_BUCKET_NAME?: string;
   R2_ENDPOINT?: string;
   R2_PUBLIC_URL?: string;
+  R2_REGION?: string;
   ADMIN_PASSWORD?: string;
 }
 
