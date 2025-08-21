@@ -2,6 +2,7 @@
 export interface CatFolder {
   id: string;
   name: string;
+  displayOrder: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -67,9 +68,9 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     const result = await db.prepare(`
-      SELECT id, name, created_at as createdAt, updated_at as updatedAt 
+      SELECT id, name, display_order as displayOrder, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
-      ORDER BY created_at DESC
+      ORDER BY display_order ASC, created_at DESC
     `).all();
     
     return result.results as CatFolder[];
@@ -79,7 +80,7 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     const result = await db.prepare(`
-      SELECT id, name, created_at as createdAt, updated_at as updatedAt 
+      SELECT id, name, display_order as displayOrder, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       WHERE id = ?
     `).bind(id).first();
@@ -93,14 +94,22 @@ class D1DatabaseManager {
     const id = Date.now().toString();
     const now = new Date().toISOString();
     
+    // Get max display_order and add 1
+    const maxOrderResult = await db.prepare(`
+      SELECT COALESCE(MAX(display_order), 0) + 1 as nextOrder 
+      FROM folders
+    `).first();
+    const displayOrder = (maxOrderResult as any)?.nextOrder || 1;
+    
     await db.prepare(`
-      INSERT INTO folders (id, name, created_at, updated_at) 
-      VALUES (?, ?, ?, ?)
-    `).bind(id, name, now, now).run();
+      INSERT INTO folders (id, name, display_order, created_at, updated_at) 
+      VALUES (?, ?, ?, ?, ?)
+    `).bind(id, name, displayOrder, now, now).run();
 
     return {
       id,
       name,
+      displayOrder,
       createdAt: now,
       updatedAt: now
     };
@@ -118,6 +127,25 @@ class D1DatabaseManager {
     `).bind(name, now, id).run();
 
     return result.meta.changes > 0;
+  }
+
+  async updateFolderOrder(folderIds: string[]): Promise<boolean> {
+    const db = this.ensureDatabase();
+    
+    try {
+      // Update display_order for each folder
+      for (let i = 0; i < folderIds.length; i++) {
+        await db.prepare(`
+          UPDATE folders 
+          SET display_order = ?, updated_at = ? 
+          WHERE id = ?
+        `).bind(i + 1, new Date().toISOString(), folderIds[i]).run();
+      }
+      return true;
+    } catch (error) {
+      console.error('Error updating folder order:', error);
+      return false;
+    }
   }
 
   async deleteFolder(id: string): Promise<boolean> {

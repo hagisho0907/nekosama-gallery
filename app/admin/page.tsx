@@ -32,6 +32,8 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [draggedFolder, setDraggedFolder] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -193,6 +195,75 @@ export default function AdminPage() {
     }
   };
 
+  const handleReorderFolders = async (newOrder: string[]) => {
+    try {
+      setSubmitting(true);
+      const response = await fetch('/api/folders/reorder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ folderIds: newOrder }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Update local state to reflect new order
+        const reorderedFolders = newOrder.map(id => 
+          folders.find(folder => folder.id === id)!
+        ).filter(Boolean);
+        setFolders(reorderedFolders);
+      } else {
+        setError(data.error || 'Failed to reorder folders');
+      }
+    } catch (err) {
+      setError('Failed to reorder folders');
+      console.error('Error reordering folders:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDragStart = (e: React.DragEvent, folderId: string) => {
+    setDraggedFolder(folderId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', folderId);
+  };
+
+  const handleDragOver = (e: React.DragEvent, targetFolderId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setIsDragOver(targetFolderId);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragOver(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetFolderId: string) => {
+    e.preventDefault();
+    setIsDragOver(null);
+    
+    if (!draggedFolder || draggedFolder === targetFolderId) {
+      setDraggedFolder(null);
+      return;
+    }
+
+    const currentOrder = folders.map(f => f.id);
+    const draggedIndex = currentOrder.indexOf(draggedFolder);
+    const targetIndex = currentOrder.indexOf(targetFolderId);
+
+    // Create new order
+    const newOrder = [...currentOrder];
+    newOrder.splice(draggedIndex, 1);
+    newOrder.splice(targetIndex, 0, draggedFolder);
+
+    // Update server
+    handleReorderFolders(newOrder);
+    setDraggedFolder(null);
+  };
+
   const handleDeleteFolder = async (folderId: string) => {
     if (!confirm('このフォルダを削除しますか？写真も全て削除されます。') || submitting) return;
     
@@ -301,7 +372,12 @@ export default function AdminPage() {
         </div>
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">フォルダ管理</h2>
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">フォルダ管理</h2>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              📱 フォルダをドラッグ&ドロップして表示順序を変更できます
+            </p>
+          </div>
           <div className="space-y-4">
             {folders.length === 0 ? (
               <div className="text-center py-8">
@@ -309,7 +385,21 @@ export default function AdminPage() {
               </div>
             ) : (
               folders.map(folder => (
-                <div key={folder.id} className="border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                <div 
+                  key={folder.id} 
+                  className={`border border-gray-200 dark:border-gray-600 rounded-lg p-4 transition-all duration-200 ${
+                    draggedFolder === folder.id 
+                      ? 'opacity-50 scale-95' 
+                      : isDragOver === folder.id 
+                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
+                        : 'hover:border-gray-300 dark:hover:border-gray-500'
+                  }`}
+                  draggable={editingFolder !== folder.id}
+                  onDragStart={(e) => handleDragStart(e, folder.id)}
+                  onDragOver={(e) => handleDragOver(e, folder.id)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, folder.id)}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       {editingFolder === folder.id ? (
@@ -343,7 +433,17 @@ export default function AdminPage() {
                         </div>
                       ) : (
                         <>
-                          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{folder.name}</h3>
+                          <div className="flex items-center gap-2">
+                            <svg 
+                              className="w-5 h-5 text-gray-400 cursor-grab active:cursor-grabbing" 
+                              fill="currentColor" 
+                              viewBox="0 0 20 20"
+                              title="ドラッグして順序を変更"
+                            >
+                              <path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zM8 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                            </svg>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{folder.name}</h3>
+                          </div>
                           <span className="text-sm text-gray-600 dark:text-gray-400">({folder.photoCount}枚)</span>
                         </>
                       )}
