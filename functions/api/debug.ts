@@ -22,6 +22,10 @@ export async function onRequestGet(context: any): Promise<Response> {
     d1Config: {
       hasDatabase: !!env.DB,
     },
+    r2Binding: {
+      hasR2Bucket: !!env.R2_BUCKET,
+      r2BucketType: typeof env.R2_BUCKET,
+    },
     timestamp: new Date().toISOString()
   }), {
     headers: { 'Content-Type': 'application/json' }

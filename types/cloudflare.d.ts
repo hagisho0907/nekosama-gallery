@@ -30,6 +30,7 @@ export interface D1ExecResult {
 
 export interface CloudflareEnv {
   DB: D1Database;
+  R2_BUCKET?: R2Bucket;
   R2_ACCESS_KEY_ID?: string;
   R2_SECRET_ACCESS_KEY?: string;
   R2_BUCKET_NAME?: string;
@@ -37,6 +38,34 @@ export interface CloudflareEnv {
   R2_PUBLIC_URL?: string;
   R2_REGION?: string;
   ADMIN_PASSWORD?: string;
+}
+
+export interface R2Bucket {
+  put(key: string, value: ArrayBuffer | ArrayBufferView | string, options?: R2PutOptions): Promise<R2Object>;
+  get(key: string): Promise<R2Object | null>;
+  delete(key: string): Promise<void>;
+}
+
+export interface R2PutOptions {
+  httpMetadata?: {
+    contentType?: string;
+    contentDisposition?: string;
+    contentEncoding?: string;
+    contentLanguage?: string;
+    cacheControl?: string;
+  };
+  customMetadata?: Record<string, string>;
+}
+
+export interface R2Object {
+  key: string;
+  size: number;
+  etag: string;
+  httpEtag: string;
+  uploaded: Date;
+  httpMetadata?: {
+    contentType?: string;
+  };
 }
 
 // Make D1Database available globally
