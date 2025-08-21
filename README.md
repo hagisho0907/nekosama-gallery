@@ -101,5 +101,6 @@ MIT License
 <!-- D1 binding configured -->
 <!-- R2 credentials updated -->
 <!-- Test R2 binding debug -->
+<!-- Test photo management debug -->
 
 <!-- Trigger redeploy for D1 binding -->
