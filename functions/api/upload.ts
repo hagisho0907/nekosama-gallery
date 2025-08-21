@@ -98,8 +98,8 @@ export async function onRequestPost(context: any): Promise<Response> {
     
     const url = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
 
-    // Check current photo count for this folder (10 photos limit per folder - TESTING)
-    const MAX_PHOTOS_PER_FOLDER = 10;
+    // Check current photo count for this folder (100 photos limit per folder)
+    const MAX_PHOTOS_PER_FOLDER = 100;
     const currentPhotos = await d1Database.getPhotos(folderId);
     
     console.log(`Folder ${folderId} currently has ${currentPhotos.length} photos`);
@@ -143,7 +143,7 @@ export async function onRequestPost(context: any): Promise<Response> {
     });
 
     const responseMessage = currentPhotos.length >= MAX_PHOTOS_PER_FOLDER 
-      ? `写真をアップロードしました。古い写真を自動削除して最大${MAX_PHOTOS_PER_FOLDER}枚を維持しています。（テスト中）`
+      ? `写真をアップロードしました。古い写真を自動削除して最大${MAX_PHOTOS_PER_FOLDER}枚を維持しています。`
       : '写真をアップロードしました。';
 
     return new Response(JSON.stringify({ 
