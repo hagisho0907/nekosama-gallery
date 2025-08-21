@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      allowedOrigins: ["localhost:3000", "*.vercel.app"],
+      allowedOrigins: ["localhost:3000", "*.vercel.app", "*.pages.dev"],
     },
   },
   images: {
