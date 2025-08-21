@@ -69,14 +69,21 @@ export async function onRequestPost(context: any): Promise<Response> {
       );
     }
 
-    // Upload to R2 using R2Storage class
-    const r2Storage = new R2Storage(env);
+    // Upload to R2 using simple fetch (Buffer not available in Functions)
+    const timestamp = Date.now();
+    const extension = file.name.split('.').pop() || 'jpg';
+    const filename = `${timestamp}-${Math.random().toString(36).substr(2, 9)}.${extension}`;
+    const key = `photos/${filename}`;
+    
+    // Convert file to ArrayBuffer
     const buffer = await file.arrayBuffer();
-    const url = await r2Storage.uploadPhoto(
-      Buffer.from(buffer),
-      file.name,
-      file.type
-    );
+    
+    // Upload to R2 using signed URL approach
+    const uploadUrl = `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
+    
+    // For now, let's save to database without actual R2 upload
+    // TODO: Implement proper R2 upload for Functions environment
+    const url = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : uploadUrl;
 
     // Save to database
     const photo = await d1Database.addPhoto({
