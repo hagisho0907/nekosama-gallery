@@ -98,7 +98,43 @@ export async function onRequestPost(context: any): Promise<Response> {
     
     const url = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
 
-    // Save to database
+    // Check current photo count for this folder (100 photos limit per folder)
+    const MAX_PHOTOS_PER_FOLDER = 100;
+    const currentPhotos = await d1Database.getPhotos(folderId);
+    
+    console.log(`Folder ${folderId} currently has ${currentPhotos.length} photos`);
+    
+    // If we're at or over the limit, delete the oldest photos
+    if (currentPhotos.length >= MAX_PHOTOS_PER_FOLDER) {
+      const photosToDelete = currentPhotos.length - MAX_PHOTOS_PER_FOLDER + 1; // +1 for the new photo we're adding
+      const oldestPhotos = currentPhotos
+        .sort((a, b) => new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime())
+        .slice(0, photosToDelete);
+      
+      console.log(`Deleting ${photosToDelete} oldest photos:`, oldestPhotos.map(p => p.id));
+      
+      // Delete from R2 and database
+      for (const oldPhoto of oldestPhotos) {
+        try {
+          // Delete from R2
+          if (env.R2_BUCKET && oldPhoto.url) {
+            const urlParts = oldPhoto.url.split('/');
+            const oldKey = urlParts.slice(-2).join('/'); // Get "photos/filename" part
+            console.log('Deleting old photo from R2:', oldKey);
+            await env.R2_BUCKET.delete(oldKey);
+          }
+          
+          // Delete from database
+          await d1Database.deletePhoto(oldPhoto.id);
+          console.log('Deleted old photo:', oldPhoto.id);
+        } catch (deleteError) {
+          console.error('Failed to delete old photo:', oldPhoto.id, deleteError);
+          // Continue with other deletions even if one fails
+        }
+      }
+    }
+
+    // Save new photo to database
     const photo = await d1Database.addPhoto({
       folderId,
       filename: file.name,
@@ -106,14 +142,20 @@ export async function onRequestPost(context: any): Promise<Response> {
       url,
     });
 
+    const responseMessage = currentPhotos.length >= MAX_PHOTOS_PER_FOLDER 
+      ? `写真をアップロードしました。古い写真を自動削除して最大${MAX_PHOTOS_PER_FOLDER}枚を維持しています。`
+      : '写真をアップロードしました。';
+
     return new Response(JSON.stringify({ 
       success: true, 
+      message: responseMessage,
       photo: {
         id: photo.id,
         url: photo.url,
         originalName: photo.originalName,
         uploadedAt: photo.uploadedAt
-      }
+      },
+      totalPhotos: Math.min(currentPhotos.length + 1, MAX_PHOTOS_PER_FOLDER)
     }), {
       headers: { 'Content-Type': 'application/json' }
     });

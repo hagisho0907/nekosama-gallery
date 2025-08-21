@@ -37,6 +37,7 @@ export default function Home() {
   const [uploadingFolder, setUploadingFolder] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     fetchFolders();
@@ -122,10 +123,17 @@ export default function Home() {
           throw new Error(data.error || 'Upload failed');
         }
         
-        return data.photo;
+        return data;
       });
 
-      await Promise.all(uploadPromises);
+      const results = await Promise.all(uploadPromises);
+      
+      // Show success message if any uploads included auto-deletion
+      const hasAutoDeletion = results.some(result => result.message?.includes('古い写真を自動削除'));
+      if (hasAutoDeletion) {
+        setSuccessMessage('写真をアップロードしました。古い写真を自動削除して最大100枚を維持しています。');
+        setTimeout(() => setSuccessMessage(null), 5000);
+      }
       
       // Refresh folders list
       await fetchFolders();
@@ -190,6 +198,18 @@ export default function Home() {
             <button 
               onClick={() => setError(null)} 
               className="ml-2 text-red-500 hover:text-red-700"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-6">
+            {successMessage}
+            <button 
+              onClick={() => setSuccessMessage(null)} 
+              className="ml-2 text-green-500 hover:text-green-700"
             >
               ✕
             </button>
