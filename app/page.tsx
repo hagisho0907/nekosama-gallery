@@ -169,23 +169,24 @@ export default function Home() {
       {/* Simple Header */}
       <header className="bg-white dark:bg-amber-900 shadow-sm border-b border-amber-300 dark:border-amber-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-amber-800 rounded-lg flex items-center justify-center">
-                <span className="text-white text-2xl">🐱</span>
+          <div className="flex justify-between items-center py-4 sm:py-6">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-800 rounded-lg flex items-center justify-center">
+                <span className="text-white text-lg sm:text-2xl">🐱</span>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-amber-900 dark:text-amber-100">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 dark:text-amber-100">
                   拝啓ねこ様 Gallery
                 </h1>
-                <p className="text-amber-700 dark:text-amber-300">Beautiful cat photos collection</p>
+                <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300 hidden sm:block">Beautiful cat photos collection</p>
               </div>
             </div>
             <Link 
               href="/admin" 
-              className="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white rounded-lg font-medium transition-colors duration-200"
+              className="px-3 py-2 sm:px-6 sm:py-3 bg-amber-800 hover:bg-amber-900 text-white rounded-lg text-sm sm:text-base font-medium transition-colors duration-200"
             >
-              管理者ページ
+              <span className="hidden sm:inline">管理者ページ</span>
+              <span className="sm:hidden">管理</span>
             </Link>
           </div>
         </div>
@@ -193,11 +194,11 @@ export default function Home() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
             {error}
             <button 
               onClick={() => setError(null)} 
-              className="ml-2 text-red-500 hover:text-red-700"
+              className="ml-2 text-red-500 hover:text-red-700 float-right"
             >
               ✕
             </button>
@@ -205,11 +206,11 @@ export default function Home() {
         )}
 
         {successMessage && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-6">
+          <div className="bg-green-50 border border-green-200 text-green-700 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
             {successMessage}
             <button 
               onClick={() => setSuccessMessage(null)} 
-              className="ml-2 text-green-500 hover:text-green-700"
+              className="ml-2 text-green-500 hover:text-green-700 float-right"
             >
               ✕
             </button>
@@ -219,38 +220,38 @@ export default function Home() {
         {!selectedFolder ? (
           <div className="space-y-8">
             {/* Simple Section Header */}
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-amber-900 dark:text-amber-100 mb-2">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-amber-900 dark:text-amber-100 mb-2">
                 猫のフォルダ一覧
               </h2>
-              <p className="text-amber-700 dark:text-amber-300">愛らしい猫たちの写真コレクション</p>
+              <p className="text-sm sm:text-base text-amber-700 dark:text-amber-300">愛らしい猫たちの写真コレクション</p>
             </div>
             
             {/* Simple Grid Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {folders.map(folder => (
                 <div key={folder.id}>
                   {/* Simple Card with Fixed Height */}
-                  <div className="bg-white dark:bg-amber-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden h-80 flex flex-col">
+                  <div className="bg-white dark:bg-amber-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden h-72 sm:h-80 flex flex-col">
                     
                     <div 
-                      className="p-6 cursor-pointer flex-1" 
+                      className="p-4 sm:p-6 cursor-pointer flex-1" 
                       onClick={() => handleFolderSelect(folder.id)}
                     >
                       {/* Simple Header */}
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100">
+                      <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <h3 className="text-lg sm:text-xl font-bold text-amber-900 dark:text-amber-100 truncate pr-2">
                           {folder.name}
                         </h3>
-                        <div className="w-6 h-6 bg-amber-800 rounded flex items-center justify-center">
-                          <span className="text-white text-sm">📁</span>
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-800 rounded flex items-center justify-center flex-shrink-0">
+                          <span className="text-white text-xs sm:text-sm">📁</span>
                         </div>
                       </div>
                       
                       {/* Simple Photo Grid - Fixed Height */}
-                      <div className="grid grid-cols-3 gap-2 mb-4 h-24">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4 h-20 sm:h-24">
                         {folder.photos.slice(0, 3).map((photo, index) => (
-                          <div key={index} className="aspect-square bg-amber-100 dark:bg-amber-700 rounded-lg overflow-hidden">
+                          <div key={index} className="aspect-square bg-amber-100 dark:bg-amber-700 rounded-md sm:rounded-lg overflow-hidden">
                             <Image 
                               src={photo.url} 
                               alt={`${folder.name}の写真`} 
@@ -270,9 +271,9 @@ export default function Home() {
                           </div>
                         ))}
                         {folder.photoCount === 0 && (
-                          <div className="col-span-3 h-24 bg-amber-50 dark:bg-amber-800 rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
+                          <div className="col-span-3 h-20 sm:h-24 bg-amber-50 dark:bg-amber-800 rounded-md sm:rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
                             <div className="text-center">
-                              <div className="text-xl mb-1">📷</div>
+                              <div className="text-lg sm:text-xl mb-1">📷</div>
                               <p className="text-amber-600 dark:text-amber-400 text-xs">写真がありません</p>
                             </div>
                           </div>
@@ -280,13 +281,13 @@ export default function Home() {
                       </div>
                       
                       {/* Simple Stats */}
-                      <p className="text-sm text-amber-700 dark:text-amber-300">
+                      <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300">
                         {folder.photoCount}枚の写真
                       </p>
                     </div>
                     
                     {/* Simple Upload Button - Fixed Position */}
-                    <div className="px-6 pb-6 mt-auto">
+                    <div className="px-4 pb-4 sm:px-6 sm:pb-6 mt-auto">
                       <label className="block">
                         <input
                           type="file"
@@ -296,7 +297,7 @@ export default function Home() {
                           className="hidden"
                           disabled={uploadingFolder === folder.id}
                         />
-                        <div className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white text-center py-2 px-4 rounded-lg cursor-pointer transition-colors duration-200">
+                        <div className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white text-center py-2 px-3 sm:px-4 rounded-lg cursor-pointer transition-colors duration-200 text-sm sm:text-base">
                           {uploadingFolder === folder.id ? 'アップロード中...' : '写真を追加'}
                         </div>
                       </label>
@@ -309,46 +310,47 @@ export default function Home() {
         ) : (
           <div className="space-y-8">
             {/* Simple Back Button */}
-            <div className="mb-6">
+            <div className="mb-4 sm:mb-6">
               <button 
                 onClick={() => {
                   setSelectedFolder(null);
                   setSelectedFolderData(null);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-amber-800 hover:bg-amber-900 text-white rounded-lg transition-colors duration-200"
+                className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-amber-800 hover:bg-amber-900 text-white rounded-lg transition-colors duration-200 text-sm sm:text-base"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                フォルダ一覧に戻る
+                <span className="hidden sm:inline">フォルダ一覧に戻る</span>
+                <span className="sm:hidden">戻る</span>
               </button>
             </div>
 
             {selectedFolderData && (
               <div className="space-y-8">
                 {/* Simple Page Header */}
-                <div className="text-center mb-8">
-                  <div className="flex items-center justify-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-amber-800 rounded-lg flex items-center justify-center">
-                      <span className="text-white text-lg">🐱</span>
+                <div className="text-center mb-6 sm:mb-8">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-amber-800 rounded-lg flex items-center justify-center">
+                      <span className="text-white text-sm sm:text-lg">🐱</span>
                     </div>
-                    <h2 className="text-3xl font-bold text-amber-900 dark:text-amber-100">
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 dark:text-amber-100">
                       {selectedFolderData.name}の写真
                     </h2>
                   </div>
-                  <p className="text-amber-700 dark:text-amber-300">
+                  <p className="text-sm sm:text-base text-amber-700 dark:text-amber-300">
                     {selectedFolderData.photos.length}枚の美しい写真コレクション
                   </p>
                 </div>
 
                 {selectedFolderData.photos.length === 0 ? (
                   // Simple Empty State
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-amber-100 dark:bg-amber-800 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <div className="text-3xl">📷</div>
+                  <div className="text-center py-8 sm:py-12">
+                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-amber-100 dark:bg-amber-800 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <div className="text-2xl sm:text-3xl">📷</div>
                     </div>
-                    <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100 mb-2">まだ写真がありません</h3>
-                    <p className="text-amber-700 dark:text-amber-300 mb-6">最初の写真をアップロードしてください</p>
+                    <h3 className="text-lg sm:text-xl font-bold text-amber-900 dark:text-amber-100 mb-2">まだ写真がありません</h3>
+                    <p className="text-sm sm:text-base text-amber-700 dark:text-amber-300 mb-6">最初の写真をアップロードしてください</p>
                     <label className="inline-block">
                       <input
                         type="file"
@@ -358,7 +360,7 @@ export default function Home() {
                         className="hidden"
                         disabled={uploadingFolder === selectedFolderData.id}
                       />
-                      <div className="bg-amber-800 hover:bg-amber-900 text-white py-3 px-6 rounded-lg cursor-pointer transition-colors duration-200">
+                      <div className="bg-amber-800 hover:bg-amber-900 text-white py-2 px-4 sm:py-3 sm:px-6 rounded-lg cursor-pointer transition-colors duration-200 text-sm sm:text-base">
                         {uploadingFolder === selectedFolderData.id ? 'アップロード中...' : '最初の写真を追加'}
                       </div>
                     </label>
@@ -366,7 +368,7 @@ export default function Home() {
                 ) : (
                   <>
                   {/* Simple Photo Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
                     {selectedFolderData.photos.map((photo) => (
                       <div key={photo.id}>
                         <div className="bg-white dark:bg-amber-800 rounded-lg shadow-md hover:shadow-lg overflow-hidden transition-shadow duration-200">
@@ -391,18 +393,19 @@ export default function Home() {
                           </div>
                           
                           {/* Simple Info */}
-                          <div className="p-3">
-                            <div className="flex items-center justify-between">
-                              <p className="text-xs text-amber-700 dark:text-amber-300">
+                          <div className="p-2 sm:p-3">
+                            <div className="flex items-center justify-between text-xs">
+                              <p className="text-amber-700 dark:text-amber-300 truncate">
                                 {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
                               </p>
                               <a 
                                 href={photo.url} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
-                                className="text-xs text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-200"
+                                className="text-amber-600 hover:text-amber-800 dark:text-amber-400 dark:hover:text-amber-200 ml-1 flex-shrink-0"
                               >
-                                直接表示
+                                <span className="hidden sm:inline">直接表示</span>
+                                <span className="sm:hidden">🔗</span>
                               </a>
                             </div>
                           </div>
