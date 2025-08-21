@@ -13,11 +13,21 @@ type CatFolder = {
   updatedAt: string;
 };
 
+type Photo = {
+  id: string;
+  filename: string;
+  originalName: string;
+  url: string;
+  uploadedAt: string;
+};
+
 export default function AdminPage() {
   const [folders, setFolders] = useState<CatFolder[]>([]);
   const [newFolderName, setNewFolderName] = useState('');
   const [editingFolder, setEditingFolder] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
+  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -129,6 +139,55 @@ export default function AdminPage() {
     } catch (err) {
       setError('Failed to update folder');
       console.error('Error updating folder:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const fetchPhotos = async (folderId: string) => {
+    try {
+      const response = await fetch(`/api/folders/${folderId}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setPhotos(data.photos || []);
+        setSelectedFolder(folderId);
+      } else {
+        setError(data.error || 'Failed to fetch photos');
+      }
+    } catch (err) {
+      setError('Failed to fetch photos');
+      console.error('Error fetching photos:', err);
+    }
+  };
+
+  const handleDeletePhoto = async (photoId: string) => {
+    if (!confirm('この写真を削除しますか？')) return;
+    
+    try {
+      setSubmitting(true);
+      const response = await fetch(`/api/photos/${photoId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setPhotos(prev => prev.filter(photo => photo.id !== photoId));
+        // Update folder photo count
+        if (selectedFolder) {
+          setFolders(prev => prev.map(folder => 
+            folder.id === selectedFolder 
+              ? { ...folder, photoCount: folder.photoCount - 1 }
+              : folder
+          ));
+        }
+      } else {
+        setError(data.error || 'Failed to delete photo');
+      }
+    } catch (err) {
+      setError('Failed to delete photo');
+      console.error('Error deleting photo:', err);
     } finally {
       setSubmitting(false);
     }
@@ -292,6 +351,13 @@ export default function AdminPage() {
                     {editingFolder !== folder.id && (
                       <div className="flex gap-2">
                         <button
+                          onClick={() => fetchPhotos(folder.id)}
+                          disabled={submitting}
+                          className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
+                        >
+                          写真管理
+                        </button>
+                        <button
                           onClick={() => handleEditFolder(folder.id)}
                           disabled={submitting}
                           className="bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
@@ -313,6 +379,69 @@ export default function AdminPage() {
             )}
           </div>
         </div>
+
+        {/* Photo Management Section */}
+        {selectedFolder && (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mt-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                写真管理 - {folders.find(f => f.id === selectedFolder)?.name}
+              </h2>
+              <button
+                onClick={() => {
+                  setSelectedFolder(null);
+                  setPhotos([]);
+                }}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                閉じる
+              </button>
+            </div>
+            
+            {photos.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400">このフォルダには写真がありません。</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {photos.map(photo => (
+                  <div key={photo.id} className="relative group">
+                    <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                      <img
+                        src={photo.url}
+                        alt={photo.originalName}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = '/placeholder.jpg';
+                        }}
+                      />
+                    </div>
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => handleDeletePhoto(photo.id)}
+                        disabled={submitting}
+                        className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white p-2 rounded-full shadow-lg transition-colors"
+                        title="写真を削除"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 truncate" title={photo.originalName}>
+                        {photo.originalName}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500">
+                        {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </main>
     </div>
   );
