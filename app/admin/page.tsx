@@ -315,22 +315,24 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900">
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              🔧 管理者ページ
+          <div className="flex justify-between items-center py-4 sm:py-6">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <span className="text-lg sm:text-xl lg:text-2xl">🔧</span> 管理者ページ
             </h1>
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <button
                 onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+                className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base"
               >
-                ログアウト
+                <span className="hidden sm:inline">ログアウト</span>
+                <span className="sm:hidden">ログアウト</span>
               </button>
               <Link 
                 href="/" 
-                className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg transition-colors"
+                className="bg-amber-800 hover:bg-amber-900 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base"
               >
-                ← ギャラリーに戻る
+                <span className="hidden sm:inline">← ギャラリーに戻る</span>
+                <span className="sm:hidden">ギャラリー</span>
               </Link>
             </div>
           </div>
@@ -339,43 +341,43 @@ export default function AdminPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
             {error}
             <button 
               onClick={() => setError(null)} 
-              className="ml-2 text-red-500 hover:text-red-700"
+              className="ml-2 text-red-500 hover:text-red-700 float-right"
             >
               ✕
             </button>
           </div>
         )}
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">新しいフォルダを作成</h2>
-          <div className="flex gap-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">新しいフォルダを作成</h2>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <input
               type="text"
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
               placeholder="猫の名前を入力..."
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              className="flex-1 px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base"
               onKeyPress={(e) => e.key === 'Enter' && handleAddFolder()}
               disabled={submitting}
             />
             <button
               onClick={handleAddFolder}
               disabled={submitting || !newFolderName.trim()}
-              className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg transition-colors"
+              className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
             >
               {submitting ? '作成中...' : '作成'}
             </button>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">フォルダ管理</h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">フォルダ管理</h2>
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
               📱 フォルダをドラッグ&ドロップして表示順序を変更できます
             </p>
           </div>
@@ -388,7 +390,7 @@ export default function AdminPage() {
               folders.map(folder => (
                 <div 
                   key={folder.id} 
-                  className={`border border-gray-200 dark:border-gray-600 rounded-lg p-4 transition-all duration-200 ${
+                  className={`border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4 transition-all duration-200 ${
                     draggedFolder === folder.id 
                       ? 'opacity-50 scale-95' 
                       : isDragOver === folder.id 
@@ -401,73 +403,76 @@ export default function AdminPage() {
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, folder.id)}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
                       {editingFolder === folder.id ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
                           <input
                             type="text"
                             value={editingName}
                             onChange={(e) => setEditingName(e.target.value)}
-                            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base"
                             onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit()}
                             disabled={submitting}
                             autoFocus
                           />
-                          <button
-                            onClick={handleSaveEdit}
-                            disabled={submitting || !editingName.trim()}
-                            className="bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
-                          >
-                            {submitting ? '保存中...' : '保存'}
-                          </button>
-                          <button
-                            onClick={() => {
-                              setEditingFolder(null);
-                              setEditingName('');
-                            }}
-                            disabled={submitting}
-                            className="bg-gray-500 hover:bg-gray-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
-                          >
-                            キャンセル
-                          </button>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={handleSaveEdit}
+                              disabled={submitting || !editingName.trim()}
+                              className="flex-1 sm:flex-none bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-3 py-2 rounded text-xs sm:text-sm transition-colors"
+                            >
+                              {submitting ? '保存中...' : '保存'}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingFolder(null);
+                                setEditingName('');
+                              }}
+                              disabled={submitting}
+                              className="flex-1 sm:flex-none bg-gray-500 hover:bg-gray-600 disabled:bg-gray-400 text-white px-3 py-2 rounded text-xs sm:text-sm transition-colors"
+                            >
+                              キャンセル
+                            </button>
+                          </div>
                         </div>
                       ) : (
                         <>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
                             <svg 
-                              className="w-5 h-5 text-gray-400 cursor-grab active:cursor-grabbing" 
+                              className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 cursor-grab active:cursor-grabbing flex-shrink-0" 
                               fill="currentColor" 
                               viewBox="0 0 20 20"
                             >
                               <path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zM8 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
                             </svg>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{folder.name}</h3>
+                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate">{folder.name}</h3>
+                            <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">({folder.photoCount}枚)</span>
                           </div>
-                          <span className="text-sm text-gray-600 dark:text-gray-400">({folder.photoCount}枚)</span>
                         </>
                       )}
                     </div>
                     {editingFolder !== folder.id && (
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-1 sm:gap-2">
                         <button
                           onClick={() => fetchPhotos(folder.id)}
                           disabled={submitting}
-                          className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
+                          className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none"
                         >
-                          写真管理
+                          <span className="hidden sm:inline">写真管理</span>
+                          <span className="sm:hidden">管理</span>
                         </button>
                         <button
                           onClick={() => handleEditFolder(folder.id)}
                           disabled={submitting}
-                          className="bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
+                          className="bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none"
                         >
                           編集
                         </button>
                         <button
                           onClick={() => handleDeleteFolder(folder.id)}
                           disabled={submitting}
-                          className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
+                          className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none"
                         >
                           削除
                         </button>
@@ -482,9 +487,9 @@ export default function AdminPage() {
 
         {/* Photo Management Section */}
         {selectedFolder && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mt-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mt-6 sm:mt-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
                 写真管理 - {folders.find(f => f.id === selectedFolder)?.name}
               </h2>
               <button
@@ -492,18 +497,18 @@ export default function AdminPage() {
                   setSelectedFolder(null);
                   setPhotos([]);
                 }}
-                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base self-start sm:self-auto"
               >
                 閉じる
               </button>
             </div>
             
             {photos.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">このフォルダには写真がありません。</p>
+              <div className="text-center py-6 sm:py-8">
+                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">このフォルダには写真がありません。</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
                 {photos.map(photo => (
                   <div key={photo.id} className="relative group">
                     <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
@@ -516,20 +521,20 @@ export default function AdminPage() {
                         }}
                       />
                     </div>
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={() => handleDeletePhoto(photo.id)}
                         disabled={submitting}
-                        className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white p-2 rounded-full shadow-lg transition-colors"
+                        className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white p-1 sm:p-2 rounded-full shadow-lg transition-colors"
                         title="写真を削除"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                       </button>
                     </div>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-600 dark:text-gray-400 truncate" title={photo.originalName}>
+                    <div className="mt-1 sm:mt-2">
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate" title={photo.originalName}>
                         {photo.originalName}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-500">

@@ -249,7 +249,7 @@ export default function Home() {
                       </div>
                       
                       {/* Simple Photo Grid - Fixed Height */}
-                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4 h-20 sm:h-24">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-2 sm:mb-3 h-16 sm:h-20">
                         {folder.photos.slice(0, 3).map((photo, index) => (
                           <div key={index} className="aspect-square bg-amber-100 dark:bg-amber-700 rounded-md sm:rounded-lg overflow-hidden">
                             <Image 
@@ -271,9 +271,9 @@ export default function Home() {
                           </div>
                         ))}
                         {folder.photoCount === 0 && (
-                          <div className="col-span-3 h-20 sm:h-24 bg-amber-50 dark:bg-amber-800 rounded-md sm:rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
+                          <div className="col-span-3 h-16 sm:h-20 bg-amber-50 dark:bg-amber-800 rounded-md sm:rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
                             <div className="text-center">
-                              <div className="text-lg sm:text-xl mb-1">📷</div>
+                              <div className="text-base sm:text-lg mb-1">📷</div>
                               <p className="text-amber-600 dark:text-amber-400 text-xs">写真がありません</p>
                             </div>
                           </div>
@@ -281,9 +281,11 @@ export default function Home() {
                       </div>
                       
                       {/* Simple Stats */}
-                      <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300">
-                        {folder.photoCount}枚の写真
-                      </p>
+                      <div className="mt-2">
+                        <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300">
+                          {folder.photoCount}枚の写真
+                        </p>
+                      </div>
                     </div>
                     
                     {/* Simple Upload Button - Fixed Position */}
