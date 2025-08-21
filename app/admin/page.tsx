@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { isAuthenticated } from '@/lib/auth';
 
 type CatFolder = {
   id: string;
@@ -19,10 +21,24 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
+    // Check authentication first
+    console.log('Admin page loading, cookies:', document.cookie);
+    console.log('isAuthenticated():', isAuthenticated());
+    
+    if (!isAuthenticated()) {
+      console.log('Not authenticated, redirecting to login');
+      router.push('/admin/login');
+      return;
+    }
+    
+    console.log('Authenticated, loading admin page');
+    setAuthenticated(true);
     fetchFolders();
-  }, []);
+  }, [router]);
 
   const fetchFolders = async () => {
     try {
@@ -144,7 +160,16 @@ export default function AdminPage() {
     }
   };
 
-  if (loading) {
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/admin/login');
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
+
+  if (!authenticated || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900 flex items-center justify-center">
         <div className="text-center">
@@ -163,12 +188,20 @@ export default function AdminPage() {
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
               🔧 管理者ページ
             </h1>
-            <Link 
-              href="/" 
-              className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              ← ギャラリーに戻る
-            </Link>
+            <div className="flex gap-3">
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                ログアウト
+              </button>
+              <Link 
+                href="/" 
+                className="bg-amber-800 hover:bg-amber-900 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                ← ギャラリーに戻る
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -201,7 +234,7 @@ export default function AdminPage() {
             <button
               onClick={handleAddFolder}
               disabled={submitting || !newFolderName.trim()}
-              className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg transition-colors"
+              className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg transition-colors"
             >
               {submitting ? '作成中...' : '作成'}
             </button>
@@ -234,7 +267,7 @@ export default function AdminPage() {
                           <button
                             onClick={handleSaveEdit}
                             disabled={submitting || !editingName.trim()}
-                            className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
+                            className="bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
                           >
                             {submitting ? '保存中...' : '保存'}
                           </button>
@@ -261,7 +294,7 @@ export default function AdminPage() {
                         <button
                           onClick={() => handleEditFolder(folder.id)}
                           disabled={submitting}
-                          className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
+                          className="bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm transition-colors"
                         >
                           編集
                         </button>

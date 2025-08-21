@@ -8,6 +8,10 @@ export async function GET() {
 
   return NextResponse.json({
     environment: process.env.NODE_ENV,
+    authConfig: {
+      hasAdminPassword: !!process.env.ADMIN_PASSWORD,
+      adminPasswordLength: process.env.ADMIN_PASSWORD?.length || 0,
+    },
     r2Config: {
       hasAccessKey: !!process.env.R2_ACCESS_KEY_ID,
       hasSecretKey: !!process.env.R2_SECRET_ACCESS_KEY,

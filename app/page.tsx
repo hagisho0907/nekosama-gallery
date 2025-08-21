@@ -132,11 +132,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 dark:from-amber-950 dark:to-orange-950">
       {/* Simple Header */}
-      <header className="bg-white dark:bg-amber-900 shadow-sm border-b border-amber-200 dark:border-amber-700">
+      <header className="bg-white dark:bg-amber-900 shadow-sm border-b border-amber-300 dark:border-amber-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-amber-600 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-amber-800 rounded-lg flex items-center justify-center">
                 <span className="text-white text-2xl">🐱</span>
               </div>
               <div>
@@ -148,7 +148,7 @@ export default function Home() {
             </div>
             <Link 
               href="/admin" 
-              className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors duration-200"
+              className="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white rounded-lg font-medium transition-colors duration-200"
             >
               管理者ページ
             </Link>
@@ -195,7 +195,7 @@ export default function Home() {
                         <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100">
                           {folder.name}
                         </h3>
-                        <div className="w-6 h-6 bg-amber-600 rounded flex items-center justify-center">
+                        <div className="w-6 h-6 bg-amber-800 rounded flex items-center justify-center">
                           <span className="text-white text-sm">📁</span>
                         </div>
                       </div>
@@ -249,7 +249,7 @@ export default function Home() {
                           className="hidden"
                           disabled={uploadingFolder === folder.id}
                         />
-                        <div className="bg-amber-600 hover:bg-amber-700 disabled:bg-gray-400 text-white text-center py-2 px-4 rounded-lg cursor-pointer transition-colors duration-200">
+                        <div className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white text-center py-2 px-4 rounded-lg cursor-pointer transition-colors duration-200">
                           {uploadingFolder === folder.id ? 'アップロード中...' : '写真を追加'}
                         </div>
                       </label>
@@ -268,7 +268,7 @@ export default function Home() {
                   setSelectedFolder(null);
                   setSelectedFolderData(null);
                 }}
-                className="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors duration-200"
+                className="flex items-center gap-2 px-4 py-2 bg-amber-800 hover:bg-amber-900 text-white rounded-lg transition-colors duration-200"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -282,7 +282,7 @@ export default function Home() {
                 {/* Simple Page Header */}
                 <div className="text-center mb-8">
                   <div className="flex items-center justify-center gap-3 mb-2">
-                    <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-amber-800 rounded-lg flex items-center justify-center">
                       <span className="text-white text-lg">🐱</span>
                     </div>
                     <h2 className="text-3xl font-bold text-amber-900 dark:text-amber-100">
@@ -311,7 +311,7 @@ export default function Home() {
                         className="hidden"
                         disabled={uploadingFolder === selectedFolderData.id}
                       />
-                      <div className="bg-amber-600 hover:bg-amber-700 text-white py-3 px-6 rounded-lg cursor-pointer transition-colors duration-200">
+                      <div className="bg-amber-800 hover:bg-amber-900 text-white py-3 px-6 rounded-lg cursor-pointer transition-colors duration-200">
                         {uploadingFolder === selectedFolderData.id ? 'アップロード中...' : '最初の写真を追加'}
                       </div>
                     </label>
