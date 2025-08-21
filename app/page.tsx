@@ -183,11 +183,11 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {folders.map(folder => (
                 <div key={folder.id}>
-                  {/* Simple Card */}
-                  <div className="bg-white dark:bg-amber-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+                  {/* Simple Card with Fixed Height */}
+                  <div className="bg-white dark:bg-amber-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden h-80 flex flex-col">
                     
                     <div 
-                      className="p-6 cursor-pointer" 
+                      className="p-6 cursor-pointer flex-1" 
                       onClick={() => handleFolderSelect(folder.id)}
                     >
                       {/* Simple Header */}
@@ -200,8 +200,8 @@ export default function Home() {
                         </div>
                       </div>
                       
-                      {/* Simple Photo Grid */}
-                      <div className="grid grid-cols-3 gap-2 mb-4">
+                      {/* Simple Photo Grid - Fixed Height */}
+                      <div className="grid grid-cols-3 gap-2 mb-4 h-24">
                         {folder.photos.slice(0, 3).map((photo, index) => (
                           <div key={index} className="aspect-square bg-amber-100 dark:bg-amber-700 rounded-lg overflow-hidden">
                             <Image 
@@ -223,10 +223,10 @@ export default function Home() {
                           </div>
                         ))}
                         {folder.photoCount === 0 && (
-                          <div className="col-span-3 aspect-square bg-amber-50 dark:bg-amber-800 rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
+                          <div className="col-span-3 h-24 bg-amber-50 dark:bg-amber-800 rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
                             <div className="text-center">
-                              <div className="text-2xl mb-1">📷</div>
-                              <p className="text-amber-600 dark:text-amber-400 text-sm">写真がありません</p>
+                              <div className="text-xl mb-1">📷</div>
+                              <p className="text-amber-600 dark:text-amber-400 text-xs">写真がありません</p>
                             </div>
                           </div>
                         )}
@@ -238,8 +238,8 @@ export default function Home() {
                       </p>
                     </div>
                     
-                    {/* Simple Upload Button */}
-                    <div className="px-6 pb-6">
+                    {/* Simple Upload Button - Fixed Position */}
+                    <div className="px-6 pb-6 mt-auto">
                       <label className="block">
                         <input
                           type="file"
