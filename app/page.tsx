@@ -131,7 +131,7 @@ export default function Home() {
       // Show success message if any uploads included auto-deletion
       const hasAutoDeletion = results.some(result => result.message?.includes('古い写真を自動削除'));
       if (hasAutoDeletion) {
-        setSuccessMessage('写真をアップロードしました。古い写真を自動削除して最大100枚を維持しています。');
+        setSuccessMessage('写真をアップロードしました。古い写真を自動削除して最大10枚を維持しています。（テスト中）');
         setTimeout(() => setSuccessMessage(null), 5000);
       }
       
