@@ -439,7 +439,6 @@ export default function AdminPage() {
                               className="w-5 h-5 text-gray-400 cursor-grab active:cursor-grabbing" 
                               fill="currentColor" 
                               viewBox="0 0 20 20"
-                              title="ドラッグして順序を変更"
                             >
                               <path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zM8 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
                             </svg>
