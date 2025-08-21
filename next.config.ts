@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Cloudflare Pages configuration
-  output: 'export',
-  trailingSlash: false,
+  // Cloudflare Pages configuration - using functions instead of static export
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true, // Required for Cloudflare Pages
     remotePatterns: [
       {
         protocol: 'https',
@@ -20,6 +18,11 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["localhost:3000", "*.vercel.app", "*.pages.dev"],
+    },
   },
 };
 
