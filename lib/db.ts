@@ -2,6 +2,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 import { memoryDatabase } from './memory-db';
+import { d1Database, initializeD1Database } from './d1-db';
 
 const dbPath = process.env.DATABASE_PATH || './data/gallery.db';
 const dbDir = path.dirname(dbPath);
@@ -37,9 +38,17 @@ export interface CatPhoto {
 class DatabaseManager {
   private db: Database.Database | null = null;
   private useMemoryDB = false;
+  private useD1DB = false;
 
   init() {
     try {
+      // Check if we're in Cloudflare environment (D1 available)
+      if (typeof process !== 'undefined' && process.env.CF_PAGES) {
+        console.log('Using Cloudflare D1 database');
+        this.useD1DB = true;
+        return null; // We'll use d1Database instead
+      }
+
       if (!canUseFileSystem()) {
         console.log('Using memory database (Vercel serverless environment)');
         this.useMemoryDB = true;
@@ -56,6 +65,12 @@ class DatabaseManager {
       this.useMemoryDB = true;
       return null;
     }
+  }
+
+  // Initialize D1 database for Cloudflare environments
+  initD1(d1Instance: any) {
+    this.useD1DB = true;
+    initializeD1Database(d1Instance);
   }
 
   private createTables() {
@@ -89,9 +104,13 @@ class DatabaseManager {
     `);
   }
 
-  getFolders(): CatFolder[] {
+  async getFolders(): Promise<CatFolder[]> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.getFolders();
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.getFolders();
     }
@@ -106,9 +125,13 @@ class DatabaseManager {
     return stmt.all() as CatFolder[];
   }
 
-  getFolder(id: string): CatFolder | null {
+  async getFolder(id: string): Promise<CatFolder | null> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.getFolder(id);
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.getFolder(id);
     }
@@ -123,9 +146,13 @@ class DatabaseManager {
     return stmt.get(id) as CatFolder | null;
   }
 
-  createFolder(name: string): CatFolder {
+  async createFolder(name: string): Promise<CatFolder> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.createFolder(name);
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.createFolder(name);
     }
@@ -149,9 +176,13 @@ class DatabaseManager {
     };
   }
 
-  updateFolder(id: string, name: string): boolean {
+  async updateFolder(id: string, name: string): Promise<boolean> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.updateFolder(id, name);
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.updateFolder(id, name);
     }
@@ -170,9 +201,13 @@ class DatabaseManager {
     return result.changes > 0;
   }
 
-  deleteFolder(id: string): boolean {
+  async deleteFolder(id: string): Promise<boolean> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.deleteFolder(id);
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.deleteFolder(id);
     }
@@ -184,9 +219,13 @@ class DatabaseManager {
     return result.changes > 0;
   }
 
-  getPhotos(folderId: string): CatPhoto[] {
+  async getPhotos(folderId: string): Promise<CatPhoto[]> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.getPhotos(folderId);
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.getPhotos(folderId);
     }
@@ -203,9 +242,13 @@ class DatabaseManager {
     return stmt.all(folderId) as CatPhoto[];
   }
 
-  addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): CatPhoto {
+  async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): Promise<CatPhoto> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.addPhoto(photo);
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.addPhoto(photo);
     }
@@ -228,9 +271,13 @@ class DatabaseManager {
     };
   }
 
-  deletePhoto(id: string): boolean {
+  async deletePhoto(id: string): Promise<boolean> {
     this.init();
     
+    if (this.useD1DB) {
+      return await d1Database.deletePhoto(id);
+    }
+
     if (this.useMemoryDB) {
       return memoryDatabase.deletePhoto(id);
     }

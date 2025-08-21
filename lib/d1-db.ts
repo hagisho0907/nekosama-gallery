@@ -1,0 +1,176 @@
+// Cloudflare D1 database interface
+export interface CatFolder {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CatPhoto {
+  id: string;
+  folderId: string;
+  filename: string;
+  originalName: string;
+  url: string;
+  uploadedAt: string;
+}
+
+// D1 Database interface (for Cloudflare environment)
+interface D1Database {
+  prepare(query: string): D1PreparedStatement;
+  exec(query: string): Promise<D1ExecResult>;
+  batch(statements: D1PreparedStatement[]): Promise<D1Result<any>[]>;
+}
+
+interface D1PreparedStatement {
+  bind(...values: any[]): D1PreparedStatement;
+  first(): Promise<any>;
+  all(): Promise<D1Result<any>>;
+  run(): Promise<D1Result<any>>;
+}
+
+interface D1Result<T = any> {
+  success: boolean;
+  results: T[];
+  meta: {
+    changes: number;
+    last_row_id: number;
+    rows_read: number;
+    rows_written: number;
+  };
+}
+
+interface D1ExecResult {
+  count: number;
+  duration: number;
+}
+
+class D1DatabaseManager {
+  private db: D1Database | null = null;
+
+  constructor(database?: D1Database) {
+    this.db = database || null;
+  }
+
+  setDatabase(database: D1Database) {
+    this.db = database;
+  }
+
+  private ensureDatabase() {
+    if (!this.db) {
+      throw new Error('D1 database not initialized. Make sure you are running in Cloudflare environment.');
+    }
+    return this.db;
+  }
+
+  async getFolders(): Promise<CatFolder[]> {
+    const db = this.ensureDatabase();
+    
+    const result = await db.prepare(`
+      SELECT id, name, created_at as createdAt, updated_at as updatedAt 
+      FROM folders 
+      ORDER BY created_at DESC
+    `).all();
+    
+    return result.results as CatFolder[];
+  }
+
+  async getFolder(id: string): Promise<CatFolder | null> {
+    const db = this.ensureDatabase();
+    
+    const result = await db.prepare(`
+      SELECT id, name, created_at as createdAt, updated_at as updatedAt 
+      FROM folders 
+      WHERE id = ?
+    `).bind(id).first();
+    
+    return result as CatFolder | null;
+  }
+
+  async createFolder(name: string): Promise<CatFolder> {
+    const db = this.ensureDatabase();
+    
+    const id = Date.now().toString();
+    const now = new Date().toISOString();
+    
+    await db.prepare(`
+      INSERT INTO folders (id, name, created_at, updated_at) 
+      VALUES (?, ?, ?, ?)
+    `).bind(id, name, now, now).run();
+
+    return {
+      id,
+      name,
+      createdAt: now,
+      updatedAt: now
+    };
+  }
+
+  async updateFolder(id: string, name: string): Promise<boolean> {
+    const db = this.ensureDatabase();
+    
+    const now = new Date().toISOString();
+    
+    const result = await db.prepare(`
+      UPDATE folders 
+      SET name = ?, updated_at = ? 
+      WHERE id = ?
+    `).bind(name, now, id).run();
+
+    return result.meta.changes > 0;
+  }
+
+  async deleteFolder(id: string): Promise<boolean> {
+    const db = this.ensureDatabase();
+    
+    const result = await db.prepare('DELETE FROM folders WHERE id = ?').bind(id).run();
+    return result.meta.changes > 0;
+  }
+
+  async getPhotos(folderId: string): Promise<CatPhoto[]> {
+    const db = this.ensureDatabase();
+    
+    const result = await db.prepare(`
+      SELECT id, folder_id as folderId, filename, original_name as originalName, 
+             url, uploaded_at as uploadedAt
+      FROM photos 
+      WHERE folder_id = ? 
+      ORDER BY uploaded_at DESC
+    `).bind(folderId).all();
+    
+    return result.results as CatPhoto[];
+  }
+
+  async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): Promise<CatPhoto> {
+    const db = this.ensureDatabase();
+    
+    const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    const uploadedAt = new Date().toISOString();
+
+    await db.prepare(`
+      INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(id, photo.folderId, photo.filename, photo.originalName, photo.url, uploadedAt).run();
+
+    return {
+      id,
+      ...photo,
+      uploadedAt
+    };
+  }
+
+  async deletePhoto(id: string): Promise<boolean> {
+    const db = this.ensureDatabase();
+    
+    const result = await db.prepare('DELETE FROM photos WHERE id = ?').bind(id).run();
+    return result.meta.changes > 0;
+  }
+}
+
+// Global instance
+export const d1Database = new D1DatabaseManager();
+
+// Helper function to initialize D1 database in Cloudflare environment
+export function initializeD1Database(database: D1Database) {
+  d1Database.setDatabase(database);
+}

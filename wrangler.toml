@@ -1,0 +1,17 @@
+name = "nekosama-gallery"
+main = "src/index.js"
+compatibility_date = "2024-08-21"
+account_id = "6cd645a137d7c4b4b83226e2bbb973e3"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "nekosama-gallery-db"
+database_id = "b8161388-f20f-4b5c-8e9f-d80134119524"
+
+[env.production]
+name = "nekosama-gallery-production"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "nekosama-gallery-db"
+database_id = "b8161388-f20f-4b5c-8e9f-d80134119524"
