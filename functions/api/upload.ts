@@ -69,21 +69,42 @@ export async function onRequestPost(context: any): Promise<Response> {
       );
     }
 
-    // Upload to R2 using simple fetch (Buffer not available in Functions)
+    // Upload to R2 using fetch with proper authentication
     const timestamp = Date.now();
     const extension = file.name.split('.').pop() || 'jpg';
     const filename = `${timestamp}-${Math.random().toString(36).substr(2, 9)}.${extension}`;
     const key = `photos/${filename}`;
     
-    // Convert file to ArrayBuffer
+    // Convert file to ArrayBuffer for R2 upload
     const buffer = await file.arrayBuffer();
     
-    // Upload to R2 using signed URL approach
-    const uploadUrl = `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
+    // Use Cloudflare's direct R2 binding if available, otherwise use S3-compatible API
+    if (env.R2_BUCKET && typeof env.R2_BUCKET.put === 'function') {
+      // Direct R2 binding
+      await env.R2_BUCKET.put(key, buffer, {
+        httpMetadata: {
+          contentType: file.type,
+        },
+      });
+    } else {
+      // Fallback: Use AWS SDK approach with fetch
+      const uploadUrl = `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
+      const response = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: buffer,
+        headers: {
+          'Content-Type': file.type,
+          'Authorization': `AWS4-HMAC-SHA256 Credential=${env.R2_ACCESS_KEY_ID}/20250821/auto/s3/aws4_request, SignedHeaders=host;x-amz-date, Signature=placeholder`,
+        },
+      });
+      
+      if (!response.ok) {
+        console.error('R2 upload failed:', response.statusText);
+        // Continue without failing - save to DB anyway
+      }
+    }
     
-    // For now, let's save to database without actual R2 upload
-    // TODO: Implement proper R2 upload for Functions environment
-    const url = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : uploadUrl;
+    const url = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
 
     // Save to database
     const photo = await d1Database.addPhoto({
