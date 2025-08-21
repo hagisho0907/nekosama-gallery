@@ -10,7 +10,7 @@ export async function DELETE(
     const { id } = await params;
     
     // Delete from database first to get photo info
-    const success = database.deletePhoto(id);
+    const success = await database.deletePhoto(id);
     
     if (!success) {
       return NextResponse.json(

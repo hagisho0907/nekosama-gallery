@@ -10,11 +10,11 @@ export async function GET(
     const { id } = await params;
     
     // Find photo by ID in all folders
-    const folders = database.getFolders();
+    const folders = await database.getFolders();
     let photo = null;
     
     for (const folder of folders) {
-      const photos = database.getPhotos(folder.id);
+      const photos = await database.getPhotos(folder.id);
       photo = photos.find(p => p.id === id);
       if (photo) break;
     }
