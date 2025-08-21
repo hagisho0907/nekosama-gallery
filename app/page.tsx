@@ -232,10 +232,10 @@ export default function Home() {
               {folders.map(folder => (
                 <div key={folder.id}>
                   {/* Simple Card with Fixed Height */}
-                  <div className="bg-white dark:bg-amber-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden h-72 sm:h-80 flex flex-col">
+                  <div className="bg-white dark:bg-amber-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden h-64 sm:h-72 flex flex-col">
                     
                     <div 
-                      className="p-4 sm:p-6 cursor-pointer flex-1" 
+                      className="p-4 sm:p-5 cursor-pointer flex-1" 
                       onClick={() => handleFolderSelect(folder.id)}
                     >
                       {/* Simple Header */}
@@ -249,7 +249,7 @@ export default function Home() {
                       </div>
                       
                       {/* Simple Photo Grid - Fixed Height */}
-                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-2 sm:mb-3 h-16 sm:h-20">
+                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4 h-14 sm:h-16">
                         {folder.photos.slice(0, 3).map((photo, index) => (
                           <div key={index} className="aspect-square bg-amber-100 dark:bg-amber-700 rounded-md sm:rounded-lg overflow-hidden">
                             <Image 
@@ -271,21 +271,21 @@ export default function Home() {
                           </div>
                         ))}
                         {folder.photoCount === 0 && (
-                          <div className="col-span-3 h-16 sm:h-20 bg-amber-50 dark:bg-amber-800 rounded-md sm:rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
+                          <div className="col-span-3 h-14 sm:h-16 bg-amber-50 dark:bg-amber-800 rounded-md sm:rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-amber-600">
                             <div className="text-center">
-                              <div className="text-base sm:text-lg mb-1">📷</div>
+                              <div className="text-sm sm:text-base mb-1">📷</div>
                               <p className="text-amber-600 dark:text-amber-400 text-xs">写真がありません</p>
                             </div>
                           </div>
                         )}
                       </div>
-                      
-                      {/* Simple Stats */}
-                      <div className="mt-2">
-                        <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300">
-                          {folder.photoCount}枚の写真
-                        </p>
-                      </div>
+                    </div>
+                    
+                    {/* Simple Stats - Moved to bottom of card */}
+                    <div className="px-4 pb-2 sm:px-5 sm:pb-3 mt-auto">
+                      <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-300 text-center">
+                        {folder.photoCount}枚の写真
+                      </p>
                     </div>
                     
                     {/* Simple Upload Button - Fixed Position */}
