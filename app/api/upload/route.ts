@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if folder exists
-    const folder = database.getFolder(folderId);
+    const folder = await database.getFolder(folderId);
     if (!folder) {
       return NextResponse.json(
         { error: 'Folder not found' },
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     const url = await r2Storage.uploadPhoto(buffer, filename, file.type);
 
     // Save to database
-    const photo = database.addPhoto({
+    const photo = await database.addPhoto({
       folderId,
       filename,
       originalName: file.name,

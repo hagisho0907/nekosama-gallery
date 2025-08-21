@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
     
-    const folder = database.getFolder(id);
+    const folder = await database.getFolder(id);
     if (!folder) {
       return NextResponse.json(
         { error: 'Folder not found' },
@@ -17,7 +17,7 @@ export async function GET(
       );
     }
 
-    const photos = database.getPhotos(id);
+    const photos = await database.getPhotos(id);
     
     return NextResponse.json({ 
       folder: {
@@ -50,7 +50,7 @@ export async function PUT(
       );
     }
 
-    const success = database.updateFolder(id, name.trim());
+    const success = await database.updateFolder(id, name.trim());
     
     if (!success) {
       return NextResponse.json(
@@ -59,7 +59,7 @@ export async function PUT(
       );
     }
 
-    const updatedFolder = database.getFolder(id);
+    const updatedFolder = await database.getFolder(id);
     
     return NextResponse.json({ 
       success: true, 
@@ -91,7 +91,7 @@ export async function DELETE(
     const { id } = await params;
     
     // Get all photos in the folder before deleting
-    const photos = database.getPhotos(id);
+    const photos = await database.getPhotos(id);
     
     // Delete photos from R2 storage
     await Promise.all(
@@ -99,7 +99,7 @@ export async function DELETE(
     );
 
     // Delete folder from database (photos will be deleted due to CASCADE)
-    const success = database.deleteFolder(id);
+    const success = await database.deleteFolder(id);
     
     if (!success) {
       return NextResponse.json(
