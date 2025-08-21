@@ -1,36 +1,7 @@
 // Cloudflare Function for /api/upload
 import { d1Database } from '../../lib/d1-db';
+import { R2Storage } from '../../lib/r2';
 import type { CloudflareEnv } from '../../types/cloudflare';
-
-// R2 Upload functionality using Cloudflare API
-async function uploadToR2(file: File, env: CloudflareEnv): Promise<string> {
-  const timestamp = Date.now();
-  const extension = file.name.split('.').pop() || 'jpg';
-  const filename = `${timestamp}-${Math.random().toString(36).substr(2, 9)}.${extension}`;
-  const key = `photos/${filename}`;
-
-  // Convert file to ArrayBuffer
-  const buffer = await file.arrayBuffer();
-
-  // Upload to R2 using fetch API
-  const uploadUrl = `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
-  
-  const response = await fetch(uploadUrl, {
-    method: 'PUT',
-    body: buffer,
-    headers: {
-      'Content-Type': file.type,
-      'Authorization': `Bearer ${env.R2_ACCESS_KEY_ID}:${env.R2_SECRET_ACCESS_KEY}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`R2 upload failed: ${response.statusText}`);
-  }
-
-  // Return public URL
-  return env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
-}
 
 export async function onRequestPost(context: any): Promise<Response> {
   console.log('Upload API called - checking environment variables...');
@@ -98,8 +69,14 @@ export async function onRequestPost(context: any): Promise<Response> {
       );
     }
 
-    // Upload to R2
-    const url = await uploadToR2(file, env);
+    // Upload to R2 using R2Storage class
+    const r2Storage = new R2Storage(env);
+    const buffer = await file.arrayBuffer();
+    const url = await r2Storage.uploadPhoto(
+      Buffer.from(buffer),
+      file.name,
+      file.type
+    );
 
     // Save to database
     const photo = await d1Database.addPhoto({
