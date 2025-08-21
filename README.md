@@ -14,10 +14,10 @@
 
 - **Frontend**: Next.js 15, React 19, TypeScript
 - **Styling**: Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: SQLite
+- **Backend**: Cloudflare Functions
+- **Database**: Cloudflare D1 SQL
 - **Storage**: Cloudflare R2
-- **Deployment**: Vercel
+- **Deployment**: Cloudflare Pages
 
 ## 🚀 開発環境セットアップ
 
