@@ -392,7 +392,6 @@ export default function Home() {
                           
                           {/* Simple Info */}
                           <div className="p-3">
-                            <p className="text-sm text-amber-900 dark:text-amber-100 truncate font-medium mb-1">{photo.originalName}</p>
                             <div className="flex items-center justify-between">
                               <p className="text-xs text-amber-700 dark:text-amber-300">
                                 {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
