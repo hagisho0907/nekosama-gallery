@@ -24,11 +24,14 @@ export async function onRequestGet(context: any): Promise<Response> {
 
     const photos = await d1Database.getPhotos(id);
     
+    console.log(`Folder ${id} - Found ${photos?.length || 0} photos:`, photos);
+    
     return new Response(JSON.stringify({ 
       folder: {
         ...folder,
         photos
-      }
+      },
+      photos: photos || [] // フロントエンド用
     }), {
       headers: { 'Content-Type': 'application/json' }
     });
