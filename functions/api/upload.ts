@@ -78,30 +78,22 @@ export async function onRequestPost(context: any): Promise<Response> {
     // Convert file to ArrayBuffer for R2 upload
     const buffer = await file.arrayBuffer();
     
-    // Use Cloudflare's direct R2 binding if available, otherwise use S3-compatible API
-    if (env.R2_BUCKET && typeof env.R2_BUCKET.put === 'function') {
-      // Direct R2 binding
-      await env.R2_BUCKET.put(key, buffer, {
-        httpMetadata: {
-          contentType: file.type,
-        },
-      });
-    } else {
-      // Fallback: Use AWS SDK approach with fetch
-      const uploadUrl = `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
-      const response = await fetch(uploadUrl, {
-        method: 'PUT',
-        body: buffer,
-        headers: {
-          'Content-Type': file.type,
-          'Authorization': `AWS4-HMAC-SHA256 Credential=${env.R2_ACCESS_KEY_ID}/20250821/auto/s3/aws4_request, SignedHeaders=host;x-amz-date, Signature=placeholder`,
-        },
-      });
-      
-      if (!response.ok) {
-        console.error('R2 upload failed:', response.statusText);
-        // Continue without failing - save to DB anyway
+    // Upload to R2 using direct binding
+    if (env.R2_BUCKET) {
+      try {
+        console.log('Uploading to R2 using binding:', key);
+        await env.R2_BUCKET.put(key, buffer, {
+          httpMetadata: {
+            contentType: file.type,
+          },
+        });
+        console.log('R2 upload successful:', key);
+      } catch (error) {
+        console.error('R2 upload failed:', error);
+        throw new Error(`Failed to upload to R2: ${error}`);
       }
+    } else {
+      throw new Error('R2 bucket binding not available');
     }
     
     const url = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
