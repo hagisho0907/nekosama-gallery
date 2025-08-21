@@ -1,9 +1,6 @@
 // Cloudflare Function for /api/photos/[id]
 import { d1Database } from '../../../lib/d1-db';
-
-interface CloudflareEnv {
-  DB: D1Database;
-}
+import type { CloudflareEnv } from '../../../types/cloudflare';
 
 export async function onRequestDelete(context: any): Promise<Response> {
   try {

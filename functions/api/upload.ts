@@ -1,15 +1,6 @@
 // Cloudflare Function for /api/upload
 import { d1Database } from '../../lib/d1-db';
-
-interface CloudflareEnv {
-  DB: D1Database;
-  R2_ACCESS_KEY_ID?: string;
-  R2_SECRET_ACCESS_KEY?: string;
-  R2_BUCKET_NAME?: string;
-  R2_ENDPOINT?: string;
-  R2_PUBLIC_URL?: string;
-  ADMIN_PASSWORD?: string;
-}
+import type { CloudflareEnv } from '../../types/cloudflare';
 
 // R2 Upload functionality using Cloudflare API
 async function uploadToR2(file: File, env: CloudflareEnv): Promise<string> {
