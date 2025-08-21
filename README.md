@@ -99,5 +99,6 @@ MIT License
 🤖 Generated with [Claude Code](https://claude.ai/code)
 
 <!-- D1 binding configured -->
+<!-- R2 credentials updated -->
 
 <!-- Trigger redeploy for D1 binding -->
