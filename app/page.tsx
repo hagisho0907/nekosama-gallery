@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { compressImage, COMPRESSION_PRESETS } from '@/lib/image-compression';
 
 type CatPhoto = {
   id: string;
@@ -21,6 +22,14 @@ type CatFolder = {
   updatedAt: string;
 };
 
+function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
 export default function Home() {
   const [folders, setFolders] = useState<CatFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
@@ -28,6 +37,8 @@ export default function Home() {
   const [uploadingFolder, setUploadingFolder] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [compressionEnabled, setCompressionEnabled] = useState(true);
+  const [compressionQuality, setCompressionQuality] = useState<keyof typeof COMPRESSION_PRESETS>('medium');
 
   useEffect(() => {
     fetchFolders();
@@ -81,8 +92,27 @@ export default function Home() {
     
     try {
       const uploadPromises = Array.from(files).map(async (file) => {
+        // Check if file is an image
+        if (!file.type.startsWith('image/')) {
+          throw new Error(`${file.name} is not an image file`);
+        }
+
+        console.log(`Original file: ${file.name} (${formatFileSize(file.size)})`);
+        
+        // Compress image before upload (if enabled)
+        let processedFile = file;
+        if (compressionEnabled) {
+          try {
+            processedFile = await compressImage(file, COMPRESSION_PRESETS[compressionQuality]);
+            console.log(`Compressed file: ${processedFile.name} (${formatFileSize(processedFile.size)})`);
+          } catch (compressionError) {
+            console.warn('Image compression failed, using original file:', compressionError);
+            // Continue with original file if compression fails
+          }
+        }
+
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', processedFile);
         formData.append('folderId', folderId);
 
         const response = await fetch('/api/upload', {
@@ -147,12 +177,39 @@ export default function Home() {
                 <p className="text-amber-700 dark:text-amber-300">Beautiful cat photos collection</p>
               </div>
             </div>
-            <Link 
-              href="/admin" 
-              className="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white rounded-lg font-medium transition-colors duration-200"
-            >
-              管理者ページ
-            </Link>
+            <div className="flex items-center gap-4">
+              {/* Compression Settings */}
+              <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-amber-50 dark:bg-amber-900/30 rounded-lg">
+                <label className="flex items-center gap-2 text-sm text-amber-800 dark:text-amber-200">
+                  <input
+                    type="checkbox"
+                    checked={compressionEnabled}
+                    onChange={(e) => setCompressionEnabled(e.target.checked)}
+                    className="rounded"
+                  />
+                  画像圧縮
+                </label>
+                {compressionEnabled && (
+                  <select
+                    value={compressionQuality}
+                    onChange={(e) => setCompressionQuality(e.target.value as keyof typeof COMPRESSION_PRESETS)}
+                    className="text-sm bg-transparent border border-amber-300 dark:border-amber-600 rounded px-2 py-1 text-amber-800 dark:text-amber-200"
+                  >
+                    <option value="high">高画質</option>
+                    <option value="medium">中画質</option>
+                    <option value="low">低画質</option>
+                    <option value="webp">WebP</option>
+                  </select>
+                )}
+              </div>
+              
+              <Link 
+                href="/admin" 
+                className="px-6 py-3 bg-amber-800 hover:bg-amber-900 text-white rounded-lg font-medium transition-colors duration-200"
+              >
+                管理者ページ
+              </Link>
+            </div>
           </div>
         </div>
       </header>
