@@ -8,6 +8,7 @@ import { isAuthenticated } from '@/lib/auth';
 type CatFolder = {
   id: string;
   name: string;
+  displayOrder: number;
   photoCount: number;
   createdAt: string;
   updatedAt: string;

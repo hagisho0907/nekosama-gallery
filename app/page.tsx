@@ -14,6 +14,7 @@ type CatPhoto = {
 type CatFolder = {
   id: string;
   name: string;
+  displayOrder: number;
   photos: CatPhoto[];
   photoCount: number;
   createdAt: string;
