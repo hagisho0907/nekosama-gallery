@@ -69,7 +69,9 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     const result = await db.prepare(`
-      SELECT id, name, display_order as displayOrder, status, created_at as createdAt, updated_at as updatedAt 
+      SELECT id, name, display_order as displayOrder, 
+             COALESCE(status, 'enrolled') as status, 
+             created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       ORDER BY display_order ASC, created_at DESC
     `).all();
@@ -81,7 +83,9 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     const result = await db.prepare(`
-      SELECT id, name, display_order as displayOrder, status, created_at as createdAt, updated_at as updatedAt 
+      SELECT id, name, display_order as displayOrder, 
+             COALESCE(status, 'enrolled') as status, 
+             created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       WHERE id = ?
     `).bind(id).first();
@@ -102,10 +106,23 @@ class D1DatabaseManager {
     `).first();
     const displayOrder = (maxOrderResult as any)?.nextOrder || 1;
     
-    await db.prepare(`
-      INSERT INTO folders (id, name, display_order, status, created_at, updated_at) 
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(id, name, displayOrder, 'enrolled', now, now).run();
+    // Try to insert with status column, fallback to without if it doesn't exist
+    try {
+      await db.prepare(`
+        INSERT INTO folders (id, name, display_order, status, created_at, updated_at) 
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).bind(id, name, displayOrder, 'enrolled', now, now).run();
+    } catch (error: any) {
+      // If status column doesn't exist, insert without it
+      if (error.message?.includes('no such column: status')) {
+        await db.prepare(`
+          INSERT INTO folders (id, name, display_order, created_at, updated_at) 
+          VALUES (?, ?, ?, ?, ?)
+        `).bind(id, name, displayOrder, now, now).run();
+      } else {
+        throw error;
+      }
+    }
 
     return {
       id,
@@ -136,13 +153,28 @@ class D1DatabaseManager {
     
     const now = new Date().toISOString();
     
-    const result = await db.prepare(`
-      UPDATE folders 
-      SET status = ?, updated_at = ? 
-      WHERE id = ?
-    `).bind(status, now, id).run();
+    try {
+      const result = await db.prepare(`
+        UPDATE folders 
+        SET status = ?, updated_at = ? 
+        WHERE id = ?
+      `).bind(status, now, id).run();
 
-    return result.meta.changes > 0;
+      return result.meta.changes > 0;
+    } catch (error: any) {
+      // If status column doesn't exist, just update the updated_at timestamp
+      if (error.message?.includes('no such column: status')) {
+        const result = await db.prepare(`
+          UPDATE folders 
+          SET updated_at = ? 
+          WHERE id = ?
+        `).bind(now, id).run();
+        
+        return result.meta.changes > 0;
+      } else {
+        throw error;
+      }
+    }
   }
 
   async updateFolderOrder(folderIds: string[]): Promise<boolean> {
