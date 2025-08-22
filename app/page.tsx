@@ -398,15 +398,16 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* 在籍生セクション */}
+            {/* 在籍生セクション - トップ */}
             {folders.filter(folder => folder.status === 'enrolled').length > 0 && (
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
+                className="mb-12"
               >
                 <motion.h3 
-                  className="text-xl sm:text-2xl font-bold text-blue-300 mb-4 sm:mb-6 flex items-center gap-3"
+                  className="text-xl sm:text-2xl font-bold text-green-300 mb-4 sm:mb-6 flex items-center gap-3"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.4, duration: 0.6 }}
@@ -434,7 +435,7 @@ export default function Home() {
               </motion.div>
             )}
 
-            {/* 卒業生セクション */}
+            {/* 卒業生セクション - ボトム */}
             {folders.filter(folder => folder.status === 'graduated').length > 0 && (
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
@@ -442,7 +443,7 @@ export default function Home() {
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
                 <motion.h3 
-                  className="text-xl sm:text-2xl font-bold text-blue-300 mb-4 sm:mb-6 flex items-center gap-3"
+                  className="text-xl sm:text-2xl font-bold text-yellow-300 mb-4 sm:mb-6 flex items-center gap-3"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.6, duration: 0.6 }}
@@ -741,14 +742,14 @@ function FolderCard({
         />
         
         {/* ステータスインジケーター */}
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-3 left-3 z-10">
           {folder.status === 'enrolled' ? (
-            <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
               <Stars className="w-3 h-3" />
               在籍
             </div>
           ) : (
-            <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+            <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
               <Sparkles className="w-3 h-3" />
               卒業
             </div>
@@ -759,7 +760,7 @@ function FolderCard({
           className="relative p-4 sm:p-5 cursor-pointer flex-1" 
           onClick={() => onSelectFolder(folder.id)}
         >
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <div className="flex items-center justify-between mb-3 sm:mb-4 mt-8">
             <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2 flex items-center gap-2">
               <span className="text-2xl">🐱</span>
               {folder.name}
