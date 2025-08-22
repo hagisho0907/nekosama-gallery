@@ -56,28 +56,56 @@ export async function onRequestPut(context: any): Promise<Response> {
     // Initialize D1 database
     d1Database.setDatabase(env.DB);
     
-    const { name } = await request.json();
+    const requestData = await request.json();
+    const { name, status } = requestData;
 
-    if (!name || !name.trim()) {
-      return new Response(
-        JSON.stringify({ error: 'Folder name is required' }),
-        { 
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+    // Check if updating name or status
+    if (name !== undefined) {
+      if (!name || !name.trim()) {
+        return new Response(
+          JSON.stringify({ error: 'Folder name is required' }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      const success = await d1Database.updateFolder(id, name.trim());
+      
+      if (!success) {
+        return new Response(
+          JSON.stringify({ error: 'Folder not found' }),
+          { 
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
     }
 
-    const success = await d1Database.updateFolder(id, name.trim());
-    
-    if (!success) {
-      return new Response(
-        JSON.stringify({ error: 'Folder not found' }),
-        { 
-          status: 404,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
+    if (status !== undefined) {
+      if (!['enrolled', 'graduated'].includes(status)) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid status. Must be "enrolled" or "graduated"' }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      const success = await d1Database.updateFolderStatus(id, status);
+      
+      if (!success) {
+        return new Response(
+          JSON.stringify({ error: 'Folder not found' }),
+          { 
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
     }
 
     const updatedFolder = await d1Database.getFolder(id);

@@ -30,6 +30,7 @@ type CatFolder = {
   id: string;
   name: string;
   displayOrder: number;
+  status: 'enrolled' | 'graduated'; // enrolled: 在籍生, graduated: 卒業生
   photos: CatPhoto[];
   photoCount: number;
   createdAt: string;
@@ -396,158 +397,103 @@ export default function Home() {
                 銀河系最高の猫写真データベース
               </p>
             </motion.div>
-            
-            <motion.div 
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                visible: {
-                  transition: {
-                    delayChildren: 0.3,
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
-            >
-              {folders.map((folder, index) => (
-                <motion.div 
-                  key={folder.id}
-                  variants={{
-                    hidden: { y: 20, opacity: 0 },
-                    visible: { y: 0, opacity: 1 }
-                  }}
-                  whileHover={{ 
-                    y: -8, 
-                    scale: 1.02,
-                    transition: { type: "spring", stiffness: 300 }
-                  }}
-                  className="group"
+
+            {/* 在籍生セクション */}
+            {folders.filter(folder => folder.status === 'enrolled').length > 0 && (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                <motion.h3 
+                  className="text-xl sm:text-2xl font-bold text-blue-300 mb-4 sm:mb-6 flex items-center gap-3"
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
                 >
-                  <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-64 sm:h-72 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
-                    
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    />
-                    
-                    <motion.div 
-                      className="relative p-4 sm:p-5 cursor-pointer flex-1" 
-                      onClick={() => handleFolderSelect(folder.id)}
-                    >
-                      <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2 flex items-center gap-2">
-                          <span className="text-2xl">🐱</span>
-                          {folder.name}
-                        </h3>
-                        <motion.div 
-                          className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg"
-                          whileHover={{ rotate: 360, scale: 1.1 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <FolderOpen className="w-4 h-4 text-white" />
-                        </motion.div>
-                      </div>
-                      
-                      <div className="grid grid-cols-3 gap-2 mb-4 h-16">
-                        {folder.photos.slice(0, 3).map((photo, index) => (
-                          <motion.div 
-                            key={index} 
-                            className="relative aspect-square bg-slate-700/50 rounded-lg overflow-hidden border border-blue-400/30"
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ type: "spring", stiffness: 300 }}
-                          >
-                            <Image 
-                              src={photo.url} 
-                              alt={`${folder.name}の写真`} 
-                              width={80} 
-                              height={80}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                console.error('Image load error:', photo.url);
-                                console.error('Full photo data:', photo);
-                                e.currentTarget.style.display = 'none';
-                              }}
-                              onLoad={() => {
-                                console.log('Image loaded successfully:', photo.url);
-                              }}
-                              unoptimized
-                            />
-                            <motion.div
-                              className="absolute inset-0 bg-blue-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                            />
-                          </motion.div>
-                        ))}
-                        {folder.photoCount === 0 && (
-                          <div className="col-span-3 h-16 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
-                            <div className="text-center">
-                              <Camera className="w-6 h-6 text-blue-400 mx-auto mb-1" />
-                              <p className="text-blue-300 text-xs">写真がありません</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                    
-                    <div className="px-4 pb-2 sm:px-5 sm:pb-3 mt-auto relative">
-                      <p className="text-xs sm:text-sm text-blue-300 text-center flex items-center justify-center gap-1">
-                        <Sparkles className="w-3 h-3" />
-                        {folder.photoCount}枚の宇宙猫
-                      </p>
-                    </div>
-                    
-                    <div className="px-4 pb-4 sm:px-6 sm:pb-6 mt-auto relative">
-                      <label className="block">
-                        <input
-                          type="file"
-                          multiple
-                          accept="image/*"
-                          onChange={(e) => handleFileUpload(folder.id, e)}
-                          className="hidden"
-                          disabled={uploadingFolder === folder.id}
-                        />
-                        <motion.div 
-                          className={`
-                            relative overflow-hidden text-white text-center py-2 px-3 sm:px-4 rounded-lg cursor-pointer text-sm sm:text-base font-medium
-                            ${uploadingFolder === folder.id 
-                              ? 'bg-slate-600 cursor-not-allowed' 
-                              : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
-                            }
-                          `}
-                          whileHover={uploadingFolder !== folder.id ? { scale: 1.02 } : {}}
-                          whileTap={uploadingFolder !== folder.id ? { scale: 0.98 } : {}}
-                        >
-                          {uploadingFolder !== folder.id && (
-                            <motion.div
-                              className="absolute inset-0 bg-white/10"
-                              initial={{ x: "-100%" }}
-                              whileHover={{ x: "100%" }}
-                              transition={{ duration: 0.6 }}
-                            />
-                          )}
-                          <span className="relative flex items-center justify-center gap-2">
-                            {uploadingFolder === folder.id ? (
-                              <>
-                                <motion.div
-                                  className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full"
-                                  animate={{ rotate: 360 }}
-                                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                />
-                                転送中...
-                              </>
-                            ) : (
-                              <>
-                                <Upload className="w-4 h-4" />
-                                写真をアップロード
-                              </>
-                            )}
-                          </span>
-                        </motion.div>
-                      </label>
-                    </div>
-                  </div>
+                  <Stars className="w-6 h-6 text-green-400" />
+                  在籍猫
+                </motion.h3>
+                <motion.div 
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    visible: {
+                      transition: {
+                        delayChildren: 0.5,
+                        staggerChildren: 0.1
+                      }
+                    }
+                  }}
+                >
+                  {folders.filter(folder => folder.status === 'enrolled').map((folder, index) => (
+                    <FolderCard key={folder.id} folder={folder} index={index} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
+                  ))}
                 </motion.div>
-              ))}
-            </motion.div>
+              </motion.div>
+            )}
+
+            {/* 卒業生セクション */}
+            {folders.filter(folder => folder.status === 'graduated').length > 0 && (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+              >
+                <motion.h3 
+                  className="text-xl sm:text-2xl font-bold text-blue-300 mb-4 sm:mb-6 flex items-center gap-3"
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.6, duration: 0.6 }}
+                >
+                  <Sparkles className="w-6 h-6 text-yellow-400" />
+                  卒業猫
+                </motion.h3>
+                <motion.div 
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    visible: {
+                      transition: {
+                        delayChildren: 0.7,
+                        staggerChildren: 0.1
+                      }
+                    }
+                  }}
+                >
+                  {folders.filter(folder => folder.status === 'graduated').map((folder, index) => (
+                    <FolderCard key={folder.id} folder={folder} index={index} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
+                  ))}
+                </motion.div>
+              </motion.div>
+            )}
+            
+            {/* フォルダーがない場合の表示 */}
+            {folders.length === 0 && (
+              <motion.div 
+                className="text-center py-12 sm:py-16"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+              >
+                <motion.div 
+                  className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl"
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                    rotate: [0, 2, -2, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  <FolderOpen className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                </motion.div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">宇宙空間は空です</h3>
+                <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
+                  まだ猫のフォルダが存在しません。管理画面から最初の宇宙猫フォルダを作成しましょう！
+                </p>
+              </motion.div>
+            )}
           </motion.div>
         ) : (
           <motion.div 
@@ -758,5 +704,172 @@ export default function Home() {
         )}
       </main>
     </div>
+  );
+}
+
+// フォルダーカードコンポーネント
+function FolderCard({ 
+  folder, 
+  index, 
+  onSelectFolder, 
+  onFileUpload, 
+  uploadingFolder 
+}: { 
+  folder: CatFolder; 
+  index: number; 
+  onSelectFolder: (folderId: string) => void; 
+  onFileUpload: (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => void; 
+  uploadingFolder: string | null; 
+}) {
+  return (
+    <motion.div 
+      variants={{
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1 }
+      }}
+      whileHover={{ 
+        y: -8, 
+        scale: 1.02,
+        transition: { type: "spring", stiffness: 300 }
+      }}
+      className="group"
+    >
+      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-64 sm:h-72 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
+        
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
+        
+        {/* ステータスインジケーター */}
+        <div className="absolute top-3 right-3 z-10">
+          {folder.status === 'enrolled' ? (
+            <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+              <Stars className="w-3 h-3" />
+              在籍
+            </div>
+          ) : (
+            <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              卒業
+            </div>
+          )}
+        </div>
+        
+        <motion.div 
+          className="relative p-4 sm:p-5 cursor-pointer flex-1" 
+          onClick={() => onSelectFolder(folder.id)}
+        >
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2 flex items-center gap-2">
+              <span className="text-2xl">🐱</span>
+              {folder.name}
+            </h3>
+            <motion.div 
+              className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg"
+              whileHover={{ rotate: 360, scale: 1.1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FolderOpen className="w-4 h-4 text-white" />
+            </motion.div>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-2 mb-4 h-16">
+            {folder.photos.slice(0, 3).map((photo, index) => (
+              <motion.div 
+                key={index} 
+                className="relative aspect-square bg-slate-700/50 rounded-lg overflow-hidden border border-blue-400/30"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Image 
+                  src={photo.url} 
+                  alt={`${folder.name}の写真`} 
+                  width={80} 
+                  height={80}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    console.error('Image load error:', photo.url);
+                    console.error('Full photo data:', photo);
+                    e.currentTarget.style.display = 'none';
+                  }}
+                  onLoad={() => {
+                    console.log('Image loaded successfully:', photo.url);
+                  }}
+                  unoptimized
+                />
+                <motion.div
+                  className="absolute inset-0 bg-blue-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                />
+              </motion.div>
+            ))}
+            {folder.photoCount === 0 && (
+              <div className="col-span-3 h-16 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
+                <div className="text-center">
+                  <Camera className="w-6 h-6 text-blue-400 mx-auto mb-1" />
+                  <p className="text-blue-300 text-xs">写真がありません</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+        
+        <div className="px-4 pb-2 sm:px-5 sm:pb-3 mt-auto relative">
+          <p className="text-xs sm:text-sm text-blue-300 text-center flex items-center justify-center gap-1">
+            <Sparkles className="w-3 h-3" />
+            {folder.photoCount}枚の宇宙猫
+          </p>
+        </div>
+        
+        <div className="px-4 pb-4 sm:px-6 sm:pb-6 mt-auto relative">
+          <label className="block">
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => onFileUpload(folder.id, e)}
+              className="hidden"
+              disabled={uploadingFolder === folder.id}
+            />
+            <motion.div 
+              className={`
+                relative overflow-hidden text-white text-center py-2 px-3 sm:px-4 rounded-lg cursor-pointer text-sm sm:text-base font-medium
+                ${uploadingFolder === folder.id 
+                  ? 'bg-slate-600 cursor-not-allowed' 
+                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
+                }
+              `}
+              whileHover={uploadingFolder !== folder.id ? { scale: 1.02 } : {}}
+              whileTap={uploadingFolder !== folder.id ? { scale: 0.98 } : {}}
+            >
+              {uploadingFolder !== folder.id && (
+                <motion.div
+                  className="absolute inset-0 bg-white/10"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "100%" }}
+                  transition={{ duration: 0.6 }}
+                />
+              )}
+              <span className="relative flex items-center justify-center gap-2">
+                {uploadingFolder === folder.id ? (
+                  <>
+                    <motion.div
+                      className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
+                    転送中...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    写真をアップロード
+                  </>
+                )}
+              </span>
+            </motion.div>
+          </label>
+        </div>
+      </div>
+    </motion.div>
   );
 }

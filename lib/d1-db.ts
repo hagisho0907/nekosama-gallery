@@ -3,6 +3,7 @@ export interface CatFolder {
   id: string;
   name: string;
   displayOrder: number;
+  status: 'enrolled' | 'graduated';
   createdAt: string;
   updatedAt: string;
 }
@@ -68,7 +69,7 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     const result = await db.prepare(`
-      SELECT id, name, display_order as displayOrder, created_at as createdAt, updated_at as updatedAt 
+      SELECT id, name, display_order as displayOrder, status, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       ORDER BY display_order ASC, created_at DESC
     `).all();
@@ -80,7 +81,7 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     const result = await db.prepare(`
-      SELECT id, name, display_order as displayOrder, created_at as createdAt, updated_at as updatedAt 
+      SELECT id, name, display_order as displayOrder, status, created_at as createdAt, updated_at as updatedAt 
       FROM folders 
       WHERE id = ?
     `).bind(id).first();
@@ -102,14 +103,15 @@ class D1DatabaseManager {
     const displayOrder = (maxOrderResult as any)?.nextOrder || 1;
     
     await db.prepare(`
-      INSERT INTO folders (id, name, display_order, created_at, updated_at) 
-      VALUES (?, ?, ?, ?, ?)
-    `).bind(id, name, displayOrder, now, now).run();
+      INSERT INTO folders (id, name, display_order, status, created_at, updated_at) 
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(id, name, displayOrder, 'enrolled', now, now).run();
 
     return {
       id,
       name,
       displayOrder,
+      status: 'enrolled',
       createdAt: now,
       updatedAt: now
     };
@@ -125,6 +127,20 @@ class D1DatabaseManager {
       SET name = ?, updated_at = ? 
       WHERE id = ?
     `).bind(name, now, id).run();
+
+    return result.meta.changes > 0;
+  }
+
+  async updateFolderStatus(id: string, status: 'enrolled' | 'graduated'): Promise<boolean> {
+    const db = this.ensureDatabase();
+    
+    const now = new Date().toISOString();
+    
+    const result = await db.prepare(`
+      UPDATE folders 
+      SET status = ?, updated_at = ? 
+      WHERE id = ?
+    `).bind(status, now, id).run();
 
     return result.meta.changes > 0;
   }

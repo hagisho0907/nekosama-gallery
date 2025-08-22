@@ -9,6 +9,7 @@ type CatFolder = {
   id: string;
   name: string;
   displayOrder: number;
+  status: 'enrolled' | 'graduated'; // enrolled: 在籍生, graduated: 卒業生
   photoCount: number;
   createdAt: string;
   updatedAt: string;
@@ -265,6 +266,48 @@ export default function AdminPage() {
     setDraggedFolder(null);
   };
 
+  const handleToggleStatus = async (folderId: string) => {
+    const folder = folders.find(f => f.id === folderId);
+    if (!folder || submitting) return;
+    
+    const newStatus = folder.status === 'enrolled' ? 'graduated' : 'enrolled';
+    const confirmMessage = folder.status === 'enrolled' 
+      ? 'このフォルダを卒業生に変更しますか？' 
+      : 'このフォルダを在籍生に変更しますか？';
+    
+    if (!confirm(confirmMessage)) return;
+    
+    try {
+      setSubmitting(true);
+      setError(null);
+      
+      const response = await fetch(`/api/folders/${folderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setFolders(prev => prev.map(f => 
+          f.id === folderId 
+            ? { ...f, status: newStatus }
+            : f
+        ));
+      } else {
+        setError(data.error || 'Failed to update folder status');
+      }
+    } catch (err) {
+      setError('Failed to update folder status');
+      console.error('Error updating folder status:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleDeleteFolder = async (folderId: string) => {
     if (!confirm('このフォルダを削除しますか？写真も全て削除されます。') || submitting) return;
     
@@ -448,6 +491,14 @@ export default function AdminPage() {
                             </svg>
                             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate">{folder.name}</h3>
                             <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">({folder.photoCount}枚)</span>
+                            {/* ステータスバッジ */}
+                            <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${
+                              folder.status === 'enrolled' 
+                                ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' 
+                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
+                            }`}>
+                              {folder.status === 'enrolled' ? '在籍' : '卒業'}
+                            </span>
                           </div>
                         </>
                       )}
@@ -461,6 +512,23 @@ export default function AdminPage() {
                         >
                           <span className="hidden sm:inline">写真管理</span>
                           <span className="sm:hidden">管理</span>
+                        </button>
+                        <button
+                          onClick={() => handleToggleStatus(folder.id)}
+                          disabled={submitting}
+                          className={`${
+                            folder.status === 'enrolled' 
+                              ? 'bg-yellow-600 hover:bg-yellow-700' 
+                              : 'bg-green-600 hover:bg-green-700'
+                          } disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none`}
+                          title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
+                        >
+                          <span className="hidden sm:inline">
+                            {folder.status === 'enrolled' ? '卒業へ' : '在籍へ'}
+                          </span>
+                          <span className="sm:hidden">
+                            {folder.status === 'enrolled' ? '卒業' : '在籍'}
+                          </span>
                         </button>
                         <button
                           onClick={() => handleEditFolder(folder.id)}
