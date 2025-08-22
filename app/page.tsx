@@ -266,8 +266,8 @@ export default function Home() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4 sm:py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-3 sm:py-4">
             <motion.div 
               className="flex items-center gap-2 sm:gap-4"
               whileHover={{ scale: 1.05 }}
@@ -311,27 +311,16 @@ export default function Home() {
                 </motion.p>
               </div>
             </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <Link 
+              href="/admin" 
+              className="px-3 py-2 sm:px-4 sm:py-2 bg-slate-700/70 hover:bg-slate-600/70 text-blue-200 hover:text-white rounded-lg text-sm font-medium transition-colors duration-200 border border-slate-600/50 hover:border-slate-500/50"
             >
-              <Link 
-                href="/admin" 
-                className="group px-3 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-300 shadow-lg border border-blue-400/30 relative overflow-hidden"
-              >
-                <motion.div
-                  className="absolute inset-0 bg-white/10"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.6 }}
-                />
-                <span className="relative flex items-center gap-2">
-                  <Zap className="w-4 h-4" />
-                  <span className="hidden sm:inline">Control Center</span>
-                  <span className="sm:hidden">Control</span>
-                </span>
-              </Link>
-            </motion.div>
+              <span className="flex items-center gap-2 opacity-80 hover:opacity-100">
+                <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Control Center</span>
+                <span className="sm:hidden">Control</span>
+              </span>
+            </Link>
           </div>
         </div>
       </motion.header>
@@ -724,7 +713,7 @@ export default function Home() {
                               alt={photo.originalName} 
                               width={300} 
                               height={300}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-130"
                               onError={(e) => {
                                 console.error('Image load error:', photo.url);
                                 console.error('Full photo data:', photo);
