@@ -58,6 +58,42 @@ export default function Home() {
     fetchFolders();
   }, []);
 
+  // Refresh data when returning from admin or other pages
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        // Check if data was updated in admin
+        const lastUpdate = localStorage.getItem('nekosama_data_updated');
+        
+        if (lastUpdate && parseInt(lastUpdate) > (Date.now() - 60000)) { // Updated within last minute
+          localStorage.removeItem('nekosama_data_updated');
+          fetchFolders();
+        } else {
+          fetchFolders();
+        }
+      }
+    };
+
+    const handleFocus = () => {
+      // Check for data updates when window gains focus
+      const lastUpdate = localStorage.getItem('nekosama_data_updated');
+      if (lastUpdate) {
+        localStorage.removeItem('nekosama_data_updated');
+        fetchFolders();
+      } else {
+        fetchFolders();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
+
   const fetchFolders = async () => {
     try {
       setLoading(true);
@@ -390,11 +426,11 @@ export default function Home() {
             >
               <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-3">
                 <FolderOpen className="w-8 h-8 text-blue-400" />
-                宇宙猫コレクション
+                拝啓ねこ様フォトギャラリー
               </h2>
               <p className="text-sm sm:text-base text-blue-300 flex items-center justify-center gap-2">
                 <Camera className="w-4 h-4" />
-                銀河系最高の猫写真データベース
+                阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！
               </p>
             </motion.div>
 
@@ -413,7 +449,7 @@ export default function Home() {
                   transition={{ delay: 0.4, duration: 0.6 }}
                 >
                   <Stars className="w-6 h-6 text-green-400" />
-                  在籍猫
+                  在籍生
                 </motion.h3>
                 <motion.div 
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
@@ -428,8 +464,8 @@ export default function Home() {
                     }
                   }}
                 >
-                  {folders.filter(folder => folder.status === 'enrolled').map((folder, index) => (
-                    <FolderCard key={folder.id} folder={folder} index={index} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
+                  {folders.filter(folder => folder.status === 'enrolled').map((folder) => (
+                    <FolderCard key={folder.id} folder={folder} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
                   ))}
                 </motion.div>
               </motion.div>
@@ -449,7 +485,7 @@ export default function Home() {
                   transition={{ delay: 0.6, duration: 0.6 }}
                 >
                   <Sparkles className="w-6 h-6 text-yellow-400" />
-                  卒業猫
+                  卒業生
                 </motion.h3>
                 <motion.div 
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
@@ -464,8 +500,8 @@ export default function Home() {
                     }
                   }}
                 >
-                  {folders.filter(folder => folder.status === 'graduated').map((folder, index) => (
-                    <FolderCard key={folder.id} folder={folder} index={index} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
+                  {folders.filter(folder => folder.status === 'graduated').map((folder) => (
+                    <FolderCard key={folder.id} folder={folder} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
                   ))}
                 </motion.div>
               </motion.div>
@@ -489,9 +525,9 @@ export default function Home() {
                 >
                   <FolderOpen className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                 </motion.div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">宇宙空間は空です</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">宇宙船に誰もいないぞ！</h3>
                 <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
-                  まだ猫のフォルダが存在しません。管理画面から最初の宇宙猫フォルダを作成しましょう！
+                  まだねこ様のフォルダが存在しません。管理画面から最初のフォルダを作成しましょう！
                 </p>
               </motion.div>
             )}
@@ -505,7 +541,7 @@ export default function Home() {
           >
             <div className="mb-4 sm:mb-6">
               <motion.button 
-                onClick={async () => {
+onClick={async () => {
                   setSelectedFolder(null);
                   setSelectedFolderData(null);
                   // フォルダ一覧を再取得
@@ -548,7 +584,7 @@ export default function Home() {
                   </div>
                   <p className="text-sm sm:text-base text-blue-300 flex items-center justify-center gap-2">
                     <Sparkles className="w-4 h-4" />
-                    {selectedFolderData.photos.length}枚の宇宙猫コレクション
+                    {selectedFolderData.photos.length}枚の写真
                   </p>
                 </motion.div>
 
@@ -569,9 +605,9 @@ export default function Home() {
                     >
                       <Camera className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
                     </motion.div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">宇宙空間は空です</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">宇宙船には誰もいないぞ！</h3>
                     <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
-                      この宇宙領域にはまだ猫の写真が存在しません。最初の宇宙猫をアップロードして探査を開始しましょう！
+                      この宇宙領域にはまだねこ様の写真が存在しません。最初の写真をアップロードして探査を開始しましょう！
                     </p>
                     <label className="inline-block">
                       <input
@@ -614,7 +650,7 @@ export default function Home() {
                           ) : (
                             <>
                               <Rocket className="w-5 h-5" />
-                              宇宙猫をアップロード
+                              写真をアップロード
                             </>
                           )}
                         </span>
@@ -635,7 +671,7 @@ export default function Home() {
                       }
                     }}
                   >
-                    {selectedFolderData.photos.map((photo, index) => (
+                    {selectedFolderData.photos.map((photo) => (
                       <motion.div 
                         key={photo.id}
                         variants={{
@@ -711,13 +747,11 @@ export default function Home() {
 // フォルダーカードコンポーネント
 function FolderCard({ 
   folder, 
-  index, 
   onSelectFolder, 
   onFileUpload, 
   uploadingFolder 
 }: { 
   folder: CatFolder; 
-  index: number; 
   onSelectFolder: (folderId: string) => void; 
   onFileUpload: (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => void; 
   uploadingFolder: string | null; 
@@ -778,14 +812,14 @@ function FolderCard({
           <div className="mb-4">
             <p className="text-xs sm:text-sm text-blue-300 flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
-              {folder.photoCount}枚の宇宙猫
+              {folder.photoCount}枚の写真
             </p>
           </div>
           
           <div className="grid grid-cols-3 gap-2 mb-4 h-16">
-            {folder.photos.slice(0, 3).map((photo, index) => (
+            {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
-                key={index} 
+                key={photo.id} 
                 className="relative aspect-square bg-slate-700/50 rounded-lg overflow-hidden border border-blue-400/30"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}

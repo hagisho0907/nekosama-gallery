@@ -93,6 +93,8 @@ export default function AdminPage() {
       if (response.ok) {
         setFolders(prev => [...prev, data.folder]);
         setNewFolderName('');
+        // Signal that data was updated for main page refresh
+        localStorage.setItem('nekosama_data_updated', Date.now().toString());
       } else {
         setError(data.error || 'Failed to create folder');
       }
@@ -137,6 +139,8 @@ export default function AdminPage() {
         ));
         setEditingFolder(null);
         setEditingName('');
+        // Signal that data was updated for main page refresh
+        localStorage.setItem('nekosama_data_updated', Date.now().toString());
       } else {
         setError(data.error || 'Failed to update folder');
       }
@@ -216,6 +220,8 @@ export default function AdminPage() {
           folders.find(folder => folder.id === id)!
         ).filter(Boolean);
         setFolders(reorderedFolders);
+        // Signal that data was updated for main page refresh
+        localStorage.setItem('nekosama_data_updated', Date.now().toString());
       } else {
         setError(data.error || 'Failed to reorder folders');
       }
@@ -297,6 +303,8 @@ export default function AdminPage() {
             ? { ...f, status: newStatus }
             : f
         ));
+        // Signal that data was updated for main page refresh
+        localStorage.setItem('nekosama_data_updated', Date.now().toString());
       } else {
         setError(data.error || 'Failed to update folder status');
       }
@@ -323,6 +331,8 @@ export default function AdminPage() {
       
       if (response.ok) {
         setFolders(prev => prev.filter(folder => folder.id !== folderId));
+        // Signal that data was updated for main page refresh
+        localStorage.setItem('nekosama_data_updated', Date.now().toString());
       } else {
         setError(data.error || 'Failed to delete folder');
       }
