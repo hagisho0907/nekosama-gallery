@@ -312,7 +312,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-800">
       <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4 sm:py-6">
@@ -341,11 +341,11 @@ export default function AdminPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
+          <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
             {error}
             <button 
               onClick={() => setError(null)} 
-              className="ml-2 text-red-500 hover:text-red-700 float-right"
+              className="ml-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-200 float-right"
             >
               ✕
             </button>
@@ -360,7 +360,7 @@ export default function AdminPage() {
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
               placeholder="猫の名前を入力..."
-              className="flex-1 px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+              className="flex-1 px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base"
               onKeyPress={(e) => e.key === 'Enter' && handleAddFolder()}
               disabled={submitting}
             />
@@ -377,14 +377,14 @@ export default function AdminPage() {
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">
           <div className="mb-4 sm:mb-6">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">フォルダ管理</h2>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               📱 フォルダをドラッグ&ドロップして表示順序を変更できます
             </p>
           </div>
           <div className="space-y-4">
             {folders.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">フォルダがありません。上記から新しいフォルダを作成してください。</p>
+                <p className="text-gray-500 dark:text-gray-300">フォルダがありません。上記から新しいフォルダを作成してください。</p>
               </div>
             ) : (
               folders.map(folder => (
@@ -394,7 +394,7 @@ export default function AdminPage() {
                     draggedFolder === folder.id 
                       ? 'opacity-50 scale-95' 
                       : isDragOver === folder.id 
-                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20' 
+                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-800/30' 
                         : 'hover:border-gray-300 dark:hover:border-gray-500'
                   }`}
                   draggable={editingFolder !== folder.id}
@@ -447,7 +447,7 @@ export default function AdminPage() {
                               <path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zM8 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
                             </svg>
                             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate">{folder.name}</h3>
-                            <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">({folder.photoCount}枚)</span>
+                            <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">({folder.photoCount}枚)</span>
                           </div>
                         </>
                       )}
@@ -505,7 +505,7 @@ export default function AdminPage() {
             
             {photos.length === 0 ? (
               <div className="text-center py-6 sm:py-8">
-                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">このフォルダには写真がありません。</p>
+                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-300">このフォルダには写真がありません。</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
@@ -534,10 +534,10 @@ export default function AdminPage() {
                       </button>
                     </div>
                     <div className="mt-1 sm:mt-2">
-                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate" title={photo.originalName}>
+                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate" title={photo.originalName}>
                         {photo.originalName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
                       </p>
                     </div>
