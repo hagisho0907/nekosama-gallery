@@ -3,6 +3,20 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Rocket, 
+  Sparkles, 
+  Stars, 
+  Zap, 
+  Camera, 
+  FolderOpen, 
+  Upload, 
+  ArrowLeft, 
+  ExternalLink,
+  AlertCircle,
+  CheckCircle
+} from 'lucide-react';
 import { compressImage, COMPRESSION_PRESETS } from '@/lib/image-compression';
 
 type CatPhoto = {
@@ -155,103 +169,304 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">読み込み中...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative flex items-center justify-center">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="stars"></div>
+          <div className="twinkling"></div>
         </div>
+        <motion.div 
+          className="text-center relative z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className="relative mx-auto mb-6"
+            animate={{ 
+              rotate: 360,
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              rotate: { duration: 2, repeat: Infinity, ease: "linear" },
+              scale: { duration: 1.5, repeat: Infinity }
+            }}
+          >
+            <Rocket className="w-16 h-16 text-blue-400 mx-auto" />
+            <motion.div
+              className="absolute -inset-4 rounded-full border-2 border-blue-400/30"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
+          <motion.p 
+            className="text-blue-300 text-lg font-medium"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            宇宙船システム起動中...
+          </motion.p>
+        </motion.div>
+        <style jsx>{`
+          .stars, .twinkling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+          .stars {
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+            animation: move-stars 200s linear infinite;
+          }
+          .twinkling {
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
+            animation: move-twinkling 100s linear infinite;
+          }
+          @keyframes move-stars {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100px); }
+          }
+          @keyframes move-twinkling {
+            from { transform: translateX(0); }
+            to { transform: translateX(-200px); }
+          }
+        `}</style>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Simple Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-amber-300 dark:border-gray-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
+      {/* Space stars background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="stars"></div>
+        <div className="twinkling"></div>
+      </div>
+      <style jsx>{`
+        .stars {
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+          animation: move-stars 200s linear infinite;
+        }
+        .twinkling {
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
+          animation: move-twinkling 100s linear infinite;
+        }
+        @keyframes move-stars {
+          from { transform: translateX(0); }
+          to { transform: translateX(-100px); }
+        }
+        @keyframes move-twinkling {
+          from { transform: translateX(0); }
+          to { transform: translateX(-200px); }
+        }
+      `}</style>
+      <motion.header 
+        className="bg-slate-800/90 backdrop-blur-md shadow-lg border-b border-blue-500/30 relative z-10"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4 sm:py-6">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-800 rounded-lg flex items-center justify-center">
-                <span className="text-white text-lg sm:text-2xl">🐱</span>
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 dark:text-white">
-                  拝啓ねこ様 Gallery
-                </h1>
-                <p className="text-xs sm:text-sm text-amber-700 dark:text-gray-300 hidden sm:block">Beautiful cat photos collection</p>
-              </div>
-            </div>
-            <Link 
-              href="/admin" 
-              className="px-3 py-2 sm:px-6 sm:py-3 bg-amber-800 hover:bg-amber-900 text-white rounded-lg text-sm sm:text-base font-medium transition-colors duration-200"
+            <motion.div 
+              className="flex items-center gap-2 sm:gap-4"
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <span className="hidden sm:inline">管理者ページ</span>
-              <span className="sm:hidden">管理</span>
-            </Link>
+              <motion.div 
+                className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <motion.div
+                  className="absolute inset-0 rounded-lg bg-blue-400/20"
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    opacity: [0, 0.5, 0]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </motion.div>
+              <div>
+                <motion.h1 
+                  className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
+                  animate={{ 
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  style={{ backgroundSize: "200% 100%" }}
+                >
+                  <Stars className="inline w-6 h-6 sm:w-8 sm:h-8 mr-2 text-blue-400" />
+                  Space Cat Station
+                </motion.h1>
+                <motion.p 
+                  className="text-xs sm:text-sm text-blue-300 hidden sm:block flex items-center gap-1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <Sparkles className="w-3 h-3" />
+                  Cosmic Feline Observatory
+                </motion.p>
+              </div>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link 
+                href="/admin" 
+                className="group px-3 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-300 shadow-lg border border-blue-400/30 relative overflow-hidden"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-white/10"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: "100%" }}
+                  transition={{ duration: 0.6 }}
+                />
+                <span className="relative flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  <span className="hidden sm:inline">Control Center</span>
+                  <span className="sm:hidden">Control</span>
+                </span>
+              </Link>
+            </motion.div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
-            {error}
-            <button 
-              onClick={() => setError(null)} 
-              className="ml-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-200 float-right"
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        <AnimatePresence>
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              className="bg-red-900/30 backdrop-blur border border-red-400/50 text-red-300 px-3 py-2 sm:px-4 sm:py-3 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base shadow-lg"
             >
-              ✕
-            </button>
-          </div>
-        )}
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span className="flex-1">{error}</span>
+                <motion.button 
+                  onClick={() => setError(null)} 
+                  className="text-red-400 hover:text-red-200 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  ✕
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {successMessage && (
-          <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
-            {successMessage}
-            <button 
-              onClick={() => setSuccessMessage(null)} 
-              className="ml-2 text-green-500 dark:text-green-400 hover:text-green-700 dark:hover:text-green-200 float-right"
+        <AnimatePresence>
+          {successMessage && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              className="bg-green-900/30 backdrop-blur border border-green-400/50 text-green-300 px-3 py-2 sm:px-4 sm:py-3 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base shadow-lg"
             >
-              ✕
-            </button>
-          </div>
-        )}
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                <span className="flex-1">{successMessage}</span>
+                <motion.button 
+                  onClick={() => setSuccessMessage(null)} 
+                  className="text-green-400 hover:text-green-200 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  ✕
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {!selectedFolder ? (
-          <div className="space-y-8">
-            {/* Simple Section Header */}
-            <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-amber-900 dark:text-white mb-2">
-                猫のフォルダ一覧
+          <motion.div 
+            className="space-y-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <motion.div 
+              className="text-center mb-6 sm:mb-8"
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-3">
+                <FolderOpen className="w-8 h-8 text-blue-400" />
+                宇宙猫コレクション
               </h2>
-              <p className="text-sm sm:text-base text-amber-700 dark:text-gray-300">愛らしい猫たちの写真コレクション</p>
-            </div>
+              <p className="text-sm sm:text-base text-blue-300 flex items-center justify-center gap-2">
+                <Camera className="w-4 h-4" />
+                銀河系最高の猫写真データベース
+              </p>
+            </motion.div>
             
-            {/* Simple Grid Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {folders.map(folder => (
-                <div key={folder.id}>
-                  {/* Simple Card with Fixed Height */}
-                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden h-64 sm:h-72 flex flex-col border dark:border-gray-700">
+            <motion.div 
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                visible: {
+                  transition: {
+                    delayChildren: 0.3,
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+            >
+              {folders.map((folder, index) => (
+                <motion.div 
+                  key={folder.id}
+                  variants={{
+                    hidden: { y: 20, opacity: 0 },
+                    visible: { y: 0, opacity: 1 }
+                  }}
+                  whileHover={{ 
+                    y: -8, 
+                    scale: 1.02,
+                    transition: { type: "spring", stiffness: 300 }
+                  }}
+                  className="group"
+                >
+                  <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-64 sm:h-72 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
                     
-                    <div 
-                      className="p-4 sm:p-5 cursor-pointer flex-1" 
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    />
+                    
+                    <motion.div 
+                      className="relative p-4 sm:p-5 cursor-pointer flex-1" 
                       onClick={() => handleFolderSelect(folder.id)}
                     >
-                      {/* Simple Header */}
                       <div className="flex items-center justify-between mb-3 sm:mb-4">
-                        <h3 className="text-lg sm:text-xl font-bold text-amber-900 dark:text-white truncate pr-2">
+                        <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2 flex items-center gap-2">
+                          <span className="text-2xl">🐱</span>
                           {folder.name}
                         </h3>
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-800 rounded flex items-center justify-center flex-shrink-0">
-                          <span className="text-white text-xs sm:text-sm">📁</span>
-                        </div>
+                        <motion.div 
+                          className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg"
+                          whileHover={{ rotate: 360, scale: 1.1 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <FolderOpen className="w-4 h-4 text-white" />
+                        </motion.div>
                       </div>
                       
-                      {/* Simple Photo Grid - Fixed Height */}
-                      <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4 h-14 sm:h-16">
+                      <div className="grid grid-cols-3 gap-2 mb-4 h-16">
                         {folder.photos.slice(0, 3).map((photo, index) => (
-                          <div key={index} className="aspect-square bg-amber-100 dark:bg-gray-700 rounded-md sm:rounded-lg overflow-hidden">
+                          <motion.div 
+                            key={index} 
+                            className="relative aspect-square bg-slate-700/50 rounded-lg overflow-hidden border border-blue-400/30"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                          >
                             <Image 
                               src={photo.url} 
                               alt={`${folder.name}の写真`} 
@@ -268,28 +483,30 @@ export default function Home() {
                               }}
                               unoptimized
                             />
-                          </div>
+                            <motion.div
+                              className="absolute inset-0 bg-blue-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                            />
+                          </motion.div>
                         ))}
                         {folder.photoCount === 0 && (
-                          <div className="col-span-3 h-14 sm:h-16 bg-amber-50 dark:bg-gray-700 rounded-md sm:rounded-lg flex items-center justify-center border-2 border-dashed border-amber-300 dark:border-gray-600">
+                          <div className="col-span-3 h-16 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
                             <div className="text-center">
-                              <div className="text-sm sm:text-base mb-1">📷</div>
-                              <p className="text-amber-600 dark:text-gray-400 text-xs">写真がありません</p>
+                              <Camera className="w-6 h-6 text-blue-400 mx-auto mb-1" />
+                              <p className="text-blue-300 text-xs">写真がありません</p>
                             </div>
                           </div>
                         )}
                       </div>
-                    </div>
+                    </motion.div>
                     
-                    {/* Simple Stats - Moved to bottom of card */}
-                    <div className="px-4 pb-2 sm:px-5 sm:pb-3 mt-auto">
-                      <p className="text-xs sm:text-sm text-amber-700 dark:text-gray-300 text-center">
-                        {folder.photoCount}枚の写真
+                    <div className="px-4 pb-2 sm:px-5 sm:pb-3 mt-auto relative">
+                      <p className="text-xs sm:text-sm text-blue-300 text-center flex items-center justify-center gap-1">
+                        <Sparkles className="w-3 h-3" />
+                        {folder.photoCount}枚の宇宙猫
                       </p>
                     </div>
                     
-                    {/* Simple Upload Button - Fixed Position */}
-                    <div className="px-4 pb-4 sm:px-6 sm:pb-6 mt-auto">
+                    <div className="px-4 pb-4 sm:px-6 sm:pb-6 mt-auto relative">
                       <label className="block">
                         <input
                           type="file"
@@ -299,60 +516,127 @@ export default function Home() {
                           className="hidden"
                           disabled={uploadingFolder === folder.id}
                         />
-                        <div className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white text-center py-2 px-3 sm:px-4 rounded-lg cursor-pointer transition-colors duration-200 text-sm sm:text-base">
-                          {uploadingFolder === folder.id ? 'アップロード中...' : '写真を追加'}
-                        </div>
+                        <motion.div 
+                          className={`
+                            relative overflow-hidden text-white text-center py-2 px-3 sm:px-4 rounded-lg cursor-pointer text-sm sm:text-base font-medium
+                            ${uploadingFolder === folder.id 
+                              ? 'bg-slate-600 cursor-not-allowed' 
+                              : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
+                            }
+                          `}
+                          whileHover={uploadingFolder !== folder.id ? { scale: 1.02 } : {}}
+                          whileTap={uploadingFolder !== folder.id ? { scale: 0.98 } : {}}
+                        >
+                          {uploadingFolder !== folder.id && (
+                            <motion.div
+                              className="absolute inset-0 bg-white/10"
+                              initial={{ x: "-100%" }}
+                              whileHover={{ x: "100%" }}
+                              transition={{ duration: 0.6 }}
+                            />
+                          )}
+                          <span className="relative flex items-center justify-center gap-2">
+                            {uploadingFolder === folder.id ? (
+                              <>
+                                <motion.div
+                                  className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full"
+                                  animate={{ rotate: 360 }}
+                                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                />
+                                転送中...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-4 h-4" />
+                                写真をアップロード
+                              </>
+                            )}
+                          </span>
+                        </motion.div>
                       </label>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ) : (
-          <div className="space-y-8">
-            {/* Simple Back Button */}
+          <motion.div 
+            className="space-y-8"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="mb-4 sm:mb-6">
-              <button 
-                onClick={() => {
+              <motion.button 
+                onClick={async () => {
                   setSelectedFolder(null);
                   setSelectedFolderData(null);
+                  // フォルダ一覧を再取得
+                  await fetchFolders();
                 }}
-                className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-amber-800 hover:bg-amber-900 text-white rounded-lg transition-colors duration-200 text-sm sm:text-base"
+                className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-lg transition-all duration-200 text-sm sm:text-base font-medium shadow-lg border border-blue-400/30"
+                whileHover={{ scale: 1.05, x: -5 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-                <span className="hidden sm:inline">フォルダ一覧に戻る</span>
+                <ArrowLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">宇宙ステーションに戻る</span>
                 <span className="sm:hidden">戻る</span>
-              </button>
+              </motion.button>
             </div>
 
             {selectedFolderData && (
-              <div className="space-y-8">
-                {/* Simple Page Header */}
-                <div className="text-center mb-6 sm:mb-8">
+              <motion.div 
+                className="space-y-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+              >
+                <motion.div 
+                  className="text-center mb-6 sm:mb-8"
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                >
                   <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-amber-800 rounded-lg flex items-center justify-center">
-                      <span className="text-white text-sm sm:text-lg">🐱</span>
-                    </div>
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-amber-900 dark:text-white">
-                      {selectedFolderData.name}の写真
+                    <motion.div 
+                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg"
+                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <span className="text-2xl">🐱</span>
+                    </motion.div>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                      {selectedFolderData.name}の宇宙航海
                     </h2>
                   </div>
-                  <p className="text-sm sm:text-base text-amber-700 dark:text-gray-300">
-                    {selectedFolderData.photos.length}枚の美しい写真コレクション
+                  <p className="text-sm sm:text-base text-blue-300 flex items-center justify-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    {selectedFolderData.photos.length}枚の宇宙猫コレクション
                   </p>
-                </div>
+                </motion.div>
 
                 {selectedFolderData.photos.length === 0 ? (
-                  // Simple Empty State
-                  <div className="text-center py-8 sm:py-12">
-                    <div className="w-12 h-12 sm:w-16 sm:h-16 bg-amber-100 dark:bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <div className="text-2xl sm:text-3xl">📷</div>
-                    </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-amber-900 dark:text-white mb-2">まだ写真がありません</h3>
-                    <p className="text-sm sm:text-base text-amber-700 dark:text-gray-300 mb-6">最初の写真をアップロードしてください</p>
+                  <motion.div 
+                    className="text-center py-12 sm:py-16"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
+                  >
+                    <motion.div 
+                      className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl"
+                      animate={{ 
+                        scale: [1, 1.05, 1],
+                        rotate: [0, 2, -2, 0]
+                      }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      <Camera className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                    </motion.div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">宇宙空間は空です</h3>
+                    <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
+                      この宇宙領域にはまだ猫の写真が存在しません。最初の宇宙猫をアップロードして探査を開始しましょう！
+                    </p>
                     <label className="inline-block">
                       <input
                         type="file"
@@ -362,26 +646,85 @@ export default function Home() {
                         className="hidden"
                         disabled={uploadingFolder === selectedFolderData.id}
                       />
-                      <div className="bg-amber-800 hover:bg-amber-900 text-white py-2 px-4 sm:py-3 sm:px-6 rounded-lg cursor-pointer transition-colors duration-200 text-sm sm:text-base">
-                        {uploadingFolder === selectedFolderData.id ? 'アップロード中...' : '最初の写真を追加'}
-                      </div>
+                      <motion.div 
+                        className={`
+                          relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg
+                          ${uploadingFolder === selectedFolderData.id 
+                            ? 'bg-slate-600 cursor-not-allowed' 
+                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
+                          }
+                        `}
+                        whileHover={uploadingFolder !== selectedFolderData.id ? { scale: 1.05 } : {}}
+                        whileTap={uploadingFolder !== selectedFolderData.id ? { scale: 0.95 } : {}}
+                      >
+                        {uploadingFolder !== selectedFolderData.id && (
+                          <motion.div
+                            className="absolute inset-0 bg-white/10"
+                            initial={{ x: "-100%" }}
+                            whileHover={{ x: "100%" }}
+                            transition={{ duration: 0.6 }}
+                          />
+                        )}
+                        <span className="relative flex items-center gap-3">
+                          {uploadingFolder === selectedFolderData.id ? (
+                            <>
+                              <motion.div
+                                className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              />
+                              宇宙転送中...
+                            </>
+                          ) : (
+                            <>
+                              <Rocket className="w-5 h-5" />
+                              宇宙猫をアップロード
+                            </>
+                          )}
+                        </span>
+                      </motion.div>
                     </label>
-                  </div>
+                  </motion.div>
                 ) : (
-                  <>
-                  {/* Simple Photo Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-4">
-                    {selectedFolderData.photos.map((photo) => (
-                      <div key={photo.id}>
-                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg overflow-hidden transition-shadow duration-200 border dark:border-gray-700">
-                          {/* Photo */}
-                          <div className="aspect-square overflow-hidden">
+                  <motion.div
+                    className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      visible: {
+                        transition: {
+                          delayChildren: 0.4,
+                          staggerChildren: 0.05
+                        }
+                      }
+                    }}
+                  >
+                    {selectedFolderData.photos.map((photo, index) => (
+                      <motion.div 
+                        key={photo.id}
+                        variants={{
+                          hidden: { y: 20, opacity: 0 },
+                          visible: { y: 0, opacity: 1 }
+                        }}
+                        whileHover={{ 
+                          y: -5, 
+                          scale: 1.02,
+                          transition: { type: "spring", stiffness: 300 }
+                        }}
+                        className="group"
+                      >
+                        <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transition-all duration-300 border border-blue-500/30 hover:border-purple-400/50">
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          />
+                          
+                          <div className="relative aspect-square overflow-hidden">
                             <Image 
                               src={photo.url} 
                               alt={photo.originalName} 
                               width={300} 
                               height={300}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                               onError={(e) => {
                                 console.error('Image load error:', photo.url);
                                 console.error('Full photo data:', photo);
@@ -392,34 +735,37 @@ export default function Home() {
                               }}
                               unoptimized
                             />
+                            <motion.div
+                              className="absolute inset-0 bg-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                            />
                           </div>
                           
-                          {/* Simple Info */}
-                          <div className="p-2 sm:p-3">
+                          <div className="relative p-2 sm:p-3 bg-slate-800/80 backdrop-blur">
                             <div className="flex items-center justify-between text-xs">
-                              <p className="text-amber-700 dark:text-gray-300 truncate">
+                              <p className="text-blue-300 truncate flex items-center gap-1">
+                                <span className="text-xs">📅</span>
                                 {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
                               </p>
-                              <a 
+                              <motion.a 
                                 href={photo.url} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
-                                className="text-amber-600 hover:text-amber-800 dark:text-gray-400 dark:hover:text-gray-200 ml-1 flex-shrink-0"
+                                className="text-blue-400 hover:text-blue-300 ml-1 flex-shrink-0 p-1 rounded transition-colors"
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
                               >
-                                <span className="hidden sm:inline">直接表示</span>
-                                <span className="sm:hidden">🔗</span>
-                              </a>
+                                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                              </motion.a>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     ))}
-                  </div>
-                  </>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
       </main>
     </div>
