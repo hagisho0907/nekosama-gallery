@@ -69,10 +69,13 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     try {
-      // Try with status column first
+      // Try with status column first, ensure valid values
       const result = await db.prepare(`
         SELECT id, name, display_order as displayOrder, 
-               COALESCE(status, 'enrolled') as status, 
+               CASE 
+                 WHEN status IN ('enrolled', 'graduated') THEN status
+                 ELSE 'enrolled'
+               END as status, 
                created_at as createdAt, updated_at as updatedAt 
         FROM folders 
         ORDER BY display_order ASC, created_at DESC
@@ -101,10 +104,13 @@ class D1DatabaseManager {
     const db = this.ensureDatabase();
     
     try {
-      // Try with status column first
+      // Try with status column first, ensure valid values
       const result = await db.prepare(`
         SELECT id, name, display_order as displayOrder, 
-               COALESCE(status, 'enrolled') as status, 
+               CASE 
+                 WHEN status IN ('enrolled', 'graduated') THEN status
+                 ELSE 'enrolled'
+               END as status, 
                created_at as createdAt, updated_at as updatedAt 
         FROM folders 
         WHERE id = ?

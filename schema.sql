@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS photos (
   FOREIGN KEY (folder_id) REFERENCES folders (id) ON DELETE CASCADE
 );
 
--- Insert default folders (backward compatible)
-INSERT OR IGNORE INTO folders (id, name) VALUES 
-  ('1', 'ミケ'),
-  ('2', 'しろ');
+-- Insert default folders with explicit status values
+INSERT OR IGNORE INTO folders (id, name, status, display_order) VALUES 
+  ('1', 'ミケ', 'enrolled', 1),
+  ('2', 'しろ', 'graduated', 2);
