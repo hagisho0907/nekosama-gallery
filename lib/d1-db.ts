@@ -81,7 +81,7 @@ class D1DatabaseManager {
       return result.results as CatFolder[];
     } catch (error: any) {
       // Fallback to query without status column
-      if (error.message?.includes('no such column: status')) {
+      if (error.message?.includes('no column named status') || error.message?.includes('no such column: status')) {
         const result = await db.prepare(`
           SELECT id, name, display_order as displayOrder, 
                  'enrolled' as status,
@@ -113,7 +113,7 @@ class D1DatabaseManager {
       return result as CatFolder | null;
     } catch (error: any) {
       // Fallback to query without status column
-      if (error.message?.includes('no such column: status')) {
+      if (error.message?.includes('no column named status') || error.message?.includes('no such column: status')) {
         const result = await db.prepare(`
           SELECT id, name, display_order as displayOrder, 
                  'enrolled' as status,
@@ -150,7 +150,7 @@ class D1DatabaseManager {
       `).bind(id, name, displayOrder, 'enrolled', now, now).run();
     } catch (error: any) {
       // If status column doesn't exist, insert without it
-      if (error.message?.includes('no such column: status')) {
+      if (error.message?.includes('no column named status') || error.message?.includes('no such column: status')) {
         await db.prepare(`
           INSERT INTO folders (id, name, display_order, created_at, updated_at) 
           VALUES (?, ?, ?, ?, ?)
@@ -199,7 +199,7 @@ class D1DatabaseManager {
       return result.meta.changes > 0;
     } catch (error: any) {
       // If status column doesn't exist, just update the updated_at timestamp
-      if (error.message?.includes('no such column: status')) {
+      if (error.message?.includes('no column named status') || error.message?.includes('no such column: status')) {
         const result = await db.prepare(`
           UPDATE folders 
           SET updated_at = ? 
