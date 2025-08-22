@@ -36,6 +36,7 @@ export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [draggedFolder, setDraggedFolder] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'enrolled' | 'graduated'>('enrolled');
   const router = useRouter();
 
   useEffect(() => {
@@ -215,11 +216,12 @@ export default function AdminPage() {
       const data = await response.json();
       
       if (response.ok) {
-        // Update local state to reflect new order
+        // Update local state to reflect new order within the current tab
+        const otherFolders = folders.filter(f => f.status !== activeTab);
         const reorderedFolders = newOrder.map(id => 
           folders.find(folder => folder.id === id)!
         ).filter(Boolean);
-        setFolders(reorderedFolders);
+        setFolders([...otherFolders, ...reorderedFolders]);
         // Signal that data was updated for main page refresh
         localStorage.setItem('nekosama_data_updated', Date.now().toString());
       } else {
@@ -258,17 +260,18 @@ export default function AdminPage() {
       return;
     }
 
-    const currentOrder = folders.map(f => f.id);
-    const draggedIndex = currentOrder.indexOf(draggedFolder);
-    const targetIndex = currentOrder.indexOf(targetFolderId);
+    // 現在のタブ内のフォルダのみで並び替え
+    const currentTabFolders = filteredFolders.map(f => f.id);
+    const draggedIndex = currentTabFolders.indexOf(draggedFolder);
+    const targetIndex = currentTabFolders.indexOf(targetFolderId);
 
-    // Create new order
-    const newOrder = [...currentOrder];
-    newOrder.splice(draggedIndex, 1);
-    newOrder.splice(targetIndex, 0, draggedFolder);
+    // Create new order for current tab
+    const newTabOrder = [...currentTabFolders];
+    newTabOrder.splice(draggedIndex, 1);
+    newTabOrder.splice(targetIndex, 0, draggedFolder);
 
-    // Update server
-    handleReorderFolders(newOrder);
+    // Update server with new order
+    handleReorderFolders(newTabOrder);
     setDraggedFolder(null);
   };
 
@@ -305,6 +308,9 @@ export default function AdminPage() {
         ));
         // Signal that data was updated for main page refresh
         localStorage.setItem('nekosama_data_updated', Date.now().toString());
+        
+        // ステータス変更後、該当するタブに自動切り替え
+        setActiveTab(newStatus);
       } else {
         setError(data.error || 'Failed to update folder status');
       }
@@ -352,6 +358,9 @@ export default function AdminPage() {
       console.error('Logout error:', err);
     }
   };
+
+  // フィルター済みフォルダを取得
+  const filteredFolders = folders.filter(folder => folder.status === activeTab);
 
   if (!authenticated || loading) {
     return (
@@ -429,26 +438,79 @@ export default function AdminPage() {
 
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">
           <div className="mb-4 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">フォルダ管理</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">フォルダ管理</h2>
+            
+            {/* タブナビゲーション */}
+            <div className="border-b border-gray-200 dark:border-gray-600 mb-4">
+              <nav className="-mb-px flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('enrolled')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'enrolled'
+                      ? 'border-green-500 text-green-600 dark:text-green-400'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    在籍生 ({folders.filter(f => f.status === 'enrolled').length})
+                  </span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('graduated')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'graduated'
+                      ? 'border-yellow-500 text-yellow-600 dark:text-yellow-400'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                    卒業生 ({folders.filter(f => f.status === 'graduated').length})
+                  </span>
+                </button>
+              </nav>
+            </div>
+            
             <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
               📱 フォルダをドラッグ&ドロップして表示順序を変更できます
             </p>
           </div>
-          <div className="space-y-4">
-            {folders.length === 0 ? (
+          <div className="space-y-4 transition-all duration-300">
+            {filteredFolders.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-300">フォルダがありません。上記から新しいフォルダを作成してください。</p>
+                <div className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-300">
+                  {activeTab === 'enrolled' ? (
+                    <>
+                      <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                      在籍生のフォルダがありません。
+                    </>
+                  ) : (
+                    <>
+                      <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
+                      卒業生のフォルダがありません。
+                    </>
+                  )}
+                </div>
               </div>
             ) : (
-              folders.map(folder => (
+              filteredFolders.map(folder => (
                 <div 
                   key={folder.id} 
-                  className={`border border-gray-200 dark:border-gray-600 rounded-lg p-3 sm:p-4 transition-all duration-200 ${
+                  className={`border rounded-lg p-3 sm:p-4 transition-all duration-200 ${
                     draggedFolder === folder.id 
                       ? 'opacity-50 scale-95' 
                       : isDragOver === folder.id 
-                        ? 'border-purple-500 bg-purple-50 dark:bg-purple-800/30' 
-                        : 'hover:border-gray-300 dark:hover:border-gray-500'
+                        ? activeTab === 'enrolled' 
+                          ? 'border-green-500 bg-green-50 dark:bg-green-800/30' 
+                          : 'border-yellow-500 bg-yellow-50 dark:bg-yellow-800/30'
+                        : activeTab === 'enrolled'
+                          ? 'border-gray-200 dark:border-gray-600 hover:border-green-300 dark:hover:border-green-500'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-yellow-300 dark:hover:border-yellow-500'
+                  } ${
+                    activeTab === 'enrolled' 
+                      ? 'border-l-4 border-l-green-500' 
+                      : 'border-l-4 border-l-yellow-500'
                   }`}
                   draggable={editingFolder !== folder.id}
                   onDragStart={(e) => handleDragStart(e, folder.id)}
