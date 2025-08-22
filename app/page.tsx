@@ -760,7 +760,7 @@ function FolderCard({
           className="relative p-4 sm:p-5 cursor-pointer flex-1" 
           onClick={() => onSelectFolder(folder.id)}
         >
-          <div className="flex items-center justify-between mb-3 sm:mb-4 mt-8">
+          <div className="flex items-center justify-between mb-2 mt-8">
             <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2 flex items-center gap-2">
               <span className="text-2xl">🐱</span>
               {folder.name}
@@ -772,6 +772,14 @@ function FolderCard({
             >
               <FolderOpen className="w-4 h-4 text-white" />
             </motion.div>
+          </div>
+          
+          {/* 写真数表示を上部に移動 */}
+          <div className="mb-4">
+            <p className="text-xs sm:text-sm text-blue-300 flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              {folder.photoCount}枚の宇宙猫
+            </p>
           </div>
           
           <div className="grid grid-cols-3 gap-2 mb-4 h-16">
@@ -813,13 +821,6 @@ function FolderCard({
             )}
           </div>
         </motion.div>
-        
-        <div className="px-4 pb-2 sm:px-5 sm:pb-3 mt-auto relative">
-          <p className="text-xs sm:text-sm text-blue-300 text-center flex items-center justify-center gap-1">
-            <Sparkles className="w-3 h-3" />
-            {folder.photoCount}枚の宇宙猫
-          </p>
-        </div>
         
         <div className="px-4 pb-4 sm:px-6 sm:pb-6 mt-auto relative">
           <label className="block">
