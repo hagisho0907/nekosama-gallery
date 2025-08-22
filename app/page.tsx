@@ -856,7 +856,7 @@ function FolderCard({
           </div>
         </motion.div>
         
-        <div className="px-4 pb-4 sm:px-6 sm:pb-6 mt-auto relative">
+        <div className="px-4 pb-3 sm:px-6 sm:pb-4 mt-auto relative">
           <label className="block">
             <input
               type="file"
@@ -868,7 +868,7 @@ function FolderCard({
             />
             <motion.div 
               className={`
-                relative overflow-hidden text-white text-center py-2 px-3 sm:px-4 rounded-lg cursor-pointer text-sm sm:text-base font-medium
+                relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
                   : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
@@ -885,20 +885,22 @@ function FolderCard({
                   transition={{ duration: 0.6 }}
                 />
               )}
-              <span className="relative flex items-center justify-center gap-2">
+              <span className="relative flex items-center justify-center gap-1.5">
                 {uploadingFolder === folder.id ? (
                   <>
                     <motion.div
-                      className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full"
+                      className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />
-                    転送中...
+                    <span className="hidden sm:inline">転送中...</span>
+                    <span className="sm:hidden">転送中</span>
                   </>
                 ) : (
                   <>
-                    <Upload className="w-4 h-4" />
-                    写真をアップロード
+                    <Upload className="w-3 h-3" />
+                    <span className="hidden sm:inline">写真をアップロード</span>
+                    <span className="sm:hidden">アップロード</span>
                   </>
                 )}
               </span>
