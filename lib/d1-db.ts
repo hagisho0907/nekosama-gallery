@@ -68,29 +68,65 @@ class D1DatabaseManager {
   async getFolders(): Promise<CatFolder[]> {
     const db = this.ensureDatabase();
     
-    const result = await db.prepare(`
-      SELECT id, name, display_order as displayOrder, 
-             COALESCE(status, 'enrolled') as status, 
-             created_at as createdAt, updated_at as updatedAt 
-      FROM folders 
-      ORDER BY display_order ASC, created_at DESC
-    `).all();
-    
-    return result.results as CatFolder[];
+    try {
+      // Try with status column first
+      const result = await db.prepare(`
+        SELECT id, name, display_order as displayOrder, 
+               COALESCE(status, 'enrolled') as status, 
+               created_at as createdAt, updated_at as updatedAt 
+        FROM folders 
+        ORDER BY display_order ASC, created_at DESC
+      `).all();
+      
+      return result.results as CatFolder[];
+    } catch (error: any) {
+      // Fallback to query without status column
+      if (error.message?.includes('no such column: status')) {
+        const result = await db.prepare(`
+          SELECT id, name, display_order as displayOrder, 
+                 'enrolled' as status,
+                 created_at as createdAt, updated_at as updatedAt 
+          FROM folders 
+          ORDER BY display_order ASC, created_at DESC
+        `).all();
+        
+        return result.results as CatFolder[];
+      } else {
+        throw error;
+      }
+    }
   }
 
   async getFolder(id: string): Promise<CatFolder | null> {
     const db = this.ensureDatabase();
     
-    const result = await db.prepare(`
-      SELECT id, name, display_order as displayOrder, 
-             COALESCE(status, 'enrolled') as status, 
-             created_at as createdAt, updated_at as updatedAt 
-      FROM folders 
-      WHERE id = ?
-    `).bind(id).first();
-    
-    return result as CatFolder | null;
+    try {
+      // Try with status column first
+      const result = await db.prepare(`
+        SELECT id, name, display_order as displayOrder, 
+               COALESCE(status, 'enrolled') as status, 
+               created_at as createdAt, updated_at as updatedAt 
+        FROM folders 
+        WHERE id = ?
+      `).bind(id).first();
+      
+      return result as CatFolder | null;
+    } catch (error: any) {
+      // Fallback to query without status column
+      if (error.message?.includes('no such column: status')) {
+        const result = await db.prepare(`
+          SELECT id, name, display_order as displayOrder, 
+                 'enrolled' as status,
+                 created_at as createdAt, updated_at as updatedAt 
+          FROM folders 
+          WHERE id = ?
+        `).bind(id).first();
+        
+        return result as CatFolder | null;
+      } else {
+        throw error;
+      }
+    }
   }
 
   async createFolder(name: string): Promise<CatFolder> {
