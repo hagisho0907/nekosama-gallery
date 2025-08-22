@@ -307,7 +307,7 @@ export default function Home() {
                   transition={{ delay: 0.5 }}
                 >
                   <Sparkles className="w-3 h-3" />
-                  Cosmic Feline Observatory
+                  Presented by 拝啓ねこ様
                 </motion.p>
               </div>
             </motion.div>
