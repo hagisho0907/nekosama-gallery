@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -773,6 +773,12 @@ function FolderCard({
   onFileUpload: (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => void; 
   uploadingFolder: string | null; 
 }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleButtonClick = () => {
+    console.log('Button clicked, triggering file input');
+    fileInputRef.current?.click();
+  };
   return (
     <motion.div 
       variants={{
@@ -865,25 +871,23 @@ function FolderCard({
         </motion.div>
         
         <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative">
-          <label className="block relative">
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={(e) => {
-                console.log('Input onChange fired!', e.target.files);
-                onFileUpload(folder.id, e);
-              }}
-              onClick={(e) => {
-                console.log('Input clicked!', e);
-                // Reset value to ensure onChange fires in Chrome
-                (e.target as HTMLInputElement).value = '';
-              }}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-              disabled={uploadingFolder === folder.id}
-            />
-            <motion.div 
-              className={`
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) => {
+              console.log('Ref Input onChange fired!', e.target.files);
+              onFileUpload(folder.id, e);
+              // Reset after upload
+              e.target.value = '';
+            }}
+            style={{ display: 'none' }}
+            disabled={uploadingFolder === folder.id}
+          />
+          <motion.div
+            onClick={handleButtonClick}
+            className={`
                 relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
@@ -921,7 +925,6 @@ function FolderCard({
                 )}
               </span>
             </motion.div>
-          </label>
         </div>
       </div>
     </motion.div>
