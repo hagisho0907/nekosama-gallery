@@ -56,17 +56,6 @@ export default function Home() {
   const detailUploadRef = useRef<HTMLInputElement>(null);
 
   const triggerFileUpload = (folderId: string) => {
-    console.log('triggerFileUpload called for folder:', folderId);
-    
-    // Method 1: Try with existing ref
-    if (detailUploadRef.current) {
-      console.log('Attempting ref click');
-      detailUploadRef.current.click();
-      return;
-    }
-    
-    // Method 2: Create new input element
-    console.log('Creating new input element');
     const input = document.createElement('input');
     input.type = 'file';
     input.multiple = true;
@@ -74,7 +63,6 @@ export default function Home() {
     input.style.display = 'none';
     
     input.onchange = (e) => {
-      console.log('Dynamic input onChange');
       const target = e.target as HTMLInputElement;
       if (target.files) {
         const syntheticEvent = {
@@ -171,19 +159,8 @@ export default function Home() {
   };
 
   const handleFileUpload = async (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleFileUpload called');
-    console.log('folderId:', folderId);
-    console.log('event:', event);
-    console.log('event.target:', event.target);
-    console.log('files:', event.target.files);
-    
     const files = event.target.files;
-    if (!files) {
-      console.log('No files selected');
-      return;
-    }
-    
-    console.log('Files to upload:', Array.from(files).map(f => f.name));
+    if (!files) return;
 
     setUploadingFolder(folderId);
     
@@ -661,20 +638,12 @@ onClick={async () => {
                       type="file"
                       multiple
                       accept="image/*"
-                      onChange={(e) => {
-                        console.log('Detail input onChange triggered');
-                        console.log('Files selected:', e.target.files?.length);
-                        handleFileUpload(selectedFolderData.id, e);
-                      }}
-                      onClick={(e) => {
-                        console.log('Detail input onClick triggered');
-                      }}
+                      onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
                       style={{ display: 'none' }}
                       disabled={uploadingFolder === selectedFolderData.id}
                     />
                     <div
                       onClick={() => {
-                        console.log('Detail upload button clicked');
                         if (uploadingFolder !== selectedFolderData.id) {
                           triggerFileUpload(selectedFolderData.id);
                         }
@@ -781,6 +750,45 @@ onClick={async () => {
                       </motion.div>
                     ))}
                   </motion.div>
+
+                  {/* 詳細画面でのアップロードボタン */}
+                  <motion.div 
+                    className="flex justify-center mt-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.6 }}
+                  >
+                    <div
+                      onClick={() => {
+                        if (uploadingFolder !== selectedFolderData.id) {
+                          triggerFileUpload(selectedFolderData.id);
+                        }
+                      }}
+                      className={`
+                        relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-200
+                        ${uploadingFolder === selectedFolderData.id 
+                          ? 'bg-slate-600 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
+                        }
+                      `}
+                    >
+                      <span className="relative flex items-center gap-3">
+                        {uploadingFolder === selectedFolderData.id ? (
+                          <>
+                            <div
+                              className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
+                            />
+                            宇宙転送中...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-5 h-5" />
+                            さらに写真をアップロード
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  </motion.div>
                 )}
               </motion.div>
             )}
@@ -806,10 +814,6 @@ function FolderCard({
   const folderUploadRef = useRef<HTMLInputElement>(null);
 
   const triggerFolderFileUpload = (folderId: string) => {
-    console.log('triggerFolderFileUpload called for folder:', folderId);
-    
-    // Create new input element for Chrome compatibility
-    console.log('Creating new folder input element');
     const input = document.createElement('input');
     input.type = 'file';
     input.multiple = true;
@@ -817,7 +821,6 @@ function FolderCard({
     input.style.display = 'none';
     
     input.onchange = (e) => {
-      console.log('Dynamic folder input onChange');
       const target = e.target as HTMLInputElement;
       if (target.files) {
         const syntheticEvent = {
@@ -929,20 +932,12 @@ function FolderCard({
             type="file"
             multiple
             accept="image/*"
-            onChange={(e) => {
-              console.log('Folder input onChange triggered');
-              console.log('Files selected:', e.target.files?.length);
-              onFileUpload(folder.id, e);
-            }}
-            onClick={(e) => {
-              console.log('Folder input onClick triggered');
-            }}
+            onChange={(e) => onFileUpload(folder.id, e)}
             style={{ display: 'none' }}
             disabled={uploadingFolder === folder.id}
           />
           <div
             onClick={() => {
-              console.log('Folder upload button clicked');
               if (uploadingFolder !== folder.id) {
                 triggerFolderFileUpload(folder.id);
               }
