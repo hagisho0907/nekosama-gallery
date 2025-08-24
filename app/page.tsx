@@ -136,24 +136,15 @@ export default function Home() {
   };
 
   const handleFileUpload = async (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleFileUpload called with folderId:', folderId);
     const files = event.target.files;
-    console.log('Selected files:', files);
-    if (!files) {
-      console.log('No files selected, returning');
-      return;
-    }
+    if (!files) return;
 
-    console.log('Setting uploading folder to:', folderId);
     setUploadingFolder(folderId);
     
     try {
-      console.log('Starting upload process for', files.length, 'files');
       const uploadPromises = Array.from(files).map(async (file) => {
-        console.log('Processing file:', file.name, 'type:', file.type);
         // Check if file is an image
         if (!file.type.startsWith('image/')) {
-          console.log('File is not an image:', file.name);
           throw new Error(`${file.name} is not an image file`);
         }
 
@@ -625,7 +616,6 @@ onClick={async () => {
                     multiple
                     accept="image/*"
                     onChange={(e) => {
-                      console.log('Detail Ref Input onChange fired!', e.target.files);
                       handleFileUpload(selectedFolderData.id, e);
                       e.target.value = '';
                     }}
@@ -633,10 +623,7 @@ onClick={async () => {
                     disabled={uploadingFolder === selectedFolderData.id}
                   />
                       <motion.div 
-                        onClick={() => {
-                          console.log('Detail button clicked, triggering file input');
-                          detailFileInputRef.current?.click();
-                        }}
+                        onClick={() => detailFileInputRef.current?.click()}
                         className={`
                           relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg
                           ${uploadingFolder === selectedFolderData.id 
@@ -776,7 +763,6 @@ function FolderCard({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
-    console.log('Button clicked, triggering file input');
     fileInputRef.current?.click();
   };
   return (
@@ -877,9 +863,7 @@ function FolderCard({
             multiple
             accept="image/*"
             onChange={(e) => {
-              console.log('Ref Input onChange fired!', e.target.files);
               onFileUpload(folder.id, e);
-              // Reset after upload
               e.target.value = '';
             }}
             style={{ display: 'none' }}
