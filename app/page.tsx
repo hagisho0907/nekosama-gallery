@@ -674,121 +674,123 @@ onClick={async () => {
                     </div>
                   </motion.div>
                 ) : (
-                  <motion.div
-                    className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4"
-                    initial="hidden"
-                    animate="visible"
-                    variants={{
-                      visible: {
-                        transition: {
-                          delayChildren: 0.4,
-                          staggerChildren: 0.05
-                        }
-                      }
-                    }}
-                  >
-                    {selectedFolderData.photos.map((photo) => (
-                      <motion.div 
-                        key={photo.id}
-                        variants={{
-                          hidden: { y: 20, opacity: 0 },
-                          visible: { y: 0, opacity: 1 }
-                        }}
-                        whileHover={{ 
-                          y: -5, 
-                          scale: 1.02,
-                          transition: { type: "spring", stiffness: 300 }
-                        }}
-                        className="group"
-                      >
-                        <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transition-all duration-300 border border-blue-500/30 hover:border-purple-400/50">
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                          />
-                          
-                          <div className="relative aspect-square overflow-hidden">
-                            <Image 
-                              src={photo.url} 
-                              alt={photo.originalName} 
-                              width={300} 
-                              height={300}
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-130"
-                              onError={(e) => {
-                                console.error('Image load error:', photo.url);
-                                console.error('Full photo data:', photo);
-                                e.currentTarget.style.display = 'none';
-                              }}
-                              onLoad={() => {
-                                console.log('Image loaded successfully:', photo.url);
-                              }}
-                              unoptimized
-                            />
-                            <motion.div
-                              className="absolute inset-0 bg-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                            />
-                          </div>
-                          
-                          <div className="relative p-2 sm:p-3 bg-slate-800/80 backdrop-blur">
-                            <div className="flex items-center justify-between text-xs">
-                              <p className="text-blue-300 truncate flex items-center gap-1">
-                                <span className="text-xs">📅</span>
-                                {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
-                              </p>
-                              <motion.a 
-                                href={photo.url} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="text-blue-400 hover:text-blue-300 ml-1 flex-shrink-0 p-1 rounded transition-colors"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                              >
-                                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
-                              </motion.a>
-                            </div>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </motion.div>
-
-                  {/* 詳細画面でのアップロードボタン */}
-                  <motion.div 
-                    className="flex justify-center mt-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.6 }}
-                  >
-                    <div
-                      onClick={() => {
-                        if (uploadingFolder !== selectedFolderData.id) {
-                          triggerFileUpload(selectedFolderData.id);
+                  <>
+                    <motion.div
+                      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4"
+                      initial="hidden"
+                      animate="visible"
+                      variants={{
+                        visible: {
+                          transition: {
+                            delayChildren: 0.4,
+                            staggerChildren: 0.05
+                          }
                         }
                       }}
-                      className={`
-                        relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-200
-                        ${uploadingFolder === selectedFolderData.id 
-                          ? 'bg-slate-600 cursor-not-allowed' 
-                          : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
-                        }
-                      `}
                     >
-                      <span className="relative flex items-center gap-3">
-                        {uploadingFolder === selectedFolderData.id ? (
-                          <>
-                            <div
-                              className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
+                      {selectedFolderData.photos.map((photo) => (
+                        <motion.div 
+                          key={photo.id}
+                          variants={{
+                            hidden: { y: 20, opacity: 0 },
+                            visible: { y: 0, opacity: 1 }
+                          }}
+                          whileHover={{ 
+                            y: -5, 
+                            scale: 1.02,
+                            transition: { type: "spring", stiffness: 300 }
+                          }}
+                          className="group"
+                        >
+                          <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transition-all duration-300 border border-blue-500/30 hover:border-purple-400/50">
+                            <motion.div
+                              className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                             />
-                            宇宙転送中...
-                          </>
-                        ) : (
-                          <>
-                            <Upload className="w-5 h-5" />
-                            さらに写真をアップロード
-                          </>
-                        )}
-                      </span>
-                    </div>
-                  </motion.div>
+                            
+                            <div className="relative aspect-square overflow-hidden">
+                              <Image 
+                                src={photo.url} 
+                                alt={photo.originalName} 
+                                width={300} 
+                                height={300}
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-130"
+                                onError={(e) => {
+                                  console.error('Image load error:', photo.url);
+                                  console.error('Full photo data:', photo);
+                                  e.currentTarget.style.display = 'none';
+                                }}
+                                onLoad={() => {
+                                  console.log('Image loaded successfully:', photo.url);
+                                }}
+                                unoptimized
+                              />
+                              <motion.div
+                                className="absolute inset-0 bg-blue-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                              />
+                            </div>
+                            
+                            <div className="relative p-2 sm:p-3 bg-slate-800/80 backdrop-blur">
+                              <div className="flex items-center justify-between text-xs">
+                                <p className="text-blue-300 truncate flex items-center gap-1">
+                                  <span className="text-xs">📅</span>
+                                  {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
+                                </p>
+                                <motion.a 
+                                  href={photo.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  className="text-blue-400 hover:text-blue-300 ml-1 flex-shrink-0 p-1 rounded transition-colors"
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                >
+                                  <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                                </motion.a>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </motion.div>
+
+                    {/* 詳細画面でのアップロードボタン */}
+                    <motion.div 
+                      className="flex justify-center mt-6"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6, duration: 0.6 }}
+                    >
+                      <div
+                        onClick={() => {
+                          if (uploadingFolder !== selectedFolderData.id) {
+                            triggerFileUpload(selectedFolderData.id);
+                          }
+                        }}
+                        className={`
+                          relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-200
+                          ${uploadingFolder === selectedFolderData.id 
+                            ? 'bg-slate-600 cursor-not-allowed' 
+                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
+                          }
+                        `}
+                      >
+                        <span className="relative flex items-center gap-3">
+                          {uploadingFolder === selectedFolderData.id ? (
+                            <>
+                              <div
+                                className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
+                              />
+                              宇宙転送中...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="w-5 h-5" />
+                              さらに写真をアップロード
+                            </>
+                          )}
+                        </span>
+                      </div>
+                    </motion.div>
+                  </>
                 )}
               </motion.div>
             )}
