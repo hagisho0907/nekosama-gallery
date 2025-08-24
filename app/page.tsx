@@ -610,15 +610,15 @@ onClick={async () => {
                       この宇宙領域にはまだねこ様の写真が存在しません。最初の写真をアップロードして探査を開始しましょう！
                     </p>
                     <label className="inline-block">
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
-                        className="hidden"
-                        disabled={uploadingFolder === selectedFolderData.id}
-                      />
-                      <motion.div 
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
+                      className="hidden"
+                      disabled={uploadingFolder === selectedFolderData.id}
+                    />
+                      <motion.div
                         className={`
                           relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg
                           ${uploadingFolder === selectedFolderData.id 
@@ -769,54 +769,45 @@ function FolderCard({
       }}
       className="group"
     >
-      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-64 sm:h-72 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
+      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-56 sm:h-64 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
         
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         />
         
-        {/* ステータスインジケーター */}
-        <div className="absolute top-3 left-3 z-10">
-          {folder.status === 'enrolled' ? (
-            <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-              <Stars className="w-3 h-3" />
-              在籍
-            </div>
-          ) : (
-            <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-              <Sparkles className="w-3 h-3" />
-              卒業
-            </div>
-          )}
-        </div>
         
         <motion.div 
-          className="relative p-4 sm:p-5 cursor-pointer flex-1" 
+          className="relative p-3 sm:p-4 cursor-pointer flex-1 flex flex-col" 
           onClick={() => onSelectFolder(folder.id)}
         >
-          <div className="flex items-center justify-between mb-2 mt-8">
-            <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2 flex items-center gap-2">
-              <span className="text-2xl">🐱</span>
-              {folder.name}
-            </h3>
-            <motion.div 
-              className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg"
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FolderOpen className="w-4 h-4 text-white" />
-            </motion.div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg sm:text-xl font-bold text-white truncate">
+                {folder.name}
+              </h3>
+              {folder.status === 'enrolled' ? (
+                <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                  <Stars className="w-3 h-3" />
+                  在籍
+                </div>
+              ) : (
+                <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                  <Sparkles className="w-3 h-3" />
+                  卒業
+                </div>
+              )}
+            </div>
           </div>
           
-          {/* 写真数表示を上部に移動 */}
-          <div className="mb-4">
+          {/* 写真数表示 */}
+          <div className="mb-2">
             <p className="text-xs sm:text-sm text-blue-300 flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
               {folder.photoCount}枚の写真
             </p>
           </div>
           
-          <div className="grid grid-cols-3 gap-2 mb-4 h-16">
+          <div className="grid grid-cols-3 gap-2 mb-1 h-14 flex-1">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
                 key={photo.id} 
@@ -846,9 +837,9 @@ function FolderCard({
               </motion.div>
             ))}
             {folder.photoCount === 0 && (
-              <div className="col-span-3 h-16 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
+              <div className="col-span-3 h-14 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
                 <div className="text-center">
-                  <Camera className="w-6 h-6 text-blue-400 mx-auto mb-1" />
+                  <Camera className="w-5 h-5 text-blue-400 mx-auto mb-1" />
                   <p className="text-blue-300 text-xs">写真がありません</p>
                 </div>
               </div>
@@ -856,7 +847,7 @@ function FolderCard({
           </div>
         </motion.div>
         
-        <div className="px-4 pb-3 sm:px-6 sm:pb-4 mt-auto relative">
+        <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative">
           <label className="block">
             <input
               type="file"
@@ -866,8 +857,8 @@ function FolderCard({
               className="hidden"
               disabled={uploadingFolder === folder.id}
             />
-            <motion.div 
-              className={`
+            <motion.div
+            className={`
                 relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
