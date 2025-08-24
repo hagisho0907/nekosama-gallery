@@ -649,7 +649,7 @@ onClick={async () => {
                         }
                       }}
                       className={`
-                        relative overflow-hidden text-white py-2 px-4 sm:py-3 sm:px-6 rounded-lg cursor-pointer text-sm sm:text-base font-medium shadow-lg transition-all duration-200
+                        relative overflow-hidden text-white py-2 px-3 sm:py-2 sm:px-4 rounded-lg cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 inline-block
                         ${uploadingFolder === selectedFolderData.id 
                           ? 'bg-slate-600 cursor-not-allowed' 
                           : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
@@ -766,25 +766,25 @@ onClick={async () => {
                           }
                         }}
                         className={`
-                          relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-200
+                          relative overflow-hidden text-white py-2 px-3 sm:py-2 sm:px-4 rounded-lg cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 inline-block
                           ${uploadingFolder === selectedFolderData.id 
                             ? 'bg-slate-600 cursor-not-allowed' 
                             : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
                           }
                         `}
                       >
-                        <span className="relative flex items-center gap-3">
+                        <span className="relative flex items-center justify-center gap-2">
                           {uploadingFolder === selectedFolderData.id ? (
                             <>
                               <div
-                                className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
+                                className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
                               />
-                              宇宙転送中...
+                              転送中...
                             </>
                           ) : (
                             <>
-                              <Upload className="w-5 h-5" />
-                              さらに写真をアップロード
+                              <Upload className="w-4 h-4" />
+                              追加アップロード
                             </>
                           )}
                         </span>
