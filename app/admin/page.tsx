@@ -16,7 +16,10 @@ import {
   Camera,
   AlertCircle,
   CheckCircle,
-  GripVertical
+  GripVertical,
+  Square,
+  CheckSquare,
+  Info
 } from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
 
@@ -52,6 +55,8 @@ export default function AdminPage() {
   const [draggedFolder, setDraggedFolder] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'enrolled' | 'graduated'>('enrolled');
+  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
+  const [showPhotoSelection, setShowPhotoSelection] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -176,6 +181,15 @@ export default function AdminPage() {
       if (response.ok) {
         setPhotos(data.photos || []);
         setSelectedFolder(folderId);
+        setSelectedPhotos([]);
+        
+        // Check if graduated folder has 10+ photos and needs selection
+        const folder = folders.find(f => f.id === folderId);
+        if (folder?.status === 'graduated' && data.photos?.length >= 10) {
+          setShowPhotoSelection(true);
+        } else {
+          setShowPhotoSelection(false);
+        }
       } else {
         setError(data.error || 'Failed to fetch photos');
       }
@@ -212,6 +226,57 @@ export default function AdminPage() {
     } catch (err) {
       setError('Failed to delete photo');
       console.error('Error deleting photo:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handlePhotoSelection = (photoId: string, selected: boolean) => {
+    if (selected) {
+      if (selectedPhotos.length < 5) {
+        setSelectedPhotos(prev => [...prev, photoId]);
+      } else {
+        setError('残す写真は5枚まで選択できます');
+      }
+    } else {
+      setSelectedPhotos(prev => prev.filter(id => id !== photoId));
+    }
+  };
+
+  const handleBulkDeletePhotos = async () => {
+    if (selectedPhotos.length !== 5) {
+      setError('残す写真を5枚選択してください');
+      return;
+    }
+
+    const photosToDelete = photos.filter(photo => !selectedPhotos.includes(photo.id));
+    const confirmMessage = `${photosToDelete.length}枚の写真を削除して、選択した5枚を残しますか？この操作は取り消せません。`;
+    
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      setSubmitting(true);
+      const deletePromises = photosToDelete.map(photo => 
+        fetch(`/api/photos/${photo.id}`, { method: 'DELETE' })
+      );
+      
+      const results = await Promise.allSettled(deletePromises);
+      const failed = results.filter(r => r.status === 'rejected').length;
+      
+      if (failed > 0) {
+        setError(`${failed}枚の写真の削除に失敗しました`);
+      } else {
+        // Refresh photos after successful deletion
+        if (selectedFolder) {
+          await fetchPhotos(selectedFolder);
+        }
+        setShowPhotoSelection(false);
+        setSelectedPhotos([]);
+        setError(null);
+      }
+    } catch (err) {
+      setError('写真の削除に失敗しました');
+      console.error('Error deleting photos:', err);
     } finally {
       setSubmitting(false);
     }
@@ -912,6 +977,8 @@ export default function AdminPage() {
                 onClick={() => {
                   setSelectedFolder(null);
                   setPhotos([]);
+                  setSelectedPhotos([]);
+                  setShowPhotoSelection(false);
                 }}
                 className="bg-slate-600/80 hover:bg-slate-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base self-start sm:self-auto backdrop-blur border border-slate-500/50 shadow-lg"
                 whileHover={{ scale: 1.05 }}
@@ -920,6 +987,81 @@ export default function AdminPage() {
                 閉じる
               </motion.button>
             </div>
+
+            {/* Photo Selection Warning for Graduated Folders */}
+            {showPhotoSelection && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-yellow-900/30 backdrop-blur border border-yellow-400/50 text-yellow-300 px-4 py-3 rounded-lg mb-6 shadow-lg"
+              >
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold mb-2">卒業生フォルダ - 写真制限</h3>
+                    <p className="text-sm mb-2">
+                      このフォルダには{photos.length}枚の写真があります。卒業生フォルダは最大10枚まで保存できるため、
+                      残したい5枚の写真を選択してください。選択されなかった写真は削除されます。
+                    </p>
+                    <p className="text-xs text-yellow-400/80">
+                      選択済み: {selectedPhotos.length}/5枚
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Bulk Delete Controls for Photo Selection */}
+            {showPhotoSelection && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-slate-700/50 backdrop-blur border border-blue-500/30 rounded-lg p-4 mb-6 shadow-lg"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-2">写真選択モード</h3>
+                    <p className="text-sm text-blue-300">
+                      残したい写真をクリックして選択してください ({selectedPhotos.length}/5枚選択済み)
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <motion.button
+                      onClick={handleBulkDeletePhotos}
+                      disabled={selectedPhotos.length !== 5 || submitting}
+                      className={`px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-lg ${
+                        selectedPhotos.length === 5 && !submitting
+                          ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white'
+                          : 'bg-slate-600 cursor-not-allowed text-slate-400'
+                      }`}
+                      whileHover={selectedPhotos.length === 5 && !submitting ? { scale: 1.05 } : {}}
+                      whileTap={selectedPhotos.length === 5 && !submitting ? { scale: 0.95 } : {}}
+                    >
+                      {submitting ? (
+                        <span className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
+                          削除中...
+                        </span>
+                      ) : (
+                        '選択外の写真を削除'
+                      )}
+                    </motion.button>
+                    <motion.button
+                      onClick={() => {
+                        setShowPhotoSelection(false);
+                        setSelectedPhotos([]);
+                      }}
+                      disabled={submitting}
+                      className="bg-slate-600/80 hover:bg-slate-500 disabled:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-lg"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      キャンセル
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            )}
             
             {photos.length === 0 ? (
               <motion.div 
@@ -954,48 +1096,92 @@ export default function AdminPage() {
                   }
                 }}
               >
-                {photos.map(photo => (
-                  <motion.div 
-                    key={photo.id} 
-                    className="relative group"
-                    variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      visible: { opacity: 1, y: 0 }
-                    }}
-                    whileHover={{ y: -5, scale: 1.02 }}
-                  >
-                    <div className="aspect-square bg-slate-700/50 rounded-lg overflow-hidden border border-blue-500/30 shadow-lg">
-                      <img
-                        src={photo.url}
-                        alt={photo.originalName}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                        onError={(e) => {
-                          e.currentTarget.src = '/placeholder.jpg';
-                        }}
-                      />
-                    </div>
-                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <motion.button
-                        onClick={() => handleDeletePhoto(photo.id)}
-                        disabled={submitting}
-                        className="bg-red-600/90 hover:bg-red-600 disabled:bg-slate-600 text-white p-1 sm:p-2 rounded-full shadow-lg transition-all duration-200 backdrop-blur border border-red-400/50"
-                        title="写真を削除"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                {photos.map(photo => {
+                  const isSelected = selectedPhotos.includes(photo.id);
+                  return (
+                    <motion.div 
+                      key={photo.id} 
+                      className="relative group"
+                      variants={{
+                        hidden: { opacity: 0, y: 20 },
+                        visible: { opacity: 1, y: 0 }
+                      }}
+                      whileHover={{ y: -5, scale: 1.02 }}
+                    >
+                      <div 
+                        className={`aspect-square bg-slate-700/50 rounded-lg overflow-hidden border shadow-lg transition-all duration-200 ${
+                          showPhotoSelection
+                            ? `cursor-pointer ${
+                                isSelected 
+                                  ? 'border-green-400 ring-2 ring-green-400/50 bg-green-900/20' 
+                                  : 'border-blue-500/30 hover:border-blue-400'
+                              }`
+                            : 'border-blue-500/30'
+                        }`}
+                        onClick={showPhotoSelection ? () => handlePhotoSelection(photo.id, !isSelected) : undefined}
                       >
-                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </motion.button>
-                    </div>
-                    <div className="mt-1 sm:mt-2">
-                      <p className="text-xs sm:text-sm text-blue-300 truncate" title={photo.originalName}>
-                        {photo.originalName}
-                      </p>
-                      <p className="text-xs text-blue-400/70">
-                        {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
+                        <img
+                          src={photo.url}
+                          alt={photo.originalName}
+                          className={`w-full h-full object-cover transition-all duration-300 ${
+                            showPhotoSelection && !isSelected 
+                              ? 'group-hover:scale-110 opacity-60' 
+                              : 'group-hover:scale-110'
+                          }`}
+                          onError={(e) => {
+                            e.currentTarget.src = '/placeholder.jpg';
+                          }}
+                        />
+                        {showPhotoSelection && (
+                          <div className="absolute top-2 left-2">
+                            <motion.div
+                              className={`w-6 h-6 rounded flex items-center justify-center border-2 transition-all duration-200 ${
+                                isSelected
+                                  ? 'bg-green-500 border-green-400 text-white'
+                                  : 'bg-white/20 backdrop-blur border-white/50 text-white/70'
+                              }`}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              {isSelected ? (
+                                <CheckSquare className="w-4 h-4" />
+                              ) : (
+                                <Square className="w-4 h-4" />
+                              )}
+                            </motion.div>
+                          </div>
+                        )}
+                      </div>
+                      {!showPhotoSelection && (
+                        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <motion.button
+                            onClick={() => handleDeletePhoto(photo.id)}
+                            disabled={submitting}
+                            className="bg-red-600/90 hover:bg-red-600 disabled:bg-slate-600 text-white p-1 sm:p-2 rounded-full shadow-lg transition-all duration-200 backdrop-blur border border-red-400/50"
+                            title="写真を削除"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                          >
+                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          </motion.button>
+                        </div>
+                      )}
+                      <div className="mt-1 sm:mt-2">
+                        <p className="text-xs sm:text-sm text-blue-300 truncate" title={photo.originalName}>
+                          {photo.originalName}
+                        </p>
+                        <p className="text-xs text-blue-400/70">
+                          {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
+                        </p>
+                        {showPhotoSelection && isSelected && (
+                          <p className="text-xs text-green-400 mt-1">
+                            ✓ 保持される写真
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </motion.div>
             )}
           </motion.div>
