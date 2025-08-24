@@ -629,6 +629,8 @@ onClick={async () => {
                         }}
                         onClick={(e) => {
                           console.log('Detail Input clicked!', e);
+                          // Reset value to ensure onChange fires in Chrome
+                          (e.target as HTMLInputElement).value = '';
                         }}
                         className="absolute inset-0 opacity-0 cursor-pointer"
                         disabled={uploadingFolder === selectedFolderData.id}
@@ -874,6 +876,8 @@ function FolderCard({
               }}
               onClick={(e) => {
                 console.log('Input clicked!', e);
+                // Reset value to ensure onChange fires in Chrome
+                (e.target as HTMLInputElement).value = '';
               }}
               className="absolute inset-0 opacity-0 cursor-pointer"
               disabled={uploadingFolder === folder.id}
