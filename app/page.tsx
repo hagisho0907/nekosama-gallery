@@ -135,15 +135,24 @@ export default function Home() {
   };
 
   const handleFileUpload = async (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleFileUpload called with folderId:', folderId);
     const files = event.target.files;
-    if (!files) return;
+    console.log('Selected files:', files);
+    if (!files) {
+      console.log('No files selected, returning');
+      return;
+    }
 
+    console.log('Setting uploading folder to:', folderId);
     setUploadingFolder(folderId);
     
     try {
+      console.log('Starting upload process for', files.length, 'files');
       const uploadPromises = Array.from(files).map(async (file) => {
+        console.log('Processing file:', file.name, 'type:', file.type);
         // Check if file is an image
         if (!file.type.startsWith('image/')) {
+          console.log('File is not an image:', file.name);
           throw new Error(`${file.name} is not an image file`);
         }
 
