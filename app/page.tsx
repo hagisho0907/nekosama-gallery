@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -48,7 +48,6 @@ function formatFileSize(bytes: number): string {
 export default function Home() {
   const [folders, setFolders] = useState<CatFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const detailFileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFolderData, setSelectedFolderData] = useState<CatFolder | null>(null);
   const [uploadingFolder, setUploadingFolder] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -610,20 +609,16 @@ onClick={async () => {
                     <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
                       この宇宙領域にはまだねこ様の写真が存在しません。最初の写真をアップロードして探査を開始しましょう！
                     </p>
+                    <label className="inline-block">
                     <input
-                    ref={detailFileInputRef}
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={(e) => {
-                      handleFileUpload(selectedFolderData.id, e);
-                      e.target.value = '';
-                    }}
-                    style={{ display: 'none' }}
-                    disabled={uploadingFolder === selectedFolderData.id}
-                  />
-                      <motion.div 
-                        onClick={() => detailFileInputRef.current?.click()}
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
+                      className="hidden"
+                      disabled={uploadingFolder === selectedFolderData.id}
+                    />
+                      <motion.div
                         className={`
                           relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg
                           ${uploadingFolder === selectedFolderData.id 
@@ -660,6 +655,7 @@ onClick={async () => {
                           )}
                         </span>
                       </motion.div>
+                    </label>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -760,11 +756,6 @@ function FolderCard({
   onFileUpload: (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => void; 
   uploadingFolder: string | null; 
 }) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  };
   return (
     <motion.div 
       variants={{
@@ -857,20 +848,16 @@ function FolderCard({
         </motion.div>
         
         <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative">
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={(e) => {
-              onFileUpload(folder.id, e);
-              e.target.value = '';
-            }}
-            style={{ display: 'none' }}
-            disabled={uploadingFolder === folder.id}
-          />
-          <motion.div
-            onClick={handleButtonClick}
+          <label className="block">
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => onFileUpload(folder.id, e)}
+              className="hidden"
+              disabled={uploadingFolder === folder.id}
+            />
+            <motion.div
             className={`
                 relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium
                 ${uploadingFolder === folder.id 
@@ -909,6 +896,7 @@ function FolderCard({
                 )}
               </span>
             </motion.div>
+          </label>
         </div>
       </div>
     </motion.div>
