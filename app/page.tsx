@@ -626,7 +626,14 @@ onClick={async () => {
                       type="file"
                       multiple
                       accept="image/*"
-                      onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
+                      onChange={(e) => {
+                        console.log('Detail input onChange triggered');
+                        console.log('Files selected:', e.target.files?.length);
+                        handleFileUpload(selectedFolderData.id, e);
+                      }}
+                      onClick={(e) => {
+                        console.log('Detail input onClick triggered');
+                      }}
                       style={{ display: 'none' }}
                       disabled={uploadingFolder === selectedFolderData.id}
                     />
@@ -867,7 +874,14 @@ function FolderCard({
             type="file"
             multiple
             accept="image/*"
-            onChange={(e) => onFileUpload(folder.id, e)}
+            onChange={(e) => {
+              console.log('Folder input onChange triggered');
+              console.log('Files selected:', e.target.files?.length);
+              onFileUpload(folder.id, e);
+            }}
+            onClick={(e) => {
+              console.log('Folder input onClick triggered');
+            }}
             style={{ display: 'none' }}
             disabled={uploadingFolder === folder.id}
           />
