@@ -143,7 +143,7 @@ export default function AdminLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="セキュリティコードを入力..."
-              className="w-full px-4 py-3 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200"
+              className="w-full px-4 py-3 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white/70 placeholder-blue-300/50 backdrop-blur transition-all duration-200"
               disabled={loading}
               required
             />
