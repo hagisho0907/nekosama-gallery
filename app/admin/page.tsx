@@ -413,7 +413,7 @@ export default function AdminPage() {
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            管制システム起動中...
+            管理システム起動中...
           </motion.p>
         </motion.div>
         <style jsx>{`
@@ -499,7 +499,7 @@ export default function AdminPage() {
                 <Settings className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </motion.div>
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                宇宙船管制センター
+                宇宙船管理センター
               </h1>
             </motion.div>
             <div className="flex gap-2 sm:gap-3">
@@ -568,7 +568,7 @@ export default function AdminPage() {
         >
           <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 sm:mb-6 flex items-center gap-3">
             <Plus className="w-6 h-6 text-blue-400" />
-            新しい宇宙領域を作成
+            新しいフォルダを作成
           </h2>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <input
@@ -617,7 +617,7 @@ export default function AdminPage() {
           <div className="mb-4 sm:mb-6">
             <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 flex items-center gap-3">
               <Settings className="w-6 h-6 text-blue-400" />
-              宇宙領域管理
+              管理センター
             </h2>
             
             {/* タブナビゲーション */}

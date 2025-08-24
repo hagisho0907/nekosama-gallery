@@ -106,7 +106,7 @@ export default function AdminLogin() {
             <Shield className="w-8 h-8 text-white" />
           </motion.div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
-            宇宙船制御センター
+            宇宙船管理センター
           </h1>
           <p className="text-blue-300 text-sm">
             管理者認証が必要です
@@ -171,7 +171,7 @@ export default function AdminLogin() {
               ) : (
                 <>
                   <Rocket className="w-4 h-4" />
-                  宇宙船にアクセス
+                  管理センターにアクセス
                 </>
               )}
             </span>
@@ -190,7 +190,7 @@ export default function AdminLogin() {
             whileHover={{ x: -5 }}
           >
             <ArrowLeft className="w-4 h-4" />
-            宇宙ステーションに戻る
+            宇宙船に戻る
           </motion.a>
         </motion.div>
       </motion.div>
