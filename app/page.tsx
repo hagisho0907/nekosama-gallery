@@ -473,7 +473,7 @@ export default function Home() {
                   transition={{ delay: 0.4, duration: 0.6 }}
                 >
                   <Stars className="w-6 h-6 text-green-400" />
-                  在籍生
+                  在籍生（最大100枚）
                 </motion.h3>
                 <motion.div 
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
@@ -509,7 +509,7 @@ export default function Home() {
                   transition={{ delay: 0.6, duration: 0.6 }}
                 >
                   <Sparkles className="w-6 h-6 text-yellow-400" />
-                  卒業生
+                  卒業生（最大10枚）
                 </motion.h3>
                 <motion.div 
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
