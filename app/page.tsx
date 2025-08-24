@@ -624,7 +624,7 @@ onClick={async () => {
                         multiple
                         accept="image/*"
                         onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
-                        className="hidden"
+                        className="absolute opacity-0 w-full h-full cursor-pointer"
                         disabled={uploadingFolder === selectedFolderData.id}
                       />
                       <motion.div 
@@ -863,7 +863,7 @@ function FolderCard({
               multiple
               accept="image/*"
               onChange={(e) => onFileUpload(folder.id, e)}
-              className="hidden"
+              className="absolute opacity-0 w-full h-full cursor-pointer"
               disabled={uploadingFolder === folder.id}
             />
             <motion.div 
