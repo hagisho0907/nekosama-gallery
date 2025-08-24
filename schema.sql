@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS photos (
   original_name TEXT NOT NULL,
   url TEXT NOT NULL,
   uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  is_featured INTEGER DEFAULT 0,
   FOREIGN KEY (folder_id) REFERENCES folders (id) ON DELETE CASCADE
 );
 

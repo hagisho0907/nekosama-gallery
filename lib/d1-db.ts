@@ -15,6 +15,7 @@ export interface CatPhoto {
   originalName: string;
   url: string;
   uploadedAt: string;
+  isFeatured?: boolean;
 }
 
 // D1 Database interface (for Cloudflare environment)
@@ -248,15 +249,35 @@ class D1DatabaseManager {
   async getPhotos(folderId: string): Promise<CatPhoto[]> {
     const db = this.ensureDatabase();
     
-    const result = await db.prepare(`
-      SELECT id, folder_id as folderId, filename, original_name as originalName, 
-             url, uploaded_at as uploadedAt
-      FROM photos 
-      WHERE folder_id = ? 
-      ORDER BY uploaded_at DESC
-    `).bind(folderId).all();
-    
-    return result.results as CatPhoto[];
+    try {
+      // Try with is_featured column first
+      const result = await db.prepare(`
+        SELECT id, folder_id as folderId, filename, original_name as originalName, 
+               url, uploaded_at as uploadedAt, 
+               CASE WHEN is_featured = 1 THEN 1 ELSE 0 END as isFeatured
+        FROM photos 
+        WHERE folder_id = ? 
+        ORDER BY uploaded_at DESC
+      `).bind(folderId).all();
+      
+      return result.results as CatPhoto[];
+    } catch (error: any) {
+      // Fallback to query without is_featured column
+      if (error.message?.includes('no column named is_featured') || error.message?.includes('no such column: is_featured')) {
+        const result = await db.prepare(`
+          SELECT id, folder_id as folderId, filename, original_name as originalName, 
+                 url, uploaded_at as uploadedAt, 
+                 0 as isFeatured
+          FROM photos 
+          WHERE folder_id = ? 
+          ORDER BY uploaded_at DESC
+        `).bind(folderId).all();
+        
+        return result.results as CatPhoto[];
+      } else {
+        throw error;
+      }
+    }
   }
 
   async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): Promise<CatPhoto> {
@@ -282,6 +303,96 @@ class D1DatabaseManager {
     
     const result = await db.prepare('DELETE FROM photos WHERE id = ?').bind(id).run();
     return result.meta.changes > 0;
+  }
+
+  async getPhotoById(id: string): Promise<CatPhoto | null> {
+    const db = this.ensureDatabase();
+    
+    try {
+      // Try with is_featured column first
+      const result = await db.prepare(`
+        SELECT id, folder_id as folderId, filename, original_name as originalName, 
+               url, uploaded_at as uploadedAt,
+               CASE WHEN is_featured = 1 THEN 1 ELSE 0 END as isFeatured
+        FROM photos 
+        WHERE id = ?
+      `).bind(id).first();
+      
+      return result as CatPhoto | null;
+    } catch (error: any) {
+      // Fallback to query without is_featured column
+      if (error.message?.includes('no column named is_featured') || error.message?.includes('no such column: is_featured')) {
+        const result = await db.prepare(`
+          SELECT id, folder_id as folderId, filename, original_name as originalName, 
+                 url, uploaded_at as uploadedAt,
+                 0 as isFeatured
+          FROM photos 
+          WHERE id = ?
+        `).bind(id).first();
+        
+        return result as CatPhoto | null;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async updatePhotoFeatured(id: string, isFeatured: boolean): Promise<boolean> {
+    const db = this.ensureDatabase();
+    
+    try {
+      const result = await db.prepare(`
+        UPDATE photos 
+        SET is_featured = ? 
+        WHERE id = ?
+      `).bind(isFeatured ? 1 : 0, id).run();
+
+      return result.meta.changes > 0;
+    } catch (error: any) {
+      // If is_featured column doesn't exist, we can't update it
+      if (error.message?.includes('no column named is_featured') || error.message?.includes('no such column: is_featured')) {
+        console.warn('is_featured column does not exist, skipping update');
+        return false;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async getFeaturedPhotos(folderId: string): Promise<CatPhoto[]> {
+    const db = this.ensureDatabase();
+    
+    try {
+      // Try with is_featured column first
+      const result = await db.prepare(`
+        SELECT id, folder_id as folderId, filename, original_name as originalName, 
+               url, uploaded_at as uploadedAt,
+               CASE WHEN is_featured = 1 THEN 1 ELSE 0 END as isFeatured
+        FROM photos 
+        WHERE folder_id = ? AND is_featured = 1
+        ORDER BY uploaded_at DESC
+        LIMIT 3
+      `).bind(folderId).all();
+      
+      return result.results as CatPhoto[];
+    } catch (error: any) {
+      // Fallback: return first 3 photos if no is_featured column
+      if (error.message?.includes('no column named is_featured') || error.message?.includes('no such column: is_featured')) {
+        const result = await db.prepare(`
+          SELECT id, folder_id as folderId, filename, original_name as originalName, 
+                 url, uploaded_at as uploadedAt,
+                 0 as isFeatured
+          FROM photos 
+          WHERE folder_id = ? 
+          ORDER BY uploaded_at DESC
+          LIMIT 3
+        `).bind(folderId).all();
+        
+        return result.results as CatPhoto[];
+      } else {
+        throw error;
+      }
+    }
   }
 }
 

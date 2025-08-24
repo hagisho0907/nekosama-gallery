@@ -19,7 +19,8 @@ import {
   GripVertical,
   Square,
   CheckSquare,
-  Info
+  Info,
+  Star
 } from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
 
@@ -39,6 +40,7 @@ type Photo = {
   originalName: string;
   url: string;
   uploadedAt: string;
+  isFeatured?: boolean;
 };
 
 export default function AdminPage() {
@@ -311,6 +313,51 @@ export default function AdminPage() {
     } catch (err) {
       setError('写真の削除に失敗しました');
       console.error('Error deleting photos:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleToggleFeatured = async (photoId: string) => {
+    try {
+      setSubmitting(true);
+      const photo = photos.find(p => p.id === photoId);
+      const newFeaturedStatus = !photo?.isFeatured;
+      
+      // Count current featured photos for this folder
+      const currentFeatured = photos.filter(p => p.isFeatured).length;
+      
+      // If trying to feature a photo but already have 3 featured, prevent it
+      if (newFeaturedStatus && currentFeatured >= 3) {
+        setError('代表写真は最大3枚まで設定できます');
+        return;
+      }
+      
+      const response = await fetch(`/api/photos/${photoId}/featured`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isFeatured: newFeaturedStatus }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        // Update local state
+        setPhotos(prev => prev.map(p => 
+          p.id === photoId 
+            ? { ...p, isFeatured: newFeaturedStatus }
+            : p
+        ));
+        // Signal that data was updated for main page refresh
+        localStorage.setItem('nekosama_data_updated', Date.now().toString());
+      } else {
+        setError(data.error || 'Failed to update featured status');
+      }
+    } catch (err) {
+      setError('Failed to update featured status');
+      console.error('Error updating featured status:', err);
     } finally {
       setSubmitting(false);
     }
@@ -1218,6 +1265,27 @@ export default function AdminPage() {
                             </motion.div>
                           </div>
                         )}
+                        {!showPhotoSelection && (
+                          <div className="absolute top-2 left-2">
+                            <motion.button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleToggleFeatured(photo.id);
+                              }}
+                              disabled={submitting}
+                              className={`w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all duration-200 ${
+                                photo.isFeatured
+                                  ? 'bg-yellow-500 border-yellow-400 text-white'
+                                  : 'bg-white/20 backdrop-blur border-white/50 text-white/70 hover:bg-yellow-500/20 hover:border-yellow-400/50'
+                              }`}
+                              title={photo.isFeatured ? '代表写真から除外' : '代表写真に設定'}
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <Star className={`w-3 h-3 ${photo.isFeatured ? 'fill-current' : ''}`} />
+                            </motion.button>
+                          </div>
+                        )}
                       </div>
                       {!showPhotoSelection && (
                         <div className="absolute top-1 right-1 sm:top-2 sm:right-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1243,6 +1311,12 @@ export default function AdminPage() {
                         {showPhotoSelection && isSelected && (
                           <p className="text-xs text-green-400 mt-1">
                             ✓ 保持される写真
+                          </p>
+                        )}
+                        {!showPhotoSelection && photo.isFeatured && (
+                          <p className="text-xs text-yellow-400 mt-1 flex items-center gap-1">
+                            <Star className="w-3 h-3 fill-current" />
+                            代表写真
                           </p>
                         )}
                       </div>

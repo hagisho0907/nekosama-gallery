@@ -13,11 +13,21 @@ export async function onRequestGet(context: any): Promise<Response> {
     
     // Get photo counts for each folder
     const foldersWithCounts = await Promise.all(folders.map(async (folder: CatFolder) => {
-      const photos = await d1Database.getPhotos(folder.id);
+      const allPhotos = await d1Database.getPhotos(folder.id);
+      const featuredPhotos = await d1Database.getFeaturedPhotos(folder.id);
+      
+      // Use featured photos first, then fill with regular photos if needed
+      let displayPhotos = featuredPhotos.slice(0, 3);
+      if (displayPhotos.length < 3) {
+        const regularPhotos = allPhotos.filter(photo => !photo.isFeatured);
+        const remainingSlots = 3 - displayPhotos.length;
+        displayPhotos = displayPhotos.concat(regularPhotos.slice(0, remainingSlots));
+      }
+      
       return {
         ...folder,
-        photoCount: photos.length,
-        photos: photos.slice(0, 3) // Get first 3 photos for thumbnails
+        photoCount: allPhotos.length,
+        photos: displayPhotos
       };
     }));
 
