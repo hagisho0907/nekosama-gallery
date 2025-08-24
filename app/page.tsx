@@ -595,7 +595,10 @@ onClick={async () => {
                   transition={{ delay: 0.3, duration: 0.6 }}
                 >
                   <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
-                    {selectedFolderData.name}の宇宙航海
+                    {selectedFolderData.status === 'graduated' 
+                      ? `${selectedFolderData.name}の宇宙の思い出` 
+                      : `${selectedFolderData.name}の宇宙航海`
+                    }
                   </h2>
                   <p className="text-sm sm:text-base text-blue-300 flex items-center justify-center gap-2">
                     <Sparkles className="w-4 h-4" />
