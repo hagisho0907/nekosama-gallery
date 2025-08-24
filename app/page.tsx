@@ -777,10 +777,10 @@ function FolderCard({
         
         
         <motion.div 
-          className="relative p-4 sm:p-5 cursor-pointer flex-1 flex flex-col" 
+          className="relative p-3 sm:p-4 cursor-pointer flex-1 flex flex-col" 
           onClick={() => onSelectFolder(folder.id)}
         >
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <h3 className="text-lg sm:text-xl font-bold text-white truncate">
                 {folder.name}
@@ -800,7 +800,7 @@ function FolderCard({
           </div>
           
           {/* 写真数表示 */}
-          <div className="mb-3">
+          <div className="mb-2">
             <p className="text-xs sm:text-sm text-blue-300 flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
               {folder.photoCount}枚の写真
@@ -847,7 +847,7 @@ function FolderCard({
           </div>
         </motion.div>
         
-        <div className="px-4 pb-4 sm:px-5 sm:pb-4 mt-auto relative">
+        <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative">
           <label className="block">
             <input
               type="file"
