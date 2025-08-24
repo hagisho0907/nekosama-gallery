@@ -48,6 +48,7 @@ function formatFileSize(bytes: number): string {
 export default function Home() {
   const [folders, setFolders] = useState<CatFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const detailFileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFolderData, setSelectedFolderData] = useState<CatFolder | null>(null);
   const [uploadingFolder, setUploadingFolder] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -618,24 +619,24 @@ onClick={async () => {
                     <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
                       この宇宙領域にはまだねこ様の写真が存在しません。最初の写真をアップロードして探査を開始しましょう！
                     </p>
-                    <label className="inline-block relative">
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        onChange={(e) => {
-                          console.log('Detail Input onChange fired!', e.target.files);
-                          handleFileUpload(selectedFolderData.id, e);
-                        }}
-                        onClick={(e) => {
-                          console.log('Detail Input clicked!', e);
-                          // Reset value to ensure onChange fires in Chrome
-                          (e.target as HTMLInputElement).value = '';
-                        }}
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        disabled={uploadingFolder === selectedFolderData.id}
-                      />
+                    <input
+                    ref={detailFileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => {
+                      console.log('Detail Ref Input onChange fired!', e.target.files);
+                      handleFileUpload(selectedFolderData.id, e);
+                      e.target.value = '';
+                    }}
+                    style={{ display: 'none' }}
+                    disabled={uploadingFolder === selectedFolderData.id}
+                  />
                       <motion.div 
+                        onClick={() => {
+                          console.log('Detail button clicked, triggering file input');
+                          detailFileInputRef.current?.click();
+                        }}
                         className={`
                           relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg
                           ${uploadingFolder === selectedFolderData.id 
@@ -672,7 +673,6 @@ onClick={async () => {
                           )}
                         </span>
                       </motion.div>
-                    </label>
                   </motion.div>
                 ) : (
                   <motion.div
