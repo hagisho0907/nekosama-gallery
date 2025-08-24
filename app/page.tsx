@@ -618,13 +618,19 @@ onClick={async () => {
                     <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
                       この宇宙領域にはまだねこ様の写真が存在しません。最初の写真をアップロードして探査を開始しましょう！
                     </p>
-                    <label className="inline-block">
+                    <label className="inline-block relative">
                       <input
                         type="file"
                         multiple
                         accept="image/*"
-                        onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
-                        className="absolute opacity-0 w-full h-full cursor-pointer"
+                        onChange={(e) => {
+                          console.log('Detail Input onChange fired!', e.target.files);
+                          handleFileUpload(selectedFolderData.id, e);
+                        }}
+                        onClick={(e) => {
+                          console.log('Detail Input clicked!', e);
+                        }}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
                         disabled={uploadingFolder === selectedFolderData.id}
                       />
                       <motion.div 
@@ -857,13 +863,19 @@ function FolderCard({
         </motion.div>
         
         <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative">
-          <label className="block">
+          <label className="block relative">
             <input
               type="file"
               multiple
               accept="image/*"
-              onChange={(e) => onFileUpload(folder.id, e)}
-              className="absolute opacity-0 w-full h-full cursor-pointer"
+              onChange={(e) => {
+                console.log('Input onChange fired!', e.target.files);
+                onFileUpload(folder.id, e);
+              }}
+              onClick={(e) => {
+                console.log('Input clicked!', e);
+              }}
+              className="absolute inset-0 opacity-0 cursor-pointer"
               disabled={uploadingFolder === folder.id}
             />
             <motion.div 
