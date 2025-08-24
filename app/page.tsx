@@ -466,15 +466,25 @@ export default function Home() {
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="mb-12"
               >
-                <motion.h3 
-                  className="text-xl sm:text-2xl font-bold text-green-300 mb-4 sm:mb-6 flex items-center gap-3"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
-                >
-                  <Stars className="w-6 h-6 text-green-400" />
-                  在籍生（最大100枚）
-                </motion.h3>
+                <div className="mb-4 sm:mb-6">
+                  <motion.h3 
+                    className="text-xl sm:text-2xl font-bold text-green-300 mb-2 flex items-center gap-3"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
+                  >
+                    <Stars className="w-6 h-6 text-green-400" />
+                    在籍生（最大100枚）
+                  </motion.h3>
+                  <motion.p 
+                    className="text-sm text-green-300 ml-9"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.5, duration: 0.6 }}
+                  >
+                    拝啓ねこ様の宇宙船で活躍している姿を見よ！
+                  </motion.p>
+                </div>
                 <motion.div 
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                   initial="hidden"
@@ -502,15 +512,25 @@ export default function Home() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <motion.h3 
-                  className="text-xl sm:text-2xl font-bold text-yellow-300 mb-4 sm:mb-6 flex items-center gap-3"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.6 }}
-                >
-                  <Sparkles className="w-6 h-6 text-yellow-400" />
-                  卒業生（最大10枚）
-                </motion.h3>
+                <div className="mb-4 sm:mb-6">
+                  <motion.h3 
+                    className="text-xl sm:text-2xl font-bold text-yellow-300 mb-2 flex items-center gap-3"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.6 }}
+                  >
+                    <Sparkles className="w-6 h-6 text-yellow-400" />
+                    卒業生（最大10枚）
+                  </motion.h3>
+                  <motion.p 
+                    className="text-sm text-yellow-300 ml-9"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.7, duration: 0.6 }}
+                  >
+                    拝啓ねこ様から飛び立った勇姿を見よ！
+                  </motion.p>
+                </div>
                 <motion.div 
                   className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
                   initial="hidden"
