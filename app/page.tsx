@@ -55,6 +55,41 @@ export default function Home() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const detailUploadRef = useRef<HTMLInputElement>(null);
 
+  const triggerFileUpload = (folderId: string) => {
+    console.log('triggerFileUpload called for folder:', folderId);
+    
+    // Method 1: Try with existing ref
+    if (detailUploadRef.current) {
+      console.log('Attempting ref click');
+      detailUploadRef.current.click();
+      return;
+    }
+    
+    // Method 2: Create new input element
+    console.log('Creating new input element');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*';
+    input.style.display = 'none';
+    
+    input.onchange = (e) => {
+      console.log('Dynamic input onChange');
+      const target = e.target as HTMLInputElement;
+      if (target.files) {
+        const syntheticEvent = {
+          target: target,
+          currentTarget: target
+        } as React.ChangeEvent<HTMLInputElement>;
+        handleFileUpload(folderId, syntheticEvent);
+      }
+      document.body.removeChild(input);
+    };
+    
+    document.body.appendChild(input);
+    input.click();
+  };
+
   useEffect(() => {
     fetchFolders();
   }, []);
@@ -640,16 +675,8 @@ onClick={async () => {
                     <div
                       onClick={() => {
                         console.log('Detail upload button clicked');
-                        console.log('Browser:', navigator.userAgent);
-                        console.log('uploadingFolder:', uploadingFolder);
-                        console.log('selectedFolderData.id:', selectedFolderData.id);
-                        console.log('detailUploadRef.current:', detailUploadRef.current);
-                        
-                        if (uploadingFolder !== selectedFolderData.id && detailUploadRef.current) {
-                          console.log('Triggering file input click...');
-                          detailUploadRef.current.click();
-                        } else {
-                          console.log('Upload blocked - either uploading or ref null');
+                        if (uploadingFolder !== selectedFolderData.id) {
+                          triggerFileUpload(selectedFolderData.id);
                         }
                       }}
                       className={`
