@@ -136,8 +136,19 @@ export default function Home() {
   };
 
   const handleFileUpload = async (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleFileUpload called');
+    console.log('folderId:', folderId);
+    console.log('event:', event);
+    console.log('event.target:', event.target);
+    console.log('files:', event.target.files);
+    
     const files = event.target.files;
-    if (!files) return;
+    if (!files) {
+      console.log('No files selected');
+      return;
+    }
+    
+    console.log('Files to upload:', Array.from(files).map(f => f.name));
 
     setUploadingFolder(folderId);
     
@@ -621,8 +632,17 @@ onClick={async () => {
                     />
                     <div
                       onClick={() => {
+                        console.log('Detail upload button clicked');
+                        console.log('Browser:', navigator.userAgent);
+                        console.log('uploadingFolder:', uploadingFolder);
+                        console.log('selectedFolderData.id:', selectedFolderData.id);
+                        console.log('detailUploadRef.current:', detailUploadRef.current);
+                        
                         if (uploadingFolder !== selectedFolderData.id && detailUploadRef.current) {
+                          console.log('Triggering file input click...');
                           detailUploadRef.current.click();
+                        } else {
+                          console.log('Upload blocked - either uploading or ref null');
                         }
                       }}
                       className={`
@@ -853,8 +873,17 @@ function FolderCard({
           />
           <div
             onClick={() => {
+              console.log('Folder upload button clicked');
+              console.log('Browser:', navigator.userAgent);
+              console.log('uploadingFolder:', uploadingFolder);
+              console.log('folder.id:', folder.id);
+              console.log('folderUploadRef.current:', folderUploadRef.current);
+              
               if (uploadingFolder !== folder.id && folderUploadRef.current) {
+                console.log('Triggering folder file input click...');
                 folderUploadRef.current.click();
+              } else {
+                console.log('Folder upload blocked - either uploading or ref null');
               }
             }}
             className={`
