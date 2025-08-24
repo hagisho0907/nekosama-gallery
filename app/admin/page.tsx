@@ -3,6 +3,21 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Settings, 
+  Stars, 
+  Sparkles, 
+  ArrowLeft, 
+  LogOut, 
+  Plus, 
+  Edit3, 
+  Trash2, 
+  Camera,
+  AlertCircle,
+  CheckCircle,
+  GripVertical
+} from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
 
 type CatFolder = {
@@ -364,159 +379,354 @@ export default function AdminPage() {
 
   if (!authenticated || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-purple-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">読み込み中...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative flex items-center justify-center">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="stars"></div>
+          <div className="twinkling"></div>
         </div>
+        <motion.div 
+          className="text-center relative z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className="relative mx-auto mb-6"
+            animate={{ 
+              rotate: 360,
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              rotate: { duration: 2, repeat: Infinity, ease: "linear" },
+              scale: { duration: 1.5, repeat: Infinity }
+            }}
+          >
+            <Settings className="w-16 h-16 text-blue-400 mx-auto" />
+            <motion.div
+              className="absolute -inset-4 rounded-full border-2 border-blue-400/30"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            />
+          </motion.div>
+          <motion.p 
+            className="text-blue-300 text-lg font-medium"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            管制システム起動中...
+          </motion.p>
+        </motion.div>
+        <style jsx>{`
+          .stars, .twinkling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+          .stars {
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+            animation: move-stars 200s linear infinite;
+          }
+          .twinkling {
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
+            animation: move-twinkling 100s linear infinite;
+          }
+          @keyframes move-stars {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100px); }
+          }
+          @keyframes move-twinkling {
+            from { transform: translateX(0); }
+            to { transform: translateX(-200px); }
+          }
+        `}</style>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-800">
-      <header className="bg-white dark:bg-gray-800 shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
+      {/* Space stars background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="stars"></div>
+        <div className="twinkling"></div>
+      </div>
+      <style jsx>{`
+        .stars, .twinkling {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+        .stars {
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+          animation: move-stars 200s linear infinite;
+        }
+        .twinkling {
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
+          animation: move-twinkling 100s linear infinite;
+        }
+        @keyframes move-stars {
+          from { transform: translateX(0); }
+          to { transform: translateX(-100px); }
+        }
+        @keyframes move-twinkling {
+          from { transform: translateX(0); }
+          to { transform: translateX(-200px); }
+        }
+      `}</style>
+
+      <motion.header 
+        className="bg-slate-800/90 backdrop-blur-md shadow-lg border-b border-blue-500/30 relative z-10"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4 sm:py-6">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <span className="text-lg sm:text-xl lg:text-2xl">🔧</span> 管理者ページ
-            </h1>
+            <motion.div 
+              className="flex items-center gap-3"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <motion.div 
+                className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Settings className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              </motion.div>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+                宇宙船管制センター
+              </h1>
+            </motion.div>
             <div className="flex gap-2 sm:gap-3">
-              <button
+              <motion.button
                 onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base"
+                className="bg-red-600/80 hover:bg-red-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base backdrop-blur-sm border border-red-400/30 shadow-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <span className="hidden sm:inline">ログアウト</span>
-                <span className="sm:hidden">ログアウト</span>
-              </button>
-              <Link 
-                href="/" 
-                className="bg-amber-800 hover:bg-amber-900 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base"
+                <span className="hidden sm:flex items-center gap-2">
+                  <LogOut className="w-4 h-4" />
+                  ログアウト
+                </span>
+                <span className="sm:hidden">
+                  <LogOut className="w-4 h-4" />
+                </span>
+              </motion.button>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <span className="hidden sm:inline">← ギャラリーに戻る</span>
-                <span className="sm:hidden">ギャラリー</span>
-              </Link>
+                <Link 
+                  href="/" 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-lg border border-blue-400/30 flex items-center gap-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline">宇宙ステーション</span>
+                  <span className="sm:hidden">戻る</span>
+                </Link>
+              </motion.div>
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-3 py-2 sm:px-4 sm:py-3 rounded mb-4 sm:mb-6 text-sm sm:text-base">
-            {error}
-            <button 
-              onClick={() => setError(null)} 
-              className="ml-2 text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-200 float-right"
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        <AnimatePresence>
+          {error && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              className="bg-red-900/30 backdrop-blur border border-red-400/50 text-red-300 px-3 py-2 sm:px-4 sm:py-3 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base shadow-lg"
             >
-              ✕
-            </button>
-          </div>
-        )}
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span className="flex-1">{error}</span>
+                <motion.button 
+                  onClick={() => setError(null)} 
+                  className="text-red-400 hover:text-red-200 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  ✕
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">新しいフォルダを作成</h2>
+        <motion.div 
+          className="bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl p-4 sm:p-6 mb-6 sm:mb-8 border border-blue-500/30"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 sm:mb-6 flex items-center gap-3">
+            <Plus className="w-6 h-6 text-blue-400" />
+            新しい宇宙領域を作成
+          </h2>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <input
               type="text"
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
-              placeholder="猫の名前を入力..."
-              className="flex-1 px-3 py-2 sm:px-4 sm:py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+              placeholder="ねこ様の名前を入力..."
+              className="flex-1 px-3 py-2 sm:px-4 sm:py-2 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200 text-sm sm:text-base"
               onKeyPress={(e) => e.key === 'Enter' && handleAddFolder()}
               disabled={submitting}
             />
-            <button
+            <motion.button
               onClick={handleAddFolder}
               disabled={submitting || !newFolderName.trim()}
-              className="bg-amber-800 hover:bg-amber-900 disabled:bg-gray-400 text-white px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition-colors text-sm sm:text-base whitespace-nowrap"
+              className={`px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base whitespace-nowrap shadow-lg ${
+                submitting || !newFolderName.trim()
+                  ? 'bg-slate-600 cursor-not-allowed text-slate-400'
+                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white'
+              }`}
+              whileHover={submitting || !newFolderName.trim() ? {} : { scale: 1.05 }}
+              whileTap={submitting || !newFolderName.trim() ? {} : { scale: 0.95 }}
             >
-              {submitting ? '作成中...' : '作成'}
-            </button>
+              <span className="flex items-center gap-2">
+                {submitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
+                    作成中...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    作成
+                  </>
+                )}
+              </span>
+            </motion.button>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6">
+        <motion.div 
+          className="bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl p-4 sm:p-6 border border-blue-500/30"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
           <div className="mb-4 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">フォルダ管理</h2>
+            <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 flex items-center gap-3">
+              <Settings className="w-6 h-6 text-blue-400" />
+              宇宙領域管理
+            </h2>
             
             {/* タブナビゲーション */}
-            <div className="border-b border-gray-200 dark:border-gray-600 mb-4">
+            <div className="border-b border-blue-500/30 mb-4">
               <nav className="-mb-px flex space-x-8">
-                <button
+                <motion.button
                   onClick={() => setActiveTab('enrolled')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
                     activeTab === 'enrolled'
-                      ? 'border-green-500 text-green-600 dark:text-green-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                      ? 'border-green-400 text-green-300'
+                      : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
                   }`}
+                  whileHover={{ y: -2 }}
                 >
                   <span className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <Stars className="w-4 h-4" />
                     在籍生 ({folders.filter(f => f.status === 'enrolled').length})
                   </span>
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   onClick={() => setActiveTab('graduated')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
                     activeTab === 'graduated'
-                      ? 'border-yellow-500 text-yellow-600 dark:text-yellow-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                      ? 'border-yellow-400 text-yellow-300'
+                      : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
                   }`}
+                  whileHover={{ y: -2 }}
                 >
                   <span className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                    <Sparkles className="w-4 h-4" />
                     卒業生 ({folders.filter(f => f.status === 'graduated').length})
                   </span>
-                </button>
+                </motion.button>
               </nav>
             </div>
             
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-              📱 フォルダをドラッグ&ドロップして表示順序を変更できます
+            <p className="text-xs sm:text-sm text-blue-300/70 flex items-center gap-2">
+              <GripVertical className="w-4 h-4" />
+              フォルダをドラッグ&ドロップして表示順序を変更できます
             </p>
           </div>
-          <div className="space-y-4 transition-all duration-300">
+          <motion.div 
+            className="space-y-4 transition-all duration-300"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: {
+                  delayChildren: 0.2,
+                  staggerChildren: 0.1
+                }
+              }
+            }}
+          >
             {filteredFolders.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="inline-flex items-center gap-2 text-gray-500 dark:text-gray-300">
+              <motion.div 
+                className="text-center py-8"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+              >
+                <motion.div 
+                  className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl"
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                    rotate: [0, 2, -2, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
                   {activeTab === 'enrolled' ? (
-                    <>
-                      <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                      在籍生のフォルダがありません。
-                    </>
+                    <Stars className="w-8 h-8 text-white" />
                   ) : (
-                    <>
-                      <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-                      卒業生のフォルダがありません。
-                    </>
+                    <Sparkles className="w-8 h-8 text-white" />
                   )}
-                </div>
-              </div>
+                </motion.div>
+                <p className="text-blue-300">
+                  {activeTab === 'enrolled' ? '在籍生の宇宙領域がありません' : '卒業生の宇宙領域がありません'}
+                </p>
+              </motion.div>
             ) : (
-              filteredFolders.map(folder => (
-                <div 
+              filteredFolders.map((folder, index) => (
+                <motion.div 
                   key={folder.id} 
-                  className={`border rounded-lg p-3 sm:p-4 transition-all duration-200 ${
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  className={`bg-slate-700/50 backdrop-blur-md border rounded-xl p-3 sm:p-4 transition-all duration-200 shadow-lg ${
                     draggedFolder === folder.id 
                       ? 'opacity-50 scale-95' 
                       : isDragOver === folder.id 
                         ? activeTab === 'enrolled' 
-                          ? 'border-green-500 bg-green-50 dark:bg-green-800/30' 
-                          : 'border-yellow-500 bg-yellow-50 dark:bg-yellow-800/30'
+                          ? 'border-green-400 bg-green-900/30 shadow-green-400/20' 
+                          : 'border-yellow-400 bg-yellow-900/30 shadow-yellow-400/20'
                         : activeTab === 'enrolled'
-                          ? 'border-gray-200 dark:border-gray-600 hover:border-green-300 dark:hover:border-green-500'
-                          : 'border-gray-200 dark:border-gray-600 hover:border-yellow-300 dark:hover:border-yellow-500'
+                          ? 'border-green-500/30 hover:border-green-400 hover:bg-slate-600/50'
+                          : 'border-yellow-500/30 hover:border-yellow-400 hover:bg-slate-600/50'
                   } ${
                     activeTab === 'enrolled' 
-                      ? 'border-l-4 border-l-green-500' 
-                      : 'border-l-4 border-l-yellow-500'
+                      ? 'border-l-4 border-l-green-400' 
+                      : 'border-l-4 border-l-yellow-400'
                   }`}
                   draggable={editingFolder !== folder.id}
                   onDragStart={(e) => handleDragStart(e, folder.id)}
                   onDragOver={(e) => handleDragOver(e, folder.id)}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, folder.id)}
+                  whileHover={{ y: -2, scale: 1.01 }}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
@@ -526,50 +736,77 @@ export default function AdminPage() {
                             type="text"
                             value={editingName}
                             onChange={(e) => setEditingName(e.target.value)}
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm sm:text-base"
+                            className="flex-1 px-3 py-2 bg-slate-600/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200 text-sm sm:text-base"
                             onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit()}
                             disabled={submitting}
                             autoFocus
                           />
                           <div className="flex gap-2">
-                            <button
+                            <motion.button
                               onClick={handleSaveEdit}
                               disabled={submitting || !editingName.trim()}
-                              className="flex-1 sm:flex-none bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-3 py-2 rounded text-xs sm:text-sm transition-colors"
+                              className={`flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm transition-all duration-200 ${
+                                submitting || !editingName.trim()
+                                  ? 'bg-slate-600 cursor-not-allowed text-slate-400'
+                                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white shadow-lg'
+                              }`}
+                              whileHover={submitting || !editingName.trim() ? {} : { scale: 1.05 }}
+                              whileTap={submitting || !editingName.trim() ? {} : { scale: 0.95 }}
                             >
-                              {submitting ? '保存中...' : '保存'}
-                            </button>
-                            <button
+                              <span className="flex items-center gap-1">
+                                {submitting ? (
+                                  <>
+                                    <div className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
+                                    保存中...
+                                  </>
+                                ) : (
+                                  <>
+                                    <CheckCircle className="w-3 h-3" />
+                                    保存
+                                  </>
+                                )}
+                              </span>
+                            </motion.button>
+                            <motion.button
                               onClick={() => {
                                 setEditingFolder(null);
                                 setEditingName('');
                               }}
                               disabled={submitting}
-                              className="flex-1 sm:flex-none bg-gray-500 hover:bg-gray-600 disabled:bg-gray-400 text-white px-3 py-2 rounded text-xs sm:text-sm transition-colors"
+                              className="flex-1 sm:flex-none bg-slate-600/80 hover:bg-slate-500 disabled:bg-slate-700 text-white px-3 py-2 rounded-lg text-xs sm:text-sm transition-all duration-200 shadow-lg border border-slate-500/50"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
                             >
                               キャンセル
-                            </button>
+                            </motion.button>
                           </div>
                         </div>
                       ) : (
                         <>
                           <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <svg 
-                              className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 cursor-grab active:cursor-grabbing flex-shrink-0" 
-                              fill="currentColor" 
-                              viewBox="0 0 20 20"
-                            >
-                              <path d="M7 2a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V4a2 2 0 00-2-2H7zM8 5a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zm0 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
-                            </svg>
-                            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate">{folder.name}</h3>
-                            <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 whitespace-nowrap">({folder.photoCount}枚)</span>
+                            <GripVertical className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400/70 cursor-grab active:cursor-grabbing flex-shrink-0" />
+                            <h3 className="text-lg sm:text-xl font-semibold text-white truncate">{folder.name}</h3>
+                            <span className="text-xs sm:text-sm text-blue-300/70 whitespace-nowrap flex items-center gap-1">
+                              <Camera className="w-3 h-3" />
+                              {folder.photoCount}枚
+                            </span>
                             {/* ステータスバッジ */}
-                            <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${
+                            <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap border ${
                               folder.status === 'enrolled' 
-                                ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' 
-                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
+                                ? 'bg-green-900/50 text-green-300 border-green-400/50 backdrop-blur' 
+                                : 'bg-yellow-900/50 text-yellow-300 border-yellow-400/50 backdrop-blur'
                             }`}>
-                              {folder.status === 'enrolled' ? '在籍' : '卒業'}
+                              {folder.status === 'enrolled' ? (
+                                <span className="flex items-center gap-1">
+                                  <Stars className="w-3 h-3" />
+                                  在籍
+                                </span>
+                              ) : (
+                                <span className="flex items-center gap-1">
+                                  <Sparkles className="w-3 h-3" />
+                                  卒業
+                                </span>
+                              )}
                             </span>
                           </div>
                         </>
@@ -577,115 +814,188 @@ export default function AdminPage() {
                     </div>
                     {editingFolder !== folder.id && (
                       <div className="flex flex-wrap gap-1 sm:gap-2">
-                        <button
+                        <motion.button
                           onClick={() => fetchPhotos(folder.id)}
                           disabled={submitting}
-                          className="bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none"
+                          className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-purple-400/30 shadow-lg"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          <span className="hidden sm:inline">写真管理</span>
-                          <span className="sm:hidden">管理</span>
-                        </button>
-                        <button
+                          <span className="hidden sm:flex items-center gap-1">
+                            <Camera className="w-3 h-3" />
+                            写真管理
+                          </span>
+                          <span className="sm:hidden flex items-center gap-1">
+                            <Camera className="w-3 h-3" />
+                            管理
+                          </span>
+                        </motion.button>
+                        <motion.button
                           onClick={() => handleToggleStatus(folder.id)}
                           disabled={submitting}
-                          className={`${
+                          className={`disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur shadow-lg border ${
                             folder.status === 'enrolled' 
-                              ? 'bg-yellow-600 hover:bg-yellow-700' 
-                              : 'bg-green-600 hover:bg-green-700'
-                          } disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none`}
+                              ? 'bg-yellow-600/80 hover:bg-yellow-600 border-yellow-400/30' 
+                              : 'bg-green-600/80 hover:bg-green-600 border-green-400/30'
+                          }`}
                           title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          <span className="hidden sm:inline">
-                            {folder.status === 'enrolled' ? '卒業へ' : '在籍へ'}
+                          <span className="hidden sm:flex items-center gap-1">
+                            {folder.status === 'enrolled' ? (
+                              <>
+                                <Sparkles className="w-3 h-3" />
+                                卒業へ
+                              </>
+                            ) : (
+                              <>
+                                <Stars className="w-3 h-3" />
+                                在籍へ
+                              </>
+                            )}
                           </span>
                           <span className="sm:hidden">
                             {folder.status === 'enrolled' ? '卒業' : '在籍'}
                           </span>
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
                           onClick={() => handleEditFolder(folder.id)}
                           disabled={submitting}
-                          className="bg-amber-700 hover:bg-amber-800 disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none"
+                          className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-blue-400/30 shadow-lg"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          編集
-                        </button>
-                        <button
+                          <span className="flex items-center gap-1">
+                            <Edit3 className="w-3 h-3" />
+                            <span className="hidden sm:inline">編集</span>
+                          </span>
+                        </motion.button>
+                        <motion.button
                           onClick={() => handleDeleteFolder(folder.id)}
                           disabled={submitting}
-                          className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm transition-colors flex-1 sm:flex-none"
+                          className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-red-400/30 shadow-lg"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
                         >
-                          削除
-                        </button>
+                          <span className="flex items-center gap-1">
+                            <Trash2 className="w-3 h-3" />
+                            <span className="hidden sm:inline">削除</span>
+                          </span>
+                        </motion.button>
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               ))
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Photo Management Section */}
         {selectedFolder && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 mt-6 sm:mt-8">
+          <motion.div 
+            className="bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl p-4 sm:p-6 mt-6 sm:mt-8 border border-purple-500/30"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-3">
+                <Camera className="w-6 h-6 text-purple-400" />
                 写真管理 - {folders.find(f => f.id === selectedFolder)?.name}
               </h2>
-              <button
+              <motion.button
                 onClick={() => {
                   setSelectedFolder(null);
                   setPhotos([]);
                 }}
-                className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm sm:text-base self-start sm:self-auto"
+                className="bg-slate-600/80 hover:bg-slate-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base self-start sm:self-auto backdrop-blur border border-slate-500/50 shadow-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 閉じる
-              </button>
+              </motion.button>
             </div>
             
             {photos.length === 0 ? (
-              <div className="text-center py-6 sm:py-8">
-                <p className="text-sm sm:text-base text-gray-500 dark:text-gray-300">このフォルダには写真がありません。</p>
-              </div>
+              <motion.div 
+                className="text-center py-6 sm:py-8"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+              >
+                <motion.div 
+                  className="w-16 h-16 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl"
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                    rotate: [0, 2, -2, 0]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  <Camera className="w-8 h-8 text-white" />
+                </motion.div>
+                <p className="text-blue-300">この宇宙領域には写真がありません</p>
+              </motion.div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4">
+              <motion.div 
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4"
+                initial="hidden"
+                animate="visible"
+                variants={{
+                  visible: {
+                    transition: {
+                      delayChildren: 0.2,
+                      staggerChildren: 0.05
+                    }
+                  }
+                }}
+              >
                 {photos.map(photo => (
-                  <div key={photo.id} className="relative group">
-                    <div className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+                  <motion.div 
+                    key={photo.id} 
+                    className="relative group"
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    whileHover={{ y: -5, scale: 1.02 }}
+                  >
+                    <div className="aspect-square bg-slate-700/50 rounded-lg overflow-hidden border border-blue-500/30 shadow-lg">
                       <img
                         src={photo.url}
                         alt={photo.originalName}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                         onError={(e) => {
                           e.currentTarget.src = '/placeholder.jpg';
                         }}
                       />
                     </div>
                     <div className="absolute top-1 right-1 sm:top-2 sm:right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button
+                      <motion.button
                         onClick={() => handleDeletePhoto(photo.id)}
                         disabled={submitting}
-                        className="bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white p-1 sm:p-2 rounded-full shadow-lg transition-colors"
+                        className="bg-red-600/90 hover:bg-red-600 disabled:bg-slate-600 text-white p-1 sm:p-2 rounded-full shadow-lg transition-all duration-200 backdrop-blur border border-red-400/50"
                         title="写真を削除"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                       >
-                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                      </motion.button>
                     </div>
                     <div className="mt-1 sm:mt-2">
-                      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 truncate" title={photo.originalName}>
+                      <p className="text-xs sm:text-sm text-blue-300 truncate" title={photo.originalName}>
                         {photo.originalName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-blue-400/70">
                         {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
         )}
       </main>
     </div>
