@@ -596,7 +596,7 @@ onClick={async () => {
                 >
                   <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
                     {selectedFolderData.status === 'graduated' 
-                      ? `${selectedFolderData.name}の宇宙の思い出` 
+                      ? `${selectedFolderData.name}の惑星探索` 
                       : `${selectedFolderData.name}の宇宙航海`
                     }
                   </h2>
