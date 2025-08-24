@@ -173,7 +173,7 @@ export default function AdminPage() {
     }
   };
 
-  const fetchPhotos = async (folderId: string) => {
+  const fetchPhotos = async (folderId: string, updatedFolder?: CatFolder) => {
     try {
       const response = await fetch(`/api/folders/${folderId}`);
       const data = await response.json();
@@ -184,7 +184,8 @@ export default function AdminPage() {
         setSelectedPhotos([]);
         
         // Check if graduated folder has 10+ photos and needs selection
-        const folder = folders.find(f => f.id === folderId);
+        // Use updatedFolder if provided, otherwise find from current folders state
+        const folder = updatedFolder || folders.find(f => f.id === folderId);
         if (folder?.status === 'graduated' && data.photos?.length >= 10) {
           setShowPhotoSelection(true);
         } else {
@@ -391,6 +392,13 @@ export default function AdminPage() {
         
         // ステータス変更後、該当するタブに自動切り替え
         setActiveTab(newStatus);
+        
+        // If the changed folder is currently selected for photo management, refresh photo selection state
+        if (selectedFolder === folderId) {
+          // Re-fetch photos to trigger selection interface check with updated folder info
+          const updatedFolder = { ...folder, status: newStatus as 'enrolled' | 'graduated' };
+          await fetchPhotos(folderId, updatedFolder);
+        }
       } else {
         setError(data.error || 'Failed to update folder status');
       }
