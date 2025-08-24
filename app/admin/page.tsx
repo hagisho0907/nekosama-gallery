@@ -706,28 +706,30 @@ export default function AdminPage() {
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
-                  className={`bg-slate-700/50 backdrop-blur-md border rounded-xl p-3 sm:p-4 transition-all duration-200 shadow-lg ${
-                    draggedFolder === folder.id 
-                      ? 'opacity-50 scale-95' 
-                      : isDragOver === folder.id 
-                        ? activeTab === 'enrolled' 
-                          ? 'border-green-400 bg-green-900/30 shadow-green-400/20' 
-                          : 'border-yellow-400 bg-yellow-900/30 shadow-yellow-400/20'
-                        : activeTab === 'enrolled'
-                          ? 'border-green-500/30 hover:border-green-400 hover:bg-slate-600/50'
-                          : 'border-yellow-500/30 hover:border-yellow-400 hover:bg-slate-600/50'
-                  } ${
-                    activeTab === 'enrolled' 
-                      ? 'border-l-4 border-l-green-400' 
-                      : 'border-l-4 border-l-yellow-400'
-                  }`}
-                  draggable={editingFolder !== folder.id}
-                  onDragStart={(e) => handleDragStart(e, folder.id)}
-                  onDragOver={(e) => handleDragOver(e, folder.id)}
-                  onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, folder.id)}
                   whileHover={{ y: -2, scale: 1.01 }}
                 >
+                  <div
+                    className={`bg-slate-700/50 backdrop-blur-md border rounded-xl p-3 sm:p-4 transition-all duration-200 shadow-lg ${
+                      draggedFolder === folder.id 
+                        ? 'opacity-50 scale-95' 
+                        : isDragOver === folder.id 
+                          ? activeTab === 'enrolled' 
+                            ? 'border-green-400 bg-green-900/30 shadow-green-400/20' 
+                            : 'border-yellow-400 bg-yellow-900/30 shadow-yellow-400/20'
+                          : activeTab === 'enrolled'
+                            ? 'border-green-500/30 hover:border-green-400 hover:bg-slate-600/50'
+                            : 'border-yellow-500/30 hover:border-yellow-400 hover:bg-slate-600/50'
+                    } ${
+                      activeTab === 'enrolled' 
+                        ? 'border-l-4 border-l-green-400' 
+                        : 'border-l-4 border-l-yellow-400'
+                    }`}
+                    draggable={editingFolder !== folder.id}
+                    onDragStart={(e) => handleDragStart(e, folder.id)}
+                    onDragOver={(e) => handleDragOver(e, folder.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, folder.id)}
+                  >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
                       {editingFolder === folder.id ? (
@@ -885,6 +887,7 @@ export default function AdminPage() {
                         </motion.button>
                       </div>
                     )}
+                  </div>
                   </div>
                 </motion.div>
               ))
