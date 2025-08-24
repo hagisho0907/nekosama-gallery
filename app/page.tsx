@@ -777,10 +777,10 @@ function FolderCard({
         
         
         <motion.div 
-          className="relative p-4 sm:p-5 cursor-pointer flex-1" 
+          className="relative p-4 sm:p-5 cursor-pointer flex-1 flex flex-col" 
           onClick={() => onSelectFolder(folder.id)}
         >
-          <div className="flex items-center justify-between mb-2 mt-8">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <h3 className="text-lg sm:text-xl font-bold text-white truncate">
                 {folder.name}
@@ -799,15 +799,15 @@ function FolderCard({
             </div>
           </div>
           
-          {/* 写真数表示を上部に移動 */}
-          <div className="mb-4">
+          {/* 写真数表示 */}
+          <div className="mb-3">
             <p className="text-xs sm:text-sm text-blue-300 flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
               {folder.photoCount}枚の写真
             </p>
           </div>
           
-          <div className="grid grid-cols-3 gap-2 mb-6 h-16">
+          <div className="grid grid-cols-3 gap-2 mb-4 h-14 flex-1">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
                 key={photo.id} 
@@ -837,9 +837,9 @@ function FolderCard({
               </motion.div>
             ))}
             {folder.photoCount === 0 && (
-              <div className="col-span-3 h-16 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
+              <div className="col-span-3 h-14 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
                 <div className="text-center">
-                  <Camera className="w-6 h-6 text-blue-400 mx-auto mb-1" />
+                  <Camera className="w-5 h-5 text-blue-400 mx-auto mb-1" />
                   <p className="text-blue-300 text-xs">写真がありません</p>
                 </div>
               </div>
@@ -847,7 +847,7 @@ function FolderCard({
           </div>
         </motion.div>
         
-        <div className="px-4 pb-3 sm:px-6 sm:pb-4 mt-auto relative">
+        <div className="px-4 pb-4 sm:px-5 sm:pb-4 mt-auto relative">
           <label className="block">
             <input
               type="file"
