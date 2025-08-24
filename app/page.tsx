@@ -618,32 +618,20 @@ onClick={async () => {
                       className="hidden"
                       disabled={uploadingFolder === selectedFolderData.id}
                     />
-                      <motion.div
+                      <div
                         className={`
-                          relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg
+                          relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-200
                           ${uploadingFolder === selectedFolderData.id 
                             ? 'bg-slate-600 cursor-not-allowed' 
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
+                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
                           }
                         `}
-                        whileHover={uploadingFolder !== selectedFolderData.id ? { scale: 1.05 } : {}}
-                        whileTap={uploadingFolder !== selectedFolderData.id ? { scale: 0.95 } : {}}
                       >
-                        {uploadingFolder !== selectedFolderData.id && (
-                          <motion.div
-                            className="absolute inset-0 bg-white/10"
-                            initial={{ x: "-100%" }}
-                            whileHover={{ x: "100%" }}
-                            transition={{ duration: 0.6 }}
-                          />
-                        )}
                         <span className="relative flex items-center gap-3">
                           {uploadingFolder === selectedFolderData.id ? (
                             <>
-                              <motion.div
-                                className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full"
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              <div
+                                className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
                               />
                               宇宙転送中...
                             </>
@@ -654,7 +642,7 @@ onClick={async () => {
                             </>
                           )}
                         </span>
-                      </motion.div>
+                      </div>
                     </label>
                   </motion.div>
                 ) : (
@@ -857,32 +845,20 @@ function FolderCard({
               className="hidden"
               disabled={uploadingFolder === folder.id}
             />
-            <motion.div
+            <div
             className={`
-                relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium
+                relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
-                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500'
+                  : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-102'
                 }
               `}
-              whileHover={uploadingFolder !== folder.id ? { scale: 1.02 } : {}}
-              whileTap={uploadingFolder !== folder.id ? { scale: 0.98 } : {}}
             >
-              {uploadingFolder !== folder.id && (
-                <motion.div
-                  className="absolute inset-0 bg-white/10"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.6 }}
-                />
-              )}
               <span className="relative flex items-center justify-center gap-1.5">
                 {uploadingFolder === folder.id ? (
                   <>
-                    <motion.div
-                      className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    <div
+                      className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
                     />
                     <span className="hidden sm:inline">転送中...</span>
                     <span className="sm:hidden">転送中</span>
@@ -895,7 +871,7 @@ function FolderCard({
                   </>
                 )}
               </span>
-            </motion.div>
+            </div>
           </label>
         </div>
       </div>
