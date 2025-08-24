@@ -804,6 +804,34 @@ function FolderCard({
   uploadingFolder: string | null; 
 }) {
   const folderUploadRef = useRef<HTMLInputElement>(null);
+
+  const triggerFolderFileUpload = (folderId: string) => {
+    console.log('triggerFolderFileUpload called for folder:', folderId);
+    
+    // Create new input element for Chrome compatibility
+    console.log('Creating new folder input element');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = 'image/*';
+    input.style.display = 'none';
+    
+    input.onchange = (e) => {
+      console.log('Dynamic folder input onChange');
+      const target = e.target as HTMLInputElement;
+      if (target.files) {
+        const syntheticEvent = {
+          target: target,
+          currentTarget: target
+        } as React.ChangeEvent<HTMLInputElement>;
+        onFileUpload(folderId, syntheticEvent);
+      }
+      document.body.removeChild(input);
+    };
+    
+    document.body.appendChild(input);
+    input.click();
+  };
   return (
     <motion.div 
       variants={{
@@ -915,16 +943,8 @@ function FolderCard({
           <div
             onClick={() => {
               console.log('Folder upload button clicked');
-              console.log('Browser:', navigator.userAgent);
-              console.log('uploadingFolder:', uploadingFolder);
-              console.log('folder.id:', folder.id);
-              console.log('folderUploadRef.current:', folderUploadRef.current);
-              
-              if (uploadingFolder !== folder.id && folderUploadRef.current) {
-                console.log('Triggering folder file input click...');
-                folderUploadRef.current.click();
-              } else {
-                console.log('Folder upload blocked - either uploading or ref null');
+              if (uploadingFolder !== folder.id) {
+                triggerFolderFileUpload(folder.id);
               }
             }}
             className={`
