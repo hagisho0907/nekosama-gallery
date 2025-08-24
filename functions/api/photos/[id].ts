@@ -3,11 +3,11 @@ import { d1Database } from '../../../lib/d1-db';
 import type { CloudflareEnv } from '../../../types/cloudflare';
 
 export async function onRequestPUT(context: any): Promise<Response> {
-  console.log('PUT request received for photo:', params?.id);
-  console.log('Request URL:', request?.url);
-  
   try {
     const { request, env, params } = context;
+    
+    console.log('PUT request received for photo:', params?.id);
+    console.log('Request URL:', request?.url);
     const photoId = params.id;
     const url = new URL(request.url);
     
