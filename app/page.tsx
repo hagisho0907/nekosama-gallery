@@ -594,18 +594,9 @@ onClick={async () => {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3, duration: 0.6 }}
                 >
-                  <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
-                    <motion.div 
-                      className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg"
-                      whileHover={{ rotate: 360, scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    >
-                      <span className="text-2xl">🐱</span>
-                    </motion.div>
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                      {selectedFolderData.name}の宇宙航海
-                    </h2>
-                  </div>
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
+                    {selectedFolderData.name}の宇宙航海
+                  </h2>
                   <p className="text-sm sm:text-base text-blue-300 flex items-center justify-center gap-2">
                     <Sparkles className="w-4 h-4" />
                     {selectedFolderData.photos.length}枚の写真
