@@ -57,6 +57,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<'enrolled' | 'graduated'>('enrolled');
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
   const [showPhotoSelection, setShowPhotoSelection] = useState(false);
+  const [pendingStatusChange, setPendingStatusChange] = useState<{folderId: string, newStatus: 'enrolled' | 'graduated'} | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -267,6 +268,38 @@ export default function AdminPage() {
       if (failed > 0) {
         setError(`${failed}枚の写真の削除に失敗しました`);
       } else {
+        // If there's a pending status change, execute it now
+        if (pendingStatusChange) {
+          try {
+            const response = await fetch(`/api/folders/${pendingStatusChange.folderId}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ status: pendingStatusChange.newStatus }),
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+              setFolders(prev => prev.map(f => 
+                f.id === pendingStatusChange.folderId 
+                  ? { ...f, status: pendingStatusChange.newStatus }
+                  : f
+              ));
+              // Signal that data was updated for main page refresh
+              localStorage.setItem('nekosama_data_updated', Date.now().toString());
+            } else {
+              setError(data.error || 'Failed to update folder status');
+            }
+          } catch (statusError) {
+            setError('Failed to update folder status');
+            console.error('Error updating folder status:', statusError);
+          }
+          
+          setPendingStatusChange(null);
+        }
+        
         // Refresh photos after successful deletion
         if (selectedFolder) {
           await fetchPhotos(selectedFolder);
@@ -361,6 +394,31 @@ export default function AdminPage() {
     if (!folder || submitting) return;
     
     const newStatus = folder.status === 'enrolled' ? 'graduated' : 'enrolled';
+    
+    // If changing to graduated status, check if folder has 10+ photos and show selection first
+    if (newStatus === 'graduated' && folder.photoCount >= 10) {
+      // First load photos to show selection interface
+      await fetchPhotos(folderId);
+      setActiveTab('graduated');
+      const updatedFolder = { ...folder, status: 'graduated' as const };
+      await fetchPhotos(folderId, updatedFolder);
+      
+      // Show confirmation after selection interface is displayed
+      const confirmMessage = `このフォルダには${folder.photoCount}枚の写真があります。卒業生に変更するには5枚まで削減する必要があります。写真を選択して削減しますか？`;
+      if (!confirm(confirmMessage)) {
+        // Reset photo selection state if cancelled
+        setSelectedFolder(null);
+        setPhotos([]);
+        setSelectedPhotos([]);
+        setShowPhotoSelection(false);
+        return;
+      }
+      
+      // Store pending status change to complete after photo selection
+      setPendingStatusChange({ folderId, newStatus: 'graduated' });
+      return;
+    }
+    
     const confirmMessage = folder.status === 'enrolled' 
       ? 'このフォルダを卒業生に変更しますか？' 
       : 'このフォルダを在籍生に変更しますか？';
@@ -392,13 +450,6 @@ export default function AdminPage() {
         
         // ステータス変更後、該当するタブに自動切り替え
         setActiveTab(newStatus);
-        
-        // If the changed folder is currently selected for photo management, refresh photo selection state
-        if (selectedFolder === folderId) {
-          // Re-fetch photos to trigger selection interface check with updated folder info
-          const updatedFolder = { ...folder, status: newStatus as 'enrolled' | 'graduated' };
-          await fetchPhotos(folderId, updatedFolder);
-        }
       } else {
         setError(data.error || 'Failed to update folder status');
       }
@@ -987,6 +1038,7 @@ export default function AdminPage() {
                   setPhotos([]);
                   setSelectedPhotos([]);
                   setShowPhotoSelection(false);
+                  setPendingStatusChange(null);
                 }}
                 className="bg-slate-600/80 hover:bg-slate-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base self-start sm:self-auto backdrop-blur border border-slate-500/50 shadow-lg"
                 whileHover={{ scale: 1.05 }}
@@ -1006,10 +1058,14 @@ export default function AdminPage() {
                 <div className="flex items-start gap-3">
                   <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-semibold mb-2">卒業生フォルダ - 写真制限</h3>
+                    <h3 className="font-semibold mb-2">
+                      {pendingStatusChange ? '卒業生への変更 - 写真削減' : '卒業生フォルダ - 写真制限'}
+                    </h3>
                     <p className="text-sm mb-2">
-                      このフォルダには{photos.length}枚の写真があります。卒業生フォルダは最大10枚まで保存できるため、
-                      残したい5枚の写真を選択してください。選択されなかった写真は削除されます。
+                      {pendingStatusChange 
+                        ? `このフォルダを卒業生に変更するため、${photos.length}枚の写真から5枚を選択してください。選択されなかった写真は削除され、その後卒業生ステータスに変更されます。`
+                        : `このフォルダには${photos.length}枚の写真があります。卒業生フォルダは最大10枚まで保存できるため、残したい5枚の写真を選択してください。選択されなかった写真は削除されます。`
+                      }
                     </p>
                     <p className="text-xs text-yellow-400/80">
                       選択済み: {selectedPhotos.length}/5枚
@@ -1051,13 +1107,16 @@ export default function AdminPage() {
                           削除中...
                         </span>
                       ) : (
-                        '選択外の写真を削除'
+                        pendingStatusChange ? '削除して卒業生に変更' : '選択外の写真を削除'
                       )}
                     </motion.button>
                     <motion.button
                       onClick={() => {
                         setShowPhotoSelection(false);
                         setSelectedPhotos([]);
+                        setPendingStatusChange(null);
+                        setSelectedFolder(null);
+                        setPhotos([]);
                       }}
                       disabled={submitting}
                       className="bg-slate-600/80 hover:bg-slate-500 disabled:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-lg"
