@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -53,6 +53,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const detailUploadRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchFolders();
@@ -609,41 +610,45 @@ onClick={async () => {
                     <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
                       この宇宙領域にはまだねこ様の写真が存在しません。最初の写真をアップロードして探査を開始しましょう！
                     </p>
-                    <label className="inline-block">
                     <input
+                      ref={detailUploadRef}
                       type="file"
                       multiple
                       accept="image/*"
                       onChange={(e) => handleFileUpload(selectedFolderData.id, e)}
-                      className="hidden"
+                      style={{ display: 'none' }}
                       disabled={uploadingFolder === selectedFolderData.id}
                     />
-                      <div
-                        className={`
-                          relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-200
-                          ${uploadingFolder === selectedFolderData.id 
-                            ? 'bg-slate-600 cursor-not-allowed' 
-                            : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
-                          }
-                        `}
-                      >
-                        <span className="relative flex items-center gap-3">
-                          {uploadingFolder === selectedFolderData.id ? (
-                            <>
-                              <div
-                                className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
-                              />
-                              宇宙転送中...
-                            </>
-                          ) : (
-                            <>
-                              <Rocket className="w-5 h-5" />
-                              写真をアップロード
-                            </>
-                          )}
-                        </span>
-                      </div>
-                    </label>
+                    <div
+                      onClick={() => {
+                        if (uploadingFolder !== selectedFolderData.id && detailUploadRef.current) {
+                          detailUploadRef.current.click();
+                        }
+                      }}
+                      className={`
+                        relative overflow-hidden text-white py-3 px-6 sm:py-4 sm:px-8 rounded-xl cursor-pointer text-base sm:text-lg font-medium shadow-lg transition-all duration-200
+                        ${uploadingFolder === selectedFolderData.id 
+                          ? 'bg-slate-600 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
+                        }
+                      `}
+                    >
+                      <span className="relative flex items-center gap-3">
+                        {uploadingFolder === selectedFolderData.id ? (
+                          <>
+                            <div
+                              className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
+                            />
+                            宇宙転送中...
+                          </>
+                        ) : (
+                          <>
+                            <Rocket className="w-5 h-5" />
+                            写真をアップロード
+                          </>
+                        )}
+                      </span>
+                    </div>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -744,6 +749,7 @@ function FolderCard({
   onFileUpload: (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => void; 
   uploadingFolder: string | null; 
 }) {
+  const folderUploadRef = useRef<HTMLInputElement>(null);
   return (
     <motion.div 
       variants={{
@@ -836,16 +842,21 @@ function FolderCard({
         </motion.div>
         
         <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative">
-          <label className="block">
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={(e) => onFileUpload(folder.id, e)}
-              className="hidden"
-              disabled={uploadingFolder === folder.id}
-            />
-            <div
+          <input
+            ref={folderUploadRef}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) => onFileUpload(folder.id, e)}
+            style={{ display: 'none' }}
+            disabled={uploadingFolder === folder.id}
+          />
+          <div
+            onClick={() => {
+              if (uploadingFolder !== folder.id && folderUploadRef.current) {
+                folderUploadRef.current.click();
+              }
+            }}
             className={`
                 relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200
                 ${uploadingFolder === folder.id 
@@ -853,26 +864,25 @@ function FolderCard({
                   : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-102'
                 }
               `}
-            >
-              <span className="relative flex items-center justify-center gap-1.5">
-                {uploadingFolder === folder.id ? (
-                  <>
-                    <div
-                      className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
-                    />
-                    <span className="hidden sm:inline">転送中...</span>
-                    <span className="sm:hidden">転送中</span>
-                  </>
-                ) : (
-                  <>
-                    <Upload className="w-3 h-3" />
-                    <span className="hidden sm:inline">写真をアップロード</span>
-                    <span className="sm:hidden">アップロード</span>
-                  </>
-                )}
-              </span>
-            </div>
-          </label>
+          >
+            <span className="relative flex items-center justify-center gap-1.5">
+              {uploadingFolder === folder.id ? (
+                <>
+                  <div
+                    className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
+                  />
+                  <span className="hidden sm:inline">転送中...</span>
+                  <span className="sm:hidden">転送中</span>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-3 h-3" />
+                  <span className="hidden sm:inline">写真をアップロード</span>
+                  <span className="sm:hidden">アップロード</span>
+                </>
+              )}
+            </span>
+          </div>
         </div>
       </div>
     </motion.div>
