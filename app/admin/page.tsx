@@ -333,7 +333,7 @@ export default function AdminPage() {
         return;
       }
       
-      const response = await fetch(`/api/photos/featured?photoId=${photoId}`, {
+      const response = await fetch(`/api/photos?action=featured&photoId=${photoId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
