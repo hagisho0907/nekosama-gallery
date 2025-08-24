@@ -3,13 +3,32 @@ import { d1Database } from '../../../lib/d1-db';
 import type { CloudflareEnv } from '../../../types/cloudflare';
 
 export async function onRequestPUT(context: any): Promise<Response> {
+  console.log('PUT request received for photo:', params?.id);
+  console.log('Request URL:', request?.url);
+  
   try {
     const { request, env, params } = context;
     const photoId = params.id;
     const url = new URL(request.url);
     
+    console.log('Photo ID:', photoId);
+    console.log('Query params:', url.searchParams.toString());
+    
+    // Debug: Return simple response first
+    if (url.searchParams.get('action') === 'test') {
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: 'PUT endpoint working',
+        photoId: photoId,
+        params: url.searchParams.toString()
+      }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+    
     // Check if this is a featured photo update request
     if (url.searchParams.get('action') === 'featured') {
+      console.log('Featured action detected');
       // Initialize D1 database
       d1Database.setDatabase(env.DB);
       
