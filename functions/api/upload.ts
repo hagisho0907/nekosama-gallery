@@ -107,22 +107,10 @@ export async function onRequestPost(context: any): Promise<Response> {
     
     console.log(`Folder ${folderId} (${folder.status}) currently has ${currentPhotos.length} photos, max: ${maxPhotos}`);
     
-    // For graduated folders with 10+ photos, require manual selection
-    if (folder.status === 'graduated' && currentPhotos.length >= MAX_PHOTOS_GRADUATED) {
-      return new Response(JSON.stringify({ 
-        error: 'photo_limit_exceeded',
-        message: '卒業生フォルダは最大10枚までです。管理画面で不要な写真を削除してからアップロードしてください。',
-        currentCount: currentPhotos.length,
-        maxCount: MAX_PHOTOS_GRADUATED
-      }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-    
-    // For enrolled folders, auto-delete oldest photos if needed
-    if (folder.status === 'enrolled' && currentPhotos.length >= MAX_PHOTOS_ENROLLED) {
-      const photosToDelete = currentPhotos.length - MAX_PHOTOS_ENROLLED + 1; // +1 for the new photo we're adding
+    // Auto-delete oldest photos if needed (both enrolled and graduated folders)
+    if ((folder.status === 'enrolled' && currentPhotos.length >= MAX_PHOTOS_ENROLLED) ||
+        (folder.status === 'graduated' && currentPhotos.length >= MAX_PHOTOS_GRADUATED)) {
+      const photosToDelete = currentPhotos.length - maxPhotos + 1; // +1 for the new photo we're adding
       const oldestPhotos = currentPhotos
         .sort((a, b) => new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime())
         .slice(0, photosToDelete);
@@ -158,8 +146,8 @@ export async function onRequestPost(context: any): Promise<Response> {
       url,
     });
 
-    const responseMessage = folder.status === 'enrolled' && currentPhotos.length >= MAX_PHOTOS_ENROLLED 
-      ? `写真をアップロードしました。古い写真を自動削除して最大${MAX_PHOTOS_ENROLLED}枚を維持しています。`
+    const responseMessage = currentPhotos.length >= maxPhotos 
+      ? `写真をアップロードしました。古い写真を自動削除して最大${maxPhotos}枚を維持しています。`
       : '写真をアップロードしました。';
 
     return new Response(JSON.stringify({ 
