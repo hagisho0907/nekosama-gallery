@@ -769,7 +769,7 @@ function FolderCard({
       }}
       className="group"
     >
-      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-64 sm:h-72 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
+      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-72 sm:h-80 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
         
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -816,7 +816,7 @@ function FolderCard({
             </p>
           </div>
           
-          <div className="grid grid-cols-3 gap-2 mb-4 h-16">
+          <div className="grid grid-cols-3 gap-2 mb-6 h-16">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
                 key={photo.id} 
