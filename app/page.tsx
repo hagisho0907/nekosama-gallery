@@ -795,17 +795,9 @@ function FolderCard({
           onClick={() => onSelectFolder(folder.id)}
         >
           <div className="flex items-center justify-between mb-2 mt-8">
-            <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2 flex items-center gap-2">
-              <span className="text-2xl">🐱</span>
+            <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2">
               {folder.name}
             </h3>
-            <motion.div 
-              className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg"
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FolderOpen className="w-4 h-4 text-white" />
-            </motion.div>
           </div>
           
           {/* 写真数表示を上部に移動 */}
