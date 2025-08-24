@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Rocket, Shield, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Rocket, Shield, ArrowLeft, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -137,16 +138,32 @@ export default function AdminLogin() {
             <label htmlFor="password" className="block text-sm font-medium text-blue-300 mb-2">
               アクセスコード
             </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="セキュリティコードを入力..."
-              className="w-full px-4 py-3 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white/70 placeholder-blue-300/50 backdrop-blur transition-all duration-200"
-              disabled={loading}
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="セキュリティコードを入力..."
+                className="w-full px-4 py-3 pr-12 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white/70 placeholder-blue-300/50 backdrop-blur transition-all duration-200"
+                disabled={loading}
+                required
+              />
+              <motion.button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-300/70 hover:text-blue-300 transition-colors duration-200 p-1"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                disabled={loading}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" />
+                ) : (
+                  <Eye className="w-5 h-5" />
+                )}
+              </motion.button>
+            </div>
           </div>
 
           <motion.button
