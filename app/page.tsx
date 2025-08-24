@@ -769,35 +769,34 @@ function FolderCard({
       }}
       className="group"
     >
-      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-72 sm:h-80 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
+      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-64 sm:h-72 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
         
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         />
         
-        {/* ステータスインジケーター */}
-        <div className="absolute top-3 left-3 z-10">
-          {folder.status === 'enrolled' ? (
-            <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-              <Stars className="w-3 h-3" />
-              在籍
-            </div>
-          ) : (
-            <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-              <Sparkles className="w-3 h-3" />
-              卒業
-            </div>
-          )}
-        </div>
         
         <motion.div 
           className="relative p-4 sm:p-5 cursor-pointer flex-1" 
           onClick={() => onSelectFolder(folder.id)}
         >
           <div className="flex items-center justify-between mb-2 mt-8">
-            <h3 className="text-lg sm:text-xl font-bold text-white truncate pr-2">
-              {folder.name}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg sm:text-xl font-bold text-white truncate">
+                {folder.name}
+              </h3>
+              {folder.status === 'enrolled' ? (
+                <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                  <Stars className="w-3 h-3" />
+                  在籍
+                </div>
+              ) : (
+                <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                  <Sparkles className="w-3 h-3" />
+                  卒業
+                </div>
+              )}
+            </div>
           </div>
           
           {/* 写真数表示を上部に移動 */}
