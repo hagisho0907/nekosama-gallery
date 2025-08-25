@@ -3,5 +3,10 @@
   "include": [
     "/api/*"
   ],
-  "exclude": []
+  "exclude": [
+    "/api/*.html",
+    "/api/*.txt",
+    "/api/*.js",
+    "/api/*.css"
+  ]
 }
