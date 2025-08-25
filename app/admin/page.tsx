@@ -677,7 +677,7 @@ export default function AdminPage() {
             <div className="flex gap-2 sm:gap-3">
               <motion.button
                 onClick={handleLogout}
-                className="bg-red-600/80 hover:bg-red-600 text-white px-3 py-3 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base backdrop-blur-sm border border-red-400/30 shadow-lg min-h-[44px] flex items-center justify-center"
+                className="bg-red-600/80 hover:bg-red-600 text-white px-4 py-3 sm:px-6 sm:py-4 rounded-lg transition-all duration-200 text-sm sm:text-base backdrop-blur-sm border border-red-400/30 shadow-lg min-h-[48px] flex items-center justify-center"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -797,7 +797,7 @@ export default function AdminPage() {
               <nav className="-mb-px flex space-x-8">
                 <motion.button
                   onClick={() => setActiveTab('enrolled')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
+                  className={`py-3 px-6 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 min-h-[48px] flex items-center justify-center ${
                     activeTab === 'enrolled'
                       ? 'border-green-400 text-green-300'
                       : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
@@ -811,7 +811,7 @@ export default function AdminPage() {
                 </motion.button>
                 <motion.button
                   onClick={() => setActiveTab('graduated')}
-                  className={`py-2 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${
+                  className={`py-3 px-6 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 min-h-[48px] flex items-center justify-center ${
                     activeTab === 'graduated'
                       ? 'border-yellow-400 text-yellow-300'
                       : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
@@ -991,7 +991,7 @@ export default function AdminPage() {
                         <motion.button
                           onClick={() => fetchPhotos(folder.id)}
                           disabled={submitting}
-                          className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-purple-400/30 shadow-lg"
+                          className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-purple-400/30 shadow-lg min-h-[40px] sm:min-h-[44px] flex items-center justify-center"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -1006,7 +1006,7 @@ export default function AdminPage() {
                         <motion.button
                           onClick={() => handleToggleStatus(folder.id)}
                           disabled={submitting}
-                          className={`disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur shadow-lg border ${
+                          className={`disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur min-h-[40px] sm:min-h-[44px] flex items-center justify-center shadow-lg border ${
                             folder.status === 'enrolled' 
                               ? 'bg-yellow-600/80 hover:bg-yellow-600 border-yellow-400/30' 
                               : 'bg-green-600/80 hover:bg-green-600 border-green-400/30'
@@ -1035,7 +1035,7 @@ export default function AdminPage() {
                         <motion.button
                           onClick={() => handleEditFolder(folder.id)}
                           disabled={submitting}
-                          className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-blue-400/30 shadow-lg"
+                          className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur min-h-[40px] sm:min-h-[44px] flex items-center justify-center border border-blue-400/30 shadow-lg"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -1050,7 +1050,7 @@ export default function AdminPage() {
                         <motion.button
                           onClick={() => handleDeleteFolder(folder.id)}
                           disabled={submitting}
-                          className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-red-400/30 shadow-lg"
+                          className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur min-h-[40px] sm:min-h-[44px] flex items-center justify-center border border-red-400/30 shadow-lg"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -1093,7 +1093,7 @@ export default function AdminPage() {
                   setShowPhotoSelection(false);
                   setPendingStatusChange(null);
                 }}
-                className="bg-slate-600/80 hover:bg-slate-500 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base self-start sm:self-auto backdrop-blur border border-slate-500/50 shadow-lg"
+                className="bg-slate-600/80 hover:bg-slate-500 text-white px-4 py-3 sm:px-6 sm:py-4 rounded-lg transition-all duration-200 text-sm sm:text-base self-start sm:self-auto backdrop-blur border border-slate-500/50 shadow-lg"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

@@ -385,7 +385,7 @@ export default function Home() {
             </motion.div>
             <Link 
               href="/admin" 
-              className="px-4 py-3 sm:px-5 sm:py-3 bg-slate-700/70 hover:bg-slate-600/70 text-blue-200 hover:text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-200 border border-slate-600/50 hover:border-slate-500/50 min-h-[44px] flex items-center active:scale-95"
+              className="px-4 py-3 sm:px-6 sm:py-4 bg-slate-700/70 hover:bg-slate-600/70 text-blue-200 hover:text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-200 border border-slate-600/50 hover:border-slate-500/50 min-h-[48px] flex items-center justify-center active:scale-95"
             >
               <span className="flex items-center gap-2 opacity-80 hover:opacity-100">
                 <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -411,7 +411,7 @@ export default function Home() {
                 <span className="flex-1">{error}</span>
                 <motion.button 
                   onClick={() => setError(null)} 
-                  className="text-red-400 hover:text-red-200 transition-colors"
+                  className="text-red-400 hover:text-red-200 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -479,7 +479,7 @@ export default function Home() {
                 <nav className="-mb-px flex justify-center space-x-8">
                   <motion.button
                     onClick={() => setActiveTab('enrolled')}
-                    className={`py-3 px-4 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 ${
+                    className={`py-3 px-6 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 min-h-[48px] flex items-center justify-center ${
                       activeTab === 'enrolled'
                         ? 'border-green-400 text-green-300'
                         : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
@@ -495,7 +495,7 @@ export default function Home() {
                   
                   <motion.button
                     onClick={() => setActiveTab('graduated')}
-                    className={`py-3 px-4 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 ${
+                    className={`py-3 px-6 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 min-h-[48px] flex items-center justify-center ${
                       activeTab === 'graduated'
                         ? 'border-yellow-400 text-yellow-300'
                         : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
@@ -550,8 +550,8 @@ export default function Home() {
                     transition={{ delay: 0.5, duration: 0.6 }}
                   >
                     {activeTab === 'enrolled' 
-                      ? '拝啓ねこ様の宇宙船で活躍している姿を見よ！'
-                      : '宇宙ステーションを卒業した名誉ある宇宙猫たち！'
+                      ? '拝啓ねこ様の宇宙船で活躍しているぞ！'
+                      : '到着した惑星で元気に探索中！'
                     }
                   </motion.p>
                 </div>
