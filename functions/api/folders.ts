@@ -104,14 +104,10 @@ export async function onRequestPost(context: any): Promise<Response> {
 
 export async function onRequestPOST(context: any): Promise<Response> {
   try {
-    console.log('POST method called on folders endpoint');
-    
-    const { request, env } = context;
-    const url = new URL(request.url);
-    
-    // Add simple test response first
+    const url = new URL(context.request.url);
     const testParam = url.searchParams.get('test');
     
+    // Simple test endpoint
     if (testParam === 'ping') {
       return new Response(
         JSON.stringify({ message: 'POST method works!', timestamp: Date.now() }),
@@ -122,11 +118,9 @@ export async function onRequestPOST(context: any): Promise<Response> {
       );
     }
     
-    // Check if this is a featured photo operation
+    const { request, env } = context;
     const action = url.searchParams.get('action');
     const photoId = url.searchParams.get('photoId');
-    
-    console.log('Debug - action:', action, 'photoId:', photoId);
     
     if (action === 'set-featured' && photoId) {
       // Initialize D1 database
