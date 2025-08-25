@@ -460,7 +460,6 @@ export default function Home() {
                 <span className="text-center">拝啓ねこ様フォトギャラリー</span>
               </h2>
               <p className="text-sm sm:text-base lg:text-lg text-blue-300 flex items-center justify-center gap-2 flex-wrap px-4">
-                <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="text-center">阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！</span>
               </p>
             </motion.div>

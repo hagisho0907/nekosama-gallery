@@ -999,8 +999,7 @@ export default function AdminPage() {
                             <Camera className="w-3 h-3" />
                             写真管理
                           </span>
-                          <span className="sm:hidden flex items-center gap-1">
-                            <Camera className="w-3 h-3" />
+                          <span className="sm:hidden">
                             管理
                           </span>
                         </motion.button>
@@ -1040,9 +1039,12 @@ export default function AdminPage() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          <span className="flex items-center gap-1">
+                          <span className="hidden sm:flex items-center gap-1">
                             <Edit3 className="w-3 h-3" />
-                            <span className="hidden sm:inline">編集</span>
+                            編集
+                          </span>
+                          <span className="sm:hidden">
+                            編集
                           </span>
                         </motion.button>
                         <motion.button
@@ -1052,9 +1054,12 @@ export default function AdminPage() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          <span className="flex items-center gap-1">
+                          <span className="hidden sm:flex items-center gap-1">
                             <Trash2 className="w-3 h-3" />
-                            <span className="hidden sm:inline">削除</span>
+                            削除
+                          </span>
+                          <span className="sm:hidden">
+                            削除
                           </span>
                         </motion.button>
                       </div>
