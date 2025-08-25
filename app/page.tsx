@@ -15,7 +15,10 @@ import {
   ArrowLeft, 
   ExternalLink,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Twitter,
+  Instagram,
+  Globe
 } from 'lucide-react';
 import { compressImage, COMPRESSION_PRESETS } from '@/lib/image-compression';
 
@@ -817,6 +820,78 @@ onClick={async () => {
           </motion.div>
         )}
       </main>
+
+      {/* Footer */}
+      <motion.footer 
+        className="bg-slate-800/70 backdrop-blur-md border-t border-blue-500/30 mt-12 relative z-10"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center space-y-6">
+            {/* Social Links */}
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+              <motion.a
+                href="https://x.com/haikeinekosama"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-700/70 hover:bg-blue-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-blue-400/50"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Twitter className="w-5 h-5" />
+                <span>X (Twitter)</span>
+              </motion.a>
+              
+              <motion.a
+                href="https://www.instagram.com/haikeinekosama/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-700/70 hover:bg-pink-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-pink-400/50"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Instagram className="w-5 h-5" />
+                <span>Instagram</span>
+              </motion.a>
+              
+              <motion.a
+                href="https://aboutme.style/haikeinekosama"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-slate-700/70 hover:bg-purple-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-purple-400/50"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Globe className="w-5 h-5" />
+                <span>HP</span>
+              </motion.a>
+            </div>
+            
+            {/* Presented by */}
+            <div className="text-center">
+              <motion.p 
+                className="text-blue-300 text-sm flex items-center justify-center gap-2 flex-wrap"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <span>Presented by</span>
+                <motion.a
+                  href="https://x.com/kilomake0607"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 transition-colors duration-200"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  きろめいく里親
+                </motion.a>
+              </motion.p>
+            </div>
+          </div>
+        </div>
+      </motion.footer>
     </div>
   );
 }

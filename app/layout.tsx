@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Space Cat Station - 拝啓ねこ様ギャラリー",
+  title: "拝啓ねこ様フォトギャラリー",
   description: "阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の写真ギャラリー",
 };
 
