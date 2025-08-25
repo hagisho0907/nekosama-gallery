@@ -999,7 +999,7 @@ export default function AdminPage() {
                             <Camera className="w-3 h-3" />
                             写真管理
                           </span>
-                          <span className="sm:hidden">
+                          <span className="sm:hidden flex items-center justify-center w-full">
                             管理
                           </span>
                         </motion.button>
@@ -1028,7 +1028,7 @@ export default function AdminPage() {
                               </>
                             )}
                           </span>
-                          <span className="sm:hidden">
+                          <span className="sm:hidden flex items-center justify-center w-full">
                             {folder.status === 'enrolled' ? '卒業' : '在籍'}
                           </span>
                         </motion.button>
@@ -1043,7 +1043,7 @@ export default function AdminPage() {
                             <Edit3 className="w-3 h-3" />
                             編集
                           </span>
-                          <span className="sm:hidden">
+                          <span className="sm:hidden flex items-center justify-center w-full">
                             編集
                           </span>
                         </motion.button>
@@ -1058,7 +1058,7 @@ export default function AdminPage() {
                             <Trash2 className="w-3 h-3" />
                             削除
                           </span>
-                          <span className="sm:hidden">
+                          <span className="sm:hidden flex items-center justify-center w-full">
                             削除
                           </span>
                         </motion.button>

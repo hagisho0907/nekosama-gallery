@@ -390,7 +390,7 @@ export default function Home() {
               <span className="flex items-center gap-2 opacity-80 hover:opacity-100">
                 <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="hidden sm:inline">Control Center</span>
-                <span className="sm:hidden">管理</span>
+                <span className="sm:hidden flex items-center justify-center">管理</span>
               </span>
             </Link>
           </div>
@@ -621,7 +621,7 @@ onClick={async () => {
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span className="hidden sm:inline">宇宙ステーションに戻る</span>
-                <span className="sm:hidden">戻る</span>
+                <span className="sm:hidden flex items-center justify-center">戻る</span>
               </motion.button>
             </div>
 
@@ -687,7 +687,7 @@ onClick={async () => {
                         }
                       }}
                       className={`
-                        relative overflow-hidden text-white py-2 px-3 sm:py-2 sm:px-4 rounded-lg cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 inline-block
+                        relative overflow-hidden text-white py-3 px-4 sm:py-3 sm:px-6 rounded-lg cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 inline-block min-h-[44px] flex items-center justify-center
                         ${uploadingFolder === selectedFolderData.id 
                           ? 'bg-slate-600 cursor-not-allowed' 
                           : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
@@ -804,7 +804,7 @@ onClick={async () => {
                           }
                         }}
                         className={`
-                          relative overflow-hidden text-white py-2 px-3 sm:py-2 sm:px-4 rounded-lg cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 inline-block
+                          relative overflow-hidden text-white py-3 px-4 sm:py-3 sm:px-6 rounded-lg cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 inline-block min-h-[44px] flex items-center justify-center
                           ${uploadingFolder === selectedFolderData.id 
                             ? 'bg-slate-600 cursor-not-allowed' 
                             : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-105'
@@ -1069,13 +1069,13 @@ function FolderCard({
                     className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
                   />
                   <span className="hidden sm:inline">転送中...</span>
-                  <span className="sm:hidden">転送中</span>
+                  <span className="sm:hidden flex items-center justify-center">転送中</span>
                 </>
               ) : (
                 <>
                   <Upload className="w-3 h-3" />
                   <span className="hidden sm:inline">写真をアップロード</span>
-                  <span className="sm:hidden">アップロード</span>
+                  <span className="sm:hidden flex items-center justify-center">アップロード</span>
                 </>
               )}
             </span>
