@@ -119,18 +119,14 @@ export async function onRequestPOST(context: any): Promise<Response> {
     );
   }
   
-  // Debug logging
-  const action = url.searchParams.get('action');
-  const photoId = url.searchParams.get('photoId');
-  console.log('Debug - action:', action, 'photoId:', photoId);
-  
   try {
     const { request, env } = context;
-    const url = new URL(request.url);
     
     // Check if this is a featured photo operation
     const action = url.searchParams.get('action');
     const photoId = url.searchParams.get('photoId');
+    
+    console.log('Debug - action:', action, 'photoId:', photoId);
     
     if (action === 'set-featured' && photoId) {
       // Initialize D1 database
