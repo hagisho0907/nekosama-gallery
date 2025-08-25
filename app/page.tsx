@@ -56,6 +56,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'enrolled' | 'graduated'>('enrolled');
   const detailUploadRef = useRef<HTMLInputElement>(null);
 
   const triggerFileUpload = (folderId: string) => {
@@ -467,8 +468,52 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* 在籍生セクション - トップ */}
-            {folders.filter(folder => folder.status === 'enrolled').length > 0 && (
+            {/* Tab Navigation */}
+            <motion.div 
+              className="mb-8"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              <div className="border-b border-blue-500/30 mb-6">
+                <nav className="-mb-px flex justify-center space-x-8">
+                  <motion.button
+                    onClick={() => setActiveTab('enrolled')}
+                    className={`py-3 px-4 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 ${
+                      activeTab === 'enrolled'
+                        ? 'border-green-400 text-green-300'
+                        : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
+                    }`}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Stars className="w-4 h-4 sm:w-5 sm:h-5" />
+                      在籍生 ({folders.filter(f => f.status === 'enrolled').length})
+                    </span>
+                  </motion.button>
+                  
+                  <motion.button
+                    onClick={() => setActiveTab('graduated')}
+                    className={`py-3 px-4 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 ${
+                      activeTab === 'graduated'
+                        ? 'border-yellow-400 text-yellow-300'
+                        : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
+                    }`}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+                      卒業生 ({folders.filter(f => f.status === 'graduated').length})
+                    </span>
+                  </motion.button>
+                </nav>
+              </div>
+            </motion.div>
+
+            {/* Filtered folders by active tab */}
+            {folders.filter(folder => folder.status === activeTab).length > 0 ? (
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -477,21 +522,37 @@ export default function Home() {
               >
                 <div className="mb-4 sm:mb-6">
                   <motion.h3 
-                    className="text-xl sm:text-2xl font-bold text-green-300 mb-2 flex items-center gap-3"
+                    className={`text-xl sm:text-2xl font-bold mb-2 flex items-center gap-3 ${
+                      activeTab === 'enrolled' ? 'text-green-300' : 'text-yellow-300'
+                    }`}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.4, duration: 0.6 }}
                   >
-                    <Stars className="w-6 h-6 text-green-400" />
-                    在籍生（最大100枚）
+                    {activeTab === 'enrolled' ? (
+                      <>
+                        <Stars className="w-6 h-6 text-green-400" />
+                        在籍生（最大100枚）
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-6 h-6 text-yellow-400" />
+                        卒業生（最大10枚）
+                      </>
+                    )}
                   </motion.h3>
                   <motion.p 
-                    className="text-sm text-green-300 ml-9"
+                    className={`text-sm ml-9 ${
+                      activeTab === 'enrolled' ? 'text-green-300' : 'text-yellow-300'
+                    }`}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.6 }}
                   >
-                    拝啓ねこ様の宇宙船で活躍している姿を見よ！
+                    {activeTab === 'enrolled' 
+                      ? '拝啓ねこ様の宇宙船で活躍している姿を見よ！'
+                      : '宇宙ステーションを卒業した名誉ある宇宙猫たち！'
+                    }
                   </motion.p>
                 </div>
                 <motion.div 
@@ -507,80 +568,34 @@ export default function Home() {
                     }
                   }}
                 >
-                  {folders.filter(folder => folder.status === 'enrolled').map((folder) => (
+                  {folders.filter(folder => folder.status === activeTab).map((folder) => (
                     <FolderCard key={folder.id} folder={folder} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
                   ))}
                 </motion.div>
               </motion.div>
-            )}
-
-            {/* 卒業生セクション - ボトム */}
-            {folders.filter(folder => folder.status === 'graduated').length > 0 && (
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-              >
-                <div className="mb-4 sm:mb-6">
-                  <motion.h3 
-                    className="text-xl sm:text-2xl font-bold text-yellow-300 mb-2 flex items-center gap-3"
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.6 }}
-                  >
-                    <Sparkles className="w-6 h-6 text-yellow-400" />
-                    卒業生（最大10枚）
-                  </motion.h3>
-                  <motion.p 
-                    className="text-sm text-yellow-300 ml-9"
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.7, duration: 0.6 }}
-                  >
-                    拝啓ねこ様から飛び立った勇姿を見よ！
-                  </motion.p>
-                </div>
-                <motion.div 
-                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
-                  initial="hidden"
-                  animate="visible"
-                  variants={{
-                    visible: {
-                      transition: {
-                        delayChildren: 0.7,
-                        staggerChildren: 0.1
-                      }
-                    }
-                  }}
-                >
-                  {folders.filter(folder => folder.status === 'graduated').map((folder) => (
-                    <FolderCard key={folder.id} folder={folder} onSelectFolder={handleFolderSelect} onFileUpload={handleFileUpload} uploadingFolder={uploadingFolder} />
-                  ))}
-                </motion.div>
-              </motion.div>
-            )}
-            
-            {/* フォルダーがない場合の表示 */}
-            {folders.length === 0 && (
+            ) : (
               <motion.div 
                 className="text-center py-12 sm:py-16"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
               >
-                <motion.div 
-                  className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl"
+                <motion.div
+                  className="w-20 h-20 mx-auto mb-6 bg-slate-700/50 rounded-full flex items-center justify-center border-2 border-dashed border-blue-400/30"
                   animate={{ 
                     scale: [1, 1.05, 1],
                     rotate: [0, 2, -2, 0]
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  <FolderOpen className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
+                  {activeTab === 'enrolled' ? (
+                    <Stars className="w-8 h-8 text-white" />
+                  ) : (
+                    <Sparkles className="w-8 h-8 text-white" />
+                  )}
                 </motion.div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">宇宙船に誰もいないぞ！</h3>
-                <p className="text-sm sm:text-base text-blue-300 mb-8 max-w-md mx-auto">
-                  まだねこ様のフォルダが存在しません。管理画面から最初のフォルダを作成しましょう！
+                <p className="text-blue-300">
+                  {activeTab === 'enrolled' ? '在籍生の宇宙領域がありません' : '卒業生の宇宙領域がありません'}
                 </p>
               </motion.div>
             )}
