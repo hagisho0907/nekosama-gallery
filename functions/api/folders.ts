@@ -101,3 +101,105 @@ export async function onRequestPost(context: any): Promise<Response> {
     );
   }
 }
+
+export async function onRequestPUT(context: any): Promise<Response> {
+  try {
+    const { request, env } = context;
+    const url = new URL(request.url);
+    
+    // Check if this is a featured photo operation
+    const action = url.searchParams.get('action');
+    const photoId = url.searchParams.get('photoId');
+    
+    if (action === 'set-featured' && photoId) {
+      // Initialize D1 database
+      d1Database.setDatabase(env.DB);
+      
+      const { isFeatured } = await request.json();
+      
+      if (typeof isFeatured !== 'boolean') {
+        return new Response(
+          JSON.stringify({ error: 'isFeatured must be a boolean' }),
+          { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      
+      // Get photo info to find the folder
+      const photo = await d1Database.getPhotoById(photoId);
+      if (!photo) {
+        return new Response(
+          JSON.stringify({ error: 'Photo not found' }),
+          { 
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      
+      // If setting as featured, check if folder already has 3 featured photos
+      if (isFeatured) {
+        const folderPhotos = await d1Database.getPhotos(photo.folderId);
+        const currentFeatured = folderPhotos.filter(p => p.isFeatured && p.id !== photoId).length;
+        
+        if (currentFeatured >= 3) {
+          return new Response(
+            JSON.stringify({ error: 'Maximum 3 photos can be featured per folder' }),
+            { 
+              status: 400,
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        }
+      }
+      
+      // Update the photo's featured status
+      const success = await d1Database.updatePhotoFeatured(photoId, isFeatured);
+      
+      if (!success) {
+        return new Response(
+          JSON.stringify({ error: 'Failed to update featured status' }),
+          { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+      
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: isFeatured ? 'Photo set as featured' : 'Photo removed from featured',
+        }),
+        {
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
+    // Default response for unsupported operations
+    return new Response(
+      JSON.stringify({ error: 'Unsupported operation' }),
+      { 
+        status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+    
+  } catch (error: any) {
+    console.error('Folders PUT error:', error);
+    
+    return new Response(
+      JSON.stringify({ 
+        error: 'Internal server error',
+        details: error.message
+      }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+}
