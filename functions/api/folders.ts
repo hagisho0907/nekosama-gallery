@@ -102,7 +102,7 @@ export async function onRequestPost(context: any): Promise<Response> {
   }
 }
 
-export async function onRequestPUT(context: any): Promise<Response> {
+export async function onRequestPOST(context: any): Promise<Response> {
   console.log('PUT method called on folders endpoint');
   
   // Add simple test response first

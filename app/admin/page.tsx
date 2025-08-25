@@ -334,7 +334,7 @@ export default function AdminPage() {
       }
       
       const response = await fetch(`/api/folders?action=set-featured&photoId=${photoId}`, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
