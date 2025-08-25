@@ -304,6 +304,13 @@ export default function Home() {
         <div className="twinkling"></div>
       </div>
       <style jsx>{`
+        .stars, .twinkling {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
         .stars {
           background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
           animation: move-stars 200s linear infinite;
