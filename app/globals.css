@@ -22,9 +22,24 @@ body {
 
 /* Improved touch targets for mobile */
 @media (max-width: 640px) {
-  button, [role="button"], input[type="file"] + * {
-    min-height: 44px;
-    min-width: 44px;
+  button, [role="button"], input[type="file"] + *, .cursor-pointer {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Extra small screens - better mobile support */
+@media (max-width: 480px) {
+  .text-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .gap-responsive {
+    gap: 0.75rem;
+  }
+  
+  .p-responsive {
+    padding: 1rem;
   }
 }
 
@@ -74,6 +89,17 @@ button, [role="button"] {
 img {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+}
+
+/* Mobile-optimized spacing */
+.mobile-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .mobile-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Custom animations for space theme */

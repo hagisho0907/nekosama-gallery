@@ -328,18 +328,18 @@ export default function Home() {
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-3 sm:py-4">
+          <div className="flex justify-between items-center py-4 sm:py-5">
             <motion.div 
-              className="flex items-center gap-2 sm:gap-4"
+              className="flex items-center gap-3 sm:gap-4"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <motion.div 
-                className="relative w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30"
+                className="relative w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
-                <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <Rocket className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 <motion.div
                   className="absolute inset-0 rounded-lg bg-blue-400/20"
                   animate={{ 
@@ -351,14 +351,14 @@ export default function Home() {
               </motion.div>
               <div>
                 <motion.h1 
-                  className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
+                  className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent"
                   animate={{ 
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                   style={{ backgroundSize: "200% 100%" }}
                 >
-                  <Stars className="inline w-6 h-6 sm:w-8 sm:h-8 mr-2 text-blue-400" />
+                  <Stars className="inline w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 mr-2 text-blue-400" />
                   Space Cat Station
                 </motion.h1>
                 <motion.p 
@@ -374,19 +374,19 @@ export default function Home() {
             </motion.div>
             <Link 
               href="/admin" 
-              className="px-3 py-2 sm:px-4 sm:py-2 bg-slate-700/70 hover:bg-slate-600/70 text-blue-200 hover:text-white rounded-lg text-sm font-medium transition-colors duration-200 border border-slate-600/50 hover:border-slate-500/50"
+              className="px-4 py-3 sm:px-5 sm:py-3 bg-slate-700/70 hover:bg-slate-600/70 text-blue-200 hover:text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-200 border border-slate-600/50 hover:border-slate-500/50 min-h-[44px] flex items-center active:scale-95"
             >
               <span className="flex items-center gap-2 opacity-80 hover:opacity-100">
-                <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
+                <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span className="hidden sm:inline">Control Center</span>
-                <span className="sm:hidden">Control</span>
+                <span className="sm:hidden">管理</span>
               </span>
             </Link>
           </div>
         </div>
       </motion.header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
         <AnimatePresence>
           {error && (
             <motion.div 
@@ -443,18 +443,18 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <motion.div 
-              className="text-center mb-6 sm:mb-8"
+              className="text-center mb-6 sm:mb-8 lg:mb-10"
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2 flex items-center justify-center gap-3">
-                <FolderOpen className="w-8 h-8 text-blue-400" />
-                拝啓ねこ様フォトギャラリー
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-3 sm:mb-4 flex items-center justify-center gap-3 flex-wrap">
+                <FolderOpen className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />
+                <span className="text-center">拝啓ねこ様フォトギャラリー</span>
               </h2>
-              <p className="text-sm sm:text-base text-blue-300 flex items-center justify-center gap-2">
-                <Camera className="w-4 h-4" />
-                阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！
+              <p className="text-sm sm:text-base lg:text-lg text-blue-300 flex items-center justify-center gap-2 flex-wrap px-4">
+                <Camera className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-center">阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！</span>
               </p>
             </motion.div>
 
@@ -486,7 +486,7 @@ export default function Home() {
                   </motion.p>
                 </div>
                 <motion.div 
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
                   initial="hidden"
                   animate="visible"
                   variants={{
@@ -532,7 +532,7 @@ export default function Home() {
                   </motion.p>
                 </div>
                 <motion.div 
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
                   initial="hidden"
                   animate="visible"
                   variants={{
@@ -670,18 +670,18 @@ onClick={async () => {
                         }
                       `}
                     >
-                      <span className="relative flex items-center justify-center gap-2">
+                      <span className="relative flex items-center justify-center gap-3">
                         {uploadingFolder === selectedFolderData.id ? (
                           <>
                             <div
-                              className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
+                              className="w-5 h-5 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"
                             />
-                            宇宙転送中...
+                            <span className="text-base font-medium">宇宙転送中...</span>
                           </>
                         ) : (
                           <>
-                            <Rocket className="w-4 h-4" />
-                            写真をアップロード
+                            <Rocket className="w-5 h-5" />
+                            <span className="text-base font-medium">写真をアップロード</span>
                           </>
                         )}
                       </span>
@@ -690,7 +690,7 @@ onClick={async () => {
                 ) : (
                   <>
                     <motion.div
-                      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4"
+                      className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6"
                       initial="hidden"
                       animate="visible"
                       variants={{
@@ -716,18 +716,18 @@ onClick={async () => {
                           }}
                           className="group"
                         >
-                          <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transition-all duration-300 border border-blue-500/30 hover:border-purple-400/50">
+                          <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl overflow-hidden transition-all duration-300 border border-blue-500/30 hover:border-purple-400/50 min-h-[280px] sm:min-h-[320px]">
                             <motion.div
                               className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                             />
                             
-                            <div className="relative aspect-square overflow-hidden">
+                            <div className="relative aspect-square overflow-hidden rounded-t-xl">
                               <Image 
                                 src={photo.url} 
                                 alt={photo.originalName} 
                                 width={300} 
                                 height={300}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-130"
+                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                                 onError={(e) => {
                                   console.error('Image load error:', photo.url);
                                   console.error('Full photo data:', photo);
@@ -743,9 +743,9 @@ onClick={async () => {
                               />
                             </div>
                             
-                            <div className="relative p-2 sm:p-3 bg-slate-800/80 backdrop-blur">
-                              <div className="flex items-center justify-between text-xs">
-                                <p className="text-blue-300 truncate flex items-center gap-1">
+                            <div className="relative p-3 sm:p-4 bg-slate-800/80 backdrop-blur">
+                              <div className="flex items-center justify-between text-xs sm:text-sm">
+                                <p className="text-blue-300 truncate flex items-center gap-1.5">
                                   <span className="text-xs">📅</span>
                                   {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
                                 </p>
@@ -753,11 +753,11 @@ onClick={async () => {
                                   href={photo.url} 
                                   target="_blank" 
                                   rel="noopener noreferrer" 
-                                  className="text-blue-400 hover:text-blue-300 ml-1 flex-shrink-0 p-1 rounded transition-colors"
+                                  className="text-blue-400 hover:text-blue-300 ml-2 flex-shrink-0 p-2 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 min-h-[44px] min-w-[44px] flex items-center justify-center"
                                   whileHover={{ scale: 1.1 }}
                                   whileTap={{ scale: 0.9 }}
                                 >
-                                  <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                                  <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
                                 </motion.a>
                               </div>
                             </div>
@@ -864,7 +864,7 @@ function FolderCard({
       }}
       className="group"
     >
-      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-56 sm:h-64 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
+      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-72 sm:h-80 lg:h-88 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
         
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -872,49 +872,49 @@ function FolderCard({
         
         
         <motion.div 
-          className="relative p-3 sm:p-4 cursor-pointer flex-1 flex flex-col" 
+          className="relative p-4 sm:p-5 cursor-pointer flex-1 flex flex-col" 
           onClick={() => onSelectFolder(folder.id)}
         >
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <h3 className="text-lg sm:text-xl font-bold text-white truncate">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white truncate flex-1">
                 {folder.name}
               </h3>
               {folder.status === 'enrolled' ? (
-                <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-                  <Stars className="w-3 h-3" />
-                  在籍
+                <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 shadow-md flex-shrink-0">
+                  <Stars className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span>在籍</span>
                 </div>
               ) : (
-                <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
-                  <Sparkles className="w-3 h-3" />
-                  卒業
+                <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 shadow-md flex-shrink-0">
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span>卒業</span>
                 </div>
               )}
             </div>
           </div>
           
           {/* 写真数表示 */}
-          <div className="mb-2">
-            <p className="text-xs sm:text-sm text-blue-300 flex items-center gap-1">
-              <Sparkles className="w-3 h-3" />
-              {folder.photoCount}枚の写真
+          <div className="mb-3">
+            <p className="text-sm sm:text-base text-blue-300 flex items-center gap-2">
+              <Sparkles className="w-4 h-4" />
+              <span className="font-medium">{folder.photoCount}枚の写真</span>
             </p>
           </div>
           
-          <div className="grid grid-cols-3 gap-2 mb-1 h-14 flex-1">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4 h-20 sm:h-24 lg:h-28 flex-1">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
                 key={photo.id} 
                 className="relative aspect-square bg-slate-700/50 rounded-lg overflow-hidden border border-blue-400/30"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.08 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <Image 
                   src={photo.url} 
                   alt={`${folder.name}の写真`} 
-                  width={80} 
-                  height={80}
+                  width={100} 
+                  height={100}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     console.error('Image load error:', photo.url);
@@ -932,10 +932,10 @@ function FolderCard({
               </motion.div>
             ))}
             {folder.photoCount === 0 && (
-              <div className="col-span-3 h-14 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
+              <div className="col-span-3 h-20 sm:h-24 lg:h-28 bg-slate-700/50 rounded-lg flex items-center justify-center border-2 border-dashed border-blue-400/30">
                 <div className="text-center">
-                  <Camera className="w-5 h-5 text-blue-400 mx-auto mb-1" />
-                  <p className="text-blue-300 text-xs">写真がありません</p>
+                  <Camera className="w-6 h-6 sm:w-7 sm:h-7 text-blue-400 mx-auto mb-2" />
+                  <p className="text-blue-300 text-xs sm:text-sm font-medium">写真がありません</p>
                 </div>
               </div>
             )}
