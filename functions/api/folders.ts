@@ -103,7 +103,7 @@ export async function onRequestPost(context: any): Promise<Response> {
 }
 
 export async function onRequestPOST(context: any): Promise<Response> {
-  console.log('PUT method called on folders endpoint');
+  console.log('POST method called on folders endpoint');
   
   // Add simple test response first
   const url = new URL(context.request.url);
@@ -111,13 +111,18 @@ export async function onRequestPOST(context: any): Promise<Response> {
   
   if (testParam === 'ping') {
     return new Response(
-      JSON.stringify({ message: 'PUT method works!', timestamp: Date.now() }),
+      JSON.stringify({ message: 'POST method works!', timestamp: Date.now() }),
       { 
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       }
     );
   }
+  
+  // Debug logging
+  const action = url.searchParams.get('action');
+  const photoId = url.searchParams.get('photoId');
+  console.log('Debug - action:', action, 'photoId:', photoId);
   
   try {
     const { request, env } = context;
