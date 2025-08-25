@@ -49,65 +49,10 @@ export async function onRequestGet(context: any): Promise<Response> {
 export async function onRequestPost(context: any): Promise<Response> {
   try {
     const { request, env } = context;
+    const url = new URL(request.url);
     
-    // Initialize D1 database
-    d1Database.setDatabase(env.DB);
-    
-    const { name } = await request.json();
-
-    if (!name || !name.trim()) {
-      return new Response(
-        JSON.stringify({ error: 'Folder name is required' }),
-        { 
-          status: 400,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    const folder = await d1Database.createFolder(name.trim());
-    
-    return new Response(JSON.stringify({ 
-      success: true, 
-      folder: {
-        ...folder,
-        photoCount: 0,
-        photos: []
-      }
-    }), {
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-  } catch (error: any) {
-    console.error('Create folder error:', error);
-    
-    // Handle unique constraint error
-    if (error.message?.includes('UNIQUE constraint')) {
-      return new Response(
-        JSON.stringify({ error: 'Folder name already exists' }),
-        { 
-          status: 409,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }
-}
-
-export async function onRequestPOST(context: any): Promise<Response> {
-  try {
-    const url = new URL(context.request.url);
+    // Check for test endpoint
     const testParam = url.searchParams.get('test');
-    
-    // Simple test endpoint
     if (testParam === 'ping') {
       return new Response(
         JSON.stringify({ message: 'POST method works!', timestamp: Date.now() }),
@@ -118,7 +63,7 @@ export async function onRequestPOST(context: any): Promise<Response> {
       );
     }
     
-    const { request, env } = context;
+    // Check for featured photo operation
     const action = url.searchParams.get('action');
     const photoId = url.searchParams.get('photoId');
     
@@ -190,23 +135,51 @@ export async function onRequestPOST(context: any): Promise<Response> {
       );
     }
     
-    // Default response for unsupported operations
-    return new Response(
-      JSON.stringify({ error: 'Unsupported operation' }),
-      { 
-        status: 400,
-        headers: { 'Content-Type': 'application/json' }
+    // Default: folder creation
+    // Initialize D1 database
+    d1Database.setDatabase(env.DB);
+    
+    const { name } = await request.json();
+
+    if (!name || !name.trim()) {
+      return new Response(
+        JSON.stringify({ error: 'Folder name is required' }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    const folder = await d1Database.createFolder(name.trim());
+    
+    return new Response(JSON.stringify({ 
+      success: true, 
+      folder: {
+        ...folder,
+        photoCount: 0,
+        photos: []
       }
-    );
-    
+    }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
   } catch (error: any) {
-    console.error('Folders PUT error:', error);
+    console.error('Create folder error:', error);
     
+    // Handle unique constraint error
+    if (error.message?.includes('UNIQUE constraint')) {
+      return new Response(
+        JSON.stringify({ error: 'Folder name already exists' }),
+        { 
+          status: 409,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
     return new Response(
-      JSON.stringify({ 
-        error: 'Internal server error',
-        details: error.message
-      }),
+      JSON.stringify({ error: 'Internal server error' }),
       { 
         status: 500,
         headers: { 'Content-Type': 'application/json' }
@@ -214,3 +187,4 @@ export async function onRequestPOST(context: any): Promise<Response> {
     );
   }
 }
+
