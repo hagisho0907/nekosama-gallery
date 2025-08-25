@@ -121,6 +121,7 @@ export async function onRequestPOST(context: any): Promise<Response> {
   
   try {
     const { request, env } = context;
+    const url = new URL(request.url);
     
     // Check if this is a featured photo operation
     const action = url.searchParams.get('action');
