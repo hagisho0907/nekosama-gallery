@@ -960,7 +960,7 @@ function FolderCard({
       }}
       className="group"
     >
-      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-72 sm:h-80 lg:h-88 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
+      <div className="relative bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden h-64 sm:h-72 lg:h-80 flex flex-col border border-blue-500/30 hover:border-purple-400/50">
         
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -997,7 +997,7 @@ function FolderCard({
           </div>
           
           <div className="flex justify-center mb-3 sm:mb-4">
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 h-20 sm:h-24 lg:h-28 w-full max-w-xs sm:max-w-none">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2 h-16 sm:h-20 lg:h-24 w-full max-w-48 sm:max-w-56">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
                 key={photo.id} 
@@ -1038,7 +1038,7 @@ function FolderCard({
           </div>
         </motion.div>
         
-        <div className="px-3 pb-2 sm:px-4 sm:pb-2 mt-2 relative flex justify-center">
+        <div className="px-3 pb-2 sm:px-4 sm:pb-2 mt-1 relative flex justify-center">
           <input
             ref={folderUploadRef}
             type="file"
