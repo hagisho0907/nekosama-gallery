@@ -60,6 +60,7 @@ export default function Home() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'enrolled' | 'graduated'>('enrolled');
   const [currentPage, setCurrentPage] = useState(1);
+  const [likedPhotos, setLikedPhotos] = useState<Set<string>>(new Set());
   const itemsPerPage = 10;
   const detailUploadRef = useRef<HTMLInputElement>(null);
 
@@ -86,9 +87,28 @@ export default function Home() {
     input.click();
   };
 
+  // ローカルストレージからいいね状態を読み込み
   useEffect(() => {
+    const savedLikedPhotos = localStorage.getItem('nekosama_liked_photos');
+    if (savedLikedPhotos) {
+      try {
+        const likedPhotoIds = JSON.parse(savedLikedPhotos);
+        setLikedPhotos(new Set(likedPhotoIds));
+      } catch (error) {
+        console.error('Failed to parse liked photos from localStorage:', error);
+      }
+    }
     fetchFolders();
   }, []);
+
+  // いいね状態をローカルストレージに保存
+  const saveLikedPhotos = (likedPhotoSet: Set<string>) => {
+    try {
+      localStorage.setItem('nekosama_liked_photos', JSON.stringify(Array.from(likedPhotoSet)));
+    } catch (error) {
+      console.error('Failed to save liked photos to localStorage:', error);
+    }
+  };
 
   // Refresh data when returning from admin or other pages
   useEffect(() => {
@@ -151,7 +171,15 @@ export default function Home() {
       const data = await response.json();
       
       if (response.ok) {
-        setSelectedFolderData(data.folder);
+        // ローカルキャッシュにあるいいね数を反映
+        const updatedFolder = {
+          ...data.folder,
+          photos: data.folder.photos.map((photo: CatPhoto) => ({
+            ...photo,
+            likes: photo.likes || 0 // DB値を優先し、存在しない場合は0
+          }))
+        };
+        setSelectedFolderData(updatedFolder);
       } else {
         setError(data.error || 'Failed to load folder details');
       }
@@ -170,6 +198,11 @@ export default function Home() {
   const handleLikePhoto = async (photoId: string) => {
     if (!selectedFolderData) return;
     
+    // いいねしていない場合のみAPIを呼び出す
+    if (likedPhotos.has(photoId)) {
+      return; // 既にいいね済みの場合は何もしない
+    }
+
     try {
       console.log('Sending like request for photo:', photoId);
       const response = await fetch(`/api/photos/${photoId}/like`, {
@@ -184,6 +217,12 @@ export default function Home() {
 
       const data = await response.json();
       console.log('Like response data:', data);
+      
+      // いいね状態をローカルに保存
+      const newLikedPhotos = new Set(likedPhotos);
+      newLikedPhotos.add(photoId);
+      setLikedPhotos(newLikedPhotos);
+      saveLikedPhotos(newLikedPhotos);
       
       // Update the local state with the new likes count
       setSelectedFolderData(prev => {
@@ -888,11 +927,15 @@ onClick={async () => {
                                 <div className="flex items-center gap-1">
                                   <motion.button 
                                     onClick={() => handleLikePhoto(photo.id)}
-                                    className="text-red-400 hover:text-red-300 flex-shrink-0 p-1 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 h-[44px] flex items-center justify-center gap-0.5"
+                                    className={`flex-shrink-0 p-1 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 h-[44px] flex items-center justify-center gap-0.5 ${
+                                      likedPhotos.has(photo.id) 
+                                        ? 'text-red-500 hover:text-red-400' 
+                                        : 'text-gray-400 hover:text-red-300'
+                                    }`}
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
                                   >
-                                    <Heart className="w-4 h-4 sm:w-3 sm:h-3 fill-current" />
+                                    <Heart className={`w-4 h-4 sm:w-3 sm:h-3 ${likedPhotos.has(photo.id) ? 'fill-current' : 'fill-none'}`} />
                                     <span className="text-xs sm:text-[10px] font-medium">{photo.likes || 0}</span>
                                   </motion.button>
                                   <motion.a 
