@@ -264,8 +264,39 @@ class D1DatabaseManager {
       
       return result.results as CatPhoto[];
     } catch (error: any) {
-      // Fallback to query without is_featured column
-      if (error.message?.includes('no column named is_featured') || error.message?.includes('no such column: is_featured')) {
+      // Fallback to query without likes column
+      if (error.message?.includes('no column named likes') || error.message?.includes('no such column: likes')) {
+        try {
+          const result = await db.prepare(`
+            SELECT id, folder_id as folderId, filename, original_name as originalName, 
+                   url, uploaded_at as uploadedAt, 
+                   CASE WHEN is_featured = 1 THEN 1 ELSE 0 END as isFeatured,
+                   0 as likes
+            FROM photos 
+            WHERE folder_id = ? 
+            ORDER BY uploaded_at DESC
+          `).bind(folderId).all();
+          
+          return result.results as CatPhoto[];
+        } catch (fallbackError: any) {
+          // Fallback to query without both is_featured and likes columns
+          if (fallbackError.message?.includes('no column named is_featured') || fallbackError.message?.includes('no such column: is_featured')) {
+            const result = await db.prepare(`
+              SELECT id, folder_id as folderId, filename, original_name as originalName, 
+                     url, uploaded_at as uploadedAt, 
+                     0 as isFeatured,
+                     0 as likes
+              FROM photos 
+              WHERE folder_id = ? 
+              ORDER BY uploaded_at DESC
+            `).bind(folderId).all();
+            
+            return result.results as CatPhoto[];
+          } else {
+            throw fallbackError;
+          }
+        }
+      } else if (error.message?.includes('no column named is_featured') || error.message?.includes('no such column: is_featured')) {
         const result = await db.prepare(`
           SELECT id, folder_id as folderId, filename, original_name as originalName, 
                  url, uploaded_at as uploadedAt, 
@@ -289,10 +320,22 @@ class D1DatabaseManager {
     const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
     const uploadedAt = new Date().toISOString();
 
-    await db.prepare(`
-      INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at, likes)
-      VALUES (?, ?, ?, ?, ?, ?, 0)
-    `).bind(id, photo.folderId, photo.filename, photo.originalName, photo.url, uploadedAt).run();
+    try {
+      await db.prepare(`
+        INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at, likes)
+        VALUES (?, ?, ?, ?, ?, ?, 0)
+      `).bind(id, photo.folderId, photo.filename, photo.originalName, photo.url, uploadedAt).run();
+    } catch (error: any) {
+      // Fallback to insert without likes column if it doesn't exist
+      if (error.message?.includes('no column named likes') || error.message?.includes('no such column: likes')) {
+        await db.prepare(`
+          INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `).bind(id, photo.folderId, photo.filename, photo.originalName, photo.url, uploadedAt).run();
+      } else {
+        throw error;
+      }
+    }
 
     return {
       id,
@@ -305,15 +348,24 @@ class D1DatabaseManager {
   async incrementLikes(photoId: string): Promise<number> {
     const db = this.ensureDatabase();
     
-    await db.prepare(`
-      UPDATE photos SET likes = likes + 1 WHERE id = ?
-    `).bind(photoId).run();
+    try {
+      await db.prepare(`
+        UPDATE photos SET likes = likes + 1 WHERE id = ?
+      `).bind(photoId).run();
 
-    const result = await db.prepare(`
-      SELECT COALESCE(likes, 0) as likes FROM photos WHERE id = ?
-    `).bind(photoId).first();
-    
-    return result?.likes || 0;
+      const result = await db.prepare(`
+        SELECT COALESCE(likes, 0) as likes FROM photos WHERE id = ?
+      `).bind(photoId).first();
+      
+      return result?.likes || 0;
+    } catch (error: any) {
+      // If likes column doesn't exist, return 0 (can't increment)
+      if (error.message?.includes('no column named likes') || error.message?.includes('no such column: likes')) {
+        return 0;
+      } else {
+        throw error;
+      }
+    }
   }
 
   async deletePhoto(id: string): Promise<boolean> {
