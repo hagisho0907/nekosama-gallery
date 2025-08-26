@@ -972,7 +972,7 @@ function FolderCard({
           onClick={() => onSelectFolder(folder.id)}
         >
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white truncate flex-1 text-left">
+            <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white truncate flex-1 text-left pr-2">
               {folder.name}
             </h3>
             {folder.status === 'enrolled' ? (
