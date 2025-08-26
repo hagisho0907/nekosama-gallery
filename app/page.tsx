@@ -171,15 +171,19 @@ export default function Home() {
     if (!selectedFolderData) return;
     
     try {
+      console.log('Sending like request for photo:', photoId);
       const response = await fetch(`/api/photos/${photoId}/like`, {
         method: 'POST',
       });
 
+      console.log('Like response status:', response.status);
+      
       if (!response.ok) {
         throw new Error('Failed to like photo');
       }
 
       const data = await response.json();
+      console.log('Like response data:', data);
       
       // Update the local state with the new likes count
       setSelectedFolderData(prev => {
@@ -188,7 +192,7 @@ export default function Home() {
           ...prev,
           photos: prev.photos.map(photo =>
             photo.id === photoId 
-              ? { ...photo, likes: data.likes }
+              ? { ...photo, likes: data.likes || (photo.likes + 1) }
               : photo
           )
         };
@@ -888,7 +892,7 @@ onClick={async () => {
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
                                   >
-                                    <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+                                    <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
                                     <span className="text-xs sm:text-sm font-medium">{photo.likes || 0}</span>
                                   </motion.button>
                                   <motion.a 
