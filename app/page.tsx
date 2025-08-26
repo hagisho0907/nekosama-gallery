@@ -198,46 +198,80 @@ export default function Home() {
   const handleLikePhoto = async (photoId: string) => {
     if (!selectedFolderData) return;
     
-    // いいねしていない場合のみAPIを呼び出す
-    if (likedPhotos.has(photoId)) {
-      return; // 既にいいね済みの場合は何もしない
-    }
+    const isLiked = likedPhotos.has(photoId);
 
     try {
-      console.log('Sending like request for photo:', photoId);
-      const response = await fetch(`/api/photos/${photoId}/like`, {
-        method: 'POST',
-      });
+      if (isLiked) {
+        // いいね取り消し処理
+        console.log('Sending unlike request for photo:', photoId);
+        const response = await fetch(`/api/photos/${photoId}/like`, {
+          method: 'DELETE',
+        });
 
-      console.log('Like response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error('Failed to like photo');
+        console.log('Unlike response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error('Failed to unlike photo');
+        }
+
+        const data = await response.json();
+        console.log('Unlike response data:', data);
+        
+        // いいね状態をローカルから削除
+        const newLikedPhotos = new Set(likedPhotos);
+        newLikedPhotos.delete(photoId);
+        setLikedPhotos(newLikedPhotos);
+        saveLikedPhotos(newLikedPhotos);
+        
+        // Update the local state with the new likes count
+        setSelectedFolderData(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            photos: prev.photos.map(photo =>
+              photo.id === photoId 
+                ? { ...photo, likes: data.likes || Math.max(0, photo.likes - 1) }
+                : photo
+            )
+          };
+        });
+      } else {
+        // いいね追加処理
+        console.log('Sending like request for photo:', photoId);
+        const response = await fetch(`/api/photos/${photoId}/like`, {
+          method: 'POST',
+        });
+
+        console.log('Like response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error('Failed to like photo');
+        }
+
+        const data = await response.json();
+        console.log('Like response data:', data);
+        
+        // いいね状態をローカルに保存
+        const newLikedPhotos = new Set(likedPhotos);
+        newLikedPhotos.add(photoId);
+        setLikedPhotos(newLikedPhotos);
+        saveLikedPhotos(newLikedPhotos);
+        
+        // Update the local state with the new likes count
+        setSelectedFolderData(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            photos: prev.photos.map(photo =>
+              photo.id === photoId 
+                ? { ...photo, likes: data.likes || (photo.likes + 1) }
+                : photo
+            )
+          };
+        });
       }
-
-      const data = await response.json();
-      console.log('Like response data:', data);
-      
-      // いいね状態をローカルに保存
-      const newLikedPhotos = new Set(likedPhotos);
-      newLikedPhotos.add(photoId);
-      setLikedPhotos(newLikedPhotos);
-      saveLikedPhotos(newLikedPhotos);
-      
-      // Update the local state with the new likes count
-      setSelectedFolderData(prev => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          photos: prev.photos.map(photo =>
-            photo.id === photoId 
-              ? { ...photo, likes: data.likes || (photo.likes + 1) }
-              : photo
-          )
-        };
-      });
     } catch (error) {
-      console.error('Error liking photo:', error);
+      console.error('Error handling like/unlike photo:', error);
     }
   };
 
