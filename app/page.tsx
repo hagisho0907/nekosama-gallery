@@ -723,6 +723,71 @@ onClick={async () => {
                   </motion.div>
                 ) : (
                   <>
+                    {/* ページングナビゲーション */}
+                    {totalPages > 1 && (
+                      <motion.div 
+                        className="flex justify-center items-center gap-2 mb-6"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.6 }}
+                      >
+                        <motion.button
+                          onClick={() => {
+                            setCurrentPage(Math.max(1, currentPage - 1));
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          disabled={currentPage === 1}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                            currentPage === 1
+                              ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                              : 'bg-slate-600/80 hover:bg-slate-500 text-white hover:scale-105'
+                          }`}
+                          whileHover={currentPage !== 1 ? { scale: 1.05 } : {}}
+                          whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
+                        >
+                          前へ
+                        </motion.button>
+                        
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                            <motion.button
+                              key={pageNum}
+                              onClick={() => {
+                                setCurrentPage(pageNum);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }}
+                              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                                currentPage === pageNum
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                                  : 'bg-slate-600/80 hover:bg-slate-500 text-white hover:scale-105'
+                              }`}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              {pageNum}
+                            </motion.button>
+                          ))}
+                        </div>
+                        
+                        <motion.button
+                          onClick={() => {
+                            setCurrentPage(Math.min(totalPages, currentPage + 1));
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          disabled={currentPage === totalPages}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                            currentPage === totalPages
+                              ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                              : 'bg-slate-600/80 hover:bg-slate-500 text-white hover:scale-105'
+                          }`}
+                          whileHover={currentPage !== totalPages ? { scale: 1.05 } : {}}
+                          whileTap={currentPage !== totalPages ? { scale: 0.95 } : {}}
+                        >
+                          次へ
+                        </motion.button>
+                      </motion.div>
+                    )}
+
                     <motion.div
                       className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 lg:gap-6"
                       initial="hidden"
@@ -799,71 +864,6 @@ onClick={async () => {
                         </motion.div>
                       ))}
                     </motion.div>
-
-                    {/* ページングナビゲーション */}
-                    {totalPages > 1 && (
-                      <motion.div 
-                        className="flex justify-center items-center gap-2 mt-6"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5, duration: 0.6 }}
-                      >
-                        <motion.button
-                          onClick={() => {
-                            setCurrentPage(Math.max(1, currentPage - 1));
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          }}
-                          disabled={currentPage === 1}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                            currentPage === 1
-                              ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
-                              : 'bg-slate-600/80 hover:bg-slate-500 text-white hover:scale-105'
-                          }`}
-                          whileHover={currentPage !== 1 ? { scale: 1.05 } : {}}
-                          whileTap={currentPage !== 1 ? { scale: 0.95 } : {}}
-                        >
-                          前へ
-                        </motion.button>
-                        
-                        <div className="flex items-center gap-1">
-                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                            <motion.button
-                              key={pageNum}
-                              onClick={() => {
-                                setCurrentPage(pageNum);
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                              }}
-                              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                                currentPage === pageNum
-                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                                  : 'bg-slate-600/80 hover:bg-slate-500 text-white hover:scale-105'
-                              }`}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              {pageNum}
-                            </motion.button>
-                          ))}
-                        </div>
-                        
-                        <motion.button
-                          onClick={() => {
-                            setCurrentPage(Math.min(totalPages, currentPage + 1));
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          }}
-                          disabled={currentPage === totalPages}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                            currentPage === totalPages
-                              ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
-                              : 'bg-slate-600/80 hover:bg-slate-500 text-white hover:scale-105'
-                          }`}
-                          whileHover={currentPage !== totalPages ? { scale: 1.05 } : {}}
-                          whileTap={currentPage !== totalPages ? { scale: 0.95 } : {}}
-                        >
-                          次へ
-                        </motion.button>
-                      </motion.div>
-                    )}
 
                     {/* 詳細画面でのアップロードボタン */}
                     <motion.div 
