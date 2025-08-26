@@ -1055,7 +1055,7 @@ function FolderCard({
               }
             }}
             className={`
-                relative overflow-hidden text-white text-center py-0.5 sm:py-1.5 px-1.5 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200 w-1/3 sm:w-auto
+                relative overflow-hidden text-white text-center py-0.5 sm:py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200 w-2/5 sm:w-auto
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
                   : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-102'
