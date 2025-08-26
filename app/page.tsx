@@ -851,36 +851,36 @@ onClick={async () => {
                 href="https://x.com/haikeinekosama"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-slate-700/70 hover:bg-blue-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-blue-400/50"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 bg-slate-700/70 hover:bg-blue-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-blue-400/50"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Twitter className="w-5 h-5" />
-                <span>X (Twitter)</span>
+                <Twitter className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-xs sm:text-sm">X (Twitter)</span>
               </motion.a>
               
               <motion.a
                 href="https://www.instagram.com/haikeinekosama/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-slate-700/70 hover:bg-pink-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-pink-400/50"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 bg-slate-700/70 hover:bg-pink-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-pink-400/50"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Instagram className="w-5 h-5" />
-                <span>Instagram</span>
+                <Instagram className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-xs sm:text-sm">Instagram</span>
               </motion.a>
               
               <motion.a
                 href="https://aboutme.style/haikeinekosama"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 bg-slate-700/70 hover:bg-purple-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-purple-400/50"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 bg-slate-700/70 hover:bg-purple-600/70 text-blue-200 hover:text-white rounded-lg transition-all duration-200 border border-slate-600/50 hover:border-purple-400/50"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Globe className="w-5 h-5" />
-                <span>HP</span>
+                <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-xs sm:text-sm">HP</span>
               </motion.a>
             </div>
             
