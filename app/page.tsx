@@ -1038,7 +1038,7 @@ function FolderCard({
           </div>
         </motion.div>
         
-        <div className="px-3 pb-2 sm:px-4 sm:pb-2 mt-1 relative flex justify-center">
+        <div className="px-3 pb-2 sm:px-4 sm:pb-2 mt-0 relative flex justify-center">
           <input
             ref={folderUploadRef}
             type="file"
