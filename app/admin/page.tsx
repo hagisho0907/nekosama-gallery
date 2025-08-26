@@ -695,7 +695,7 @@ export default function AdminPage() {
               >
                 <Link 
                   href="/" 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-3 py-3 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-lg border border-blue-400/30 flex items-center gap-2 min-h-[44px]"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-4 py-3 sm:px-6 sm:py-4 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-lg border border-blue-400/30 flex items-center gap-2 min-h-[48px]"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span className="hidden sm:inline">宇宙ステーション</span>
@@ -828,7 +828,7 @@ export default function AdminPage() {
             
             <p className="text-xs sm:text-sm text-blue-300/70 flex items-center gap-2">
               <GripVertical className="w-4 h-4" />
-              フォルダをドラッグ&ドロップして表示順序を変更できます
+              フォルダをドラッグ&ドロップして表示順序を変更
             </p>
           </div>
           <motion.div 
