@@ -846,7 +846,7 @@ onClick={async () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center space-y-6">
             {/* Social Links */}
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            <div className="flex justify-center gap-2 sm:gap-6">
               <motion.a
                 href="https://x.com/haikeinekosama"
                 target="_blank"
@@ -1055,7 +1055,7 @@ function FolderCard({
               }
             }}
             className={`
-                relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200 w-1/2 sm:w-auto
+                relative overflow-hidden text-white text-center py-0.5 sm:py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200 w-1/2 sm:w-auto
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
                   : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-102'
