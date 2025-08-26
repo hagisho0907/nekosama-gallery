@@ -996,7 +996,7 @@ function FolderCard({
             </p>
           </div>
           
-          <div className="flex justify-center mb-3 sm:mb-4">
+          <div className="flex justify-center mb-2 sm:mb-3">
             <div className="grid grid-cols-3 gap-2 sm:gap-3 h-24 sm:h-24 lg:h-28 w-full max-w-lg sm:max-w-none">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
@@ -1055,7 +1055,7 @@ function FolderCard({
               }
             }}
             className={`
-                relative overflow-hidden text-white text-center py-0.5 sm:py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200 w-1/2 sm:w-auto
+                relative overflow-hidden text-white text-center py-0.5 sm:py-1.5 px-1.5 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200 w-1/3 sm:w-auto
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
                   : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-102'
