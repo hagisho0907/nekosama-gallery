@@ -997,7 +997,7 @@ function FolderCard({
           </div>
           
           <div className="flex justify-center mb-3 sm:mb-4">
-            <div className="grid grid-cols-3 gap-2 sm:gap-3 h-24 sm:h-24 lg:h-28 w-full max-w-md sm:max-w-none">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 h-24 sm:h-24 lg:h-28 w-full max-w-lg sm:max-w-none">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
                 key={photo.id} 
