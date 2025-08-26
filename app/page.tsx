@@ -28,6 +28,7 @@ type CatPhoto = {
   url: string;
   originalName: string;
   uploadedAt: string;
+  likes: number;
 };
 
 type CatFolder = {
