@@ -972,33 +972,32 @@ function FolderCard({
           onClick={() => onSelectFolder(folder.id)}
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white truncate flex-1">
-                {folder.name}
-              </h3>
-              {folder.status === 'enrolled' ? (
-                <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 shadow-md flex-shrink-0">
-                  <Stars className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span>在籍</span>
-                </div>
-              ) : (
-                <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 shadow-md flex-shrink-0">
-                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span>卒業</span>
-                </div>
-              )}
-            </div>
+            <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white truncate flex-1 text-left">
+              {folder.name}
+            </h3>
+            {folder.status === 'enrolled' ? (
+              <div className="bg-green-500/80 backdrop-blur-sm text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 shadow-md flex-shrink-0">
+                <Stars className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span>在籍</span>
+              </div>
+            ) : (
+              <div className="bg-yellow-500/80 backdrop-blur-sm text-white text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-1.5 rounded-full flex items-center gap-1 shadow-md flex-shrink-0">
+                <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span>卒業</span>
+              </div>
+            )}
           </div>
           
           {/* 写真数表示 */}
-          <div className="mb-3">
+          <div className="mb-3 flex justify-center">
             <p className="text-sm sm:text-base text-blue-300 flex items-center gap-2">
               <Sparkles className="w-4 h-4" />
               <span className="font-medium">{folder.photoCount}枚の写真</span>
             </p>
           </div>
           
-          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4 h-20 sm:h-24 lg:h-28 flex-1">
+          <div className="flex justify-center mb-3 sm:mb-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3 h-20 sm:h-24 lg:h-28 w-full max-w-xs sm:max-w-none">
             {folder.photos.slice(0, 3).map((photo) => (
               <motion.div 
                 key={photo.id} 
@@ -1035,10 +1034,11 @@ function FolderCard({
                 </div>
               </div>
             )}
+            </div>
           </div>
         </motion.div>
         
-        <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative">
+        <div className="px-3 pb-3 sm:px-4 sm:pb-3 mt-auto relative flex justify-center">
           <input
             ref={folderUploadRef}
             type="file"
@@ -1055,7 +1055,7 @@ function FolderCard({
               }
             }}
             className={`
-                relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200
+                relative overflow-hidden text-white text-center py-1.5 px-2 sm:px-3 rounded-md cursor-pointer text-xs sm:text-sm font-medium transition-all duration-200 w-1/2 sm:w-auto
                 ${uploadingFolder === folder.id 
                   ? 'bg-slate-600 cursor-not-allowed' 
                   : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 hover:scale-102'
