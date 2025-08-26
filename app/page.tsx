@@ -888,12 +888,12 @@ onClick={async () => {
                                 <div className="flex items-center gap-1">
                                   <motion.button 
                                     onClick={() => handleLikePhoto(photo.id)}
-                                    className="text-red-400 hover:text-red-300 flex-shrink-0 p-2 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 h-[44px] w-[44px] sm:h-[32px] sm:w-[32px] flex items-center justify-center gap-0.5"
+                                    className="text-red-400 hover:text-red-300 flex-shrink-0 p-1 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 h-[44px] w-[44px] sm:h-[32px] sm:w-[32px] flex flex-col items-center justify-center gap-0"
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.9 }}
                                   >
-                                    <Heart className="w-3 h-3 sm:w-2.5 sm:h-2.5 fill-current" />
-                                    <span className="text-[10px] sm:text-xs font-medium">{photo.likes || 0}</span>
+                                    <Heart className="w-4 h-4 sm:w-3 sm:h-3 fill-current" />
+                                    <span className="text-[9px] sm:text-[10px] font-medium leading-none">{photo.likes || 0}</span>
                                   </motion.button>
                                   <motion.a 
                                     href={photo.url} 
