@@ -914,12 +914,12 @@ onClick={async () => {
 
       {/* Footer */}
       <motion.footer 
-        className="bg-slate-800/70 backdrop-blur-md border-t border-blue-500/30 mt-12 relative z-10"
+        className="bg-slate-800/70 backdrop-blur-md border-t border-blue-500/30 mt-8 relative z-10"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center space-y-6">
             {/* Social Links */}
             <div className="flex justify-center gap-2 sm:gap-6">
