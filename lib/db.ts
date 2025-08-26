@@ -33,6 +33,7 @@ export interface CatPhoto {
   originalName: string;
   url: string;
   uploadedAt: string;
+  likes: number;
 }
 
 class DatabaseManager {
@@ -94,9 +95,17 @@ class DatabaseManager {
         url TEXT NOT NULL,
         uploaded_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         is_featured INTEGER DEFAULT 0,
+        likes INTEGER DEFAULT 0,
         FOREIGN KEY (folder_id) REFERENCES folders (id) ON DELETE CASCADE
       )
     `);
+
+    // Add likes column if it doesn't exist (for existing databases)
+    try {
+      this.db.exec(`ALTER TABLE photos ADD COLUMN likes INTEGER DEFAULT 0`);
+    } catch (error) {
+      // Column might already exist, ignore the error
+    }
 
     this.db.exec(`
       INSERT OR IGNORE INTO folders (id, name) VALUES 
@@ -235,7 +244,7 @@ class DatabaseManager {
     
     const stmt = this.db.prepare(`
       SELECT id, folder_id as folderId, filename, original_name as originalName, 
-             url, uploaded_at as uploadedAt
+             url, uploaded_at as uploadedAt, COALESCE(likes, 0) as likes
       FROM photos 
       WHERE folder_id = ? 
       ORDER BY uploaded_at DESC
@@ -243,7 +252,7 @@ class DatabaseManager {
     return stmt.all(folderId) as CatPhoto[];
   }
 
-  async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): Promise<CatPhoto> {
+  async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt' | 'likes'>): Promise<CatPhoto> {
     this.init();
     
     if (this.useD1DB) {
@@ -268,8 +277,34 @@ class DatabaseManager {
     return {
       id,
       ...photo,
-      uploadedAt
+      uploadedAt,
+      likes: 0
     };
+  }
+
+  async incrementLikes(photoId: string): Promise<number> {
+    this.init();
+    
+    if (this.useD1DB) {
+      return await d1Database.incrementLikes(photoId);
+    }
+
+    if (this.useMemoryDB) {
+      return memoryDatabase.incrementLikes(photoId);
+    }
+
+    if (!this.db) throw new Error('Database not initialized');
+    
+    const stmt = this.db.prepare(`
+      UPDATE photos SET likes = likes + 1 WHERE id = ?
+    `);
+    stmt.run(photoId);
+
+    const selectStmt = this.db.prepare(`
+      SELECT COALESCE(likes, 0) as likes FROM photos WHERE id = ?
+    `);
+    const result = selectStmt.get(photoId) as { likes: number } | undefined;
+    return result?.likes || 0;
   }
 
   async deletePhoto(id: string): Promise<boolean> {

@@ -17,6 +17,7 @@ import {
   AlertCircle,
   CheckCircle,
   Twitter,
+  Heart,
   Instagram,
   Globe
 } from 'lucide-react';
@@ -163,6 +164,37 @@ export default function Home() {
     setSelectedFolder(folderId);
     setCurrentPage(1); // ページをリセット
     fetchFolderDetails(folderId);
+  };
+
+  const handleLikePhoto = async (photoId: string) => {
+    if (!selectedFolderData) return;
+    
+    try {
+      const response = await fetch(`/api/photos/${photoId}/like`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to like photo');
+      }
+
+      const data = await response.json();
+      
+      // Update the local state with the new likes count
+      setSelectedFolderData(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          photos: prev.photos.map(photo =>
+            photo.id === photoId 
+              ? { ...photo, likes: data.likes }
+              : photo
+          )
+        };
+      });
+    } catch (error) {
+      console.error('Error liking photo:', error);
+    }
   };
 
   const handleFileUpload = async (folderId: string, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -848,16 +880,27 @@ onClick={async () => {
                                   <span className="text-xs">📅</span>
                                   {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
                                 </p>
-                                <motion.a 
-                                  href={photo.url} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="text-blue-400 hover:text-blue-300 ml-2 flex-shrink-0 p-2 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.9 }}
-                                >
-                                  <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
-                                </motion.a>
+                                <div className="flex items-center gap-2">
+                                  <motion.button 
+                                    onClick={() => handleLikePhoto(photo.id)}
+                                    className="text-red-400 hover:text-red-300 flex-shrink-0 p-2 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 min-h-[44px] min-w-[44px] flex items-center justify-center gap-1"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+                                    <span className="text-xs sm:text-sm font-medium">{photo.likes || 0}</span>
+                                  </motion.button>
+                                  <motion.a 
+                                    href={photo.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="text-blue-400 hover:text-blue-300 flex-shrink-0 p-2 rounded-lg transition-colors bg-slate-700/50 hover:bg-slate-600/50 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                                  </motion.a>
+                                </div>
                               </div>
                             </div>
                           </div>
