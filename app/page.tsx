@@ -811,6 +811,7 @@ onClick={async () => {
                         <motion.button
                           onClick={() => {
                             setCurrentPage(Math.max(1, currentPage - 1));
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
                           disabled={currentPage === 1}
                           className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
@@ -828,7 +829,10 @@ onClick={async () => {
                           {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                             <motion.button
                               key={pageNum}
-                              onClick={() => setCurrentPage(pageNum)}
+                              onClick={() => {
+                                setCurrentPage(pageNum);
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                              }}
                               className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                                 currentPage === pageNum
                                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
@@ -845,6 +849,7 @@ onClick={async () => {
                         <motion.button
                           onClick={() => {
                             setCurrentPage(Math.min(totalPages, currentPage + 1));
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
                           disabled={currentPage === totalPages}
                           className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
