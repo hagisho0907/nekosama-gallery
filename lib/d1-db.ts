@@ -16,6 +16,7 @@ export interface CatPhoto {
   url: string;
   uploadedAt: string;
   isFeatured?: boolean;
+  likes: number;
 }
 
 // D1 Database interface (for Cloudflare environment)
@@ -254,7 +255,8 @@ class D1DatabaseManager {
       const result = await db.prepare(`
         SELECT id, folder_id as folderId, filename, original_name as originalName, 
                url, uploaded_at as uploadedAt, 
-               CASE WHEN is_featured = 1 THEN 1 ELSE 0 END as isFeatured
+               CASE WHEN is_featured = 1 THEN 1 ELSE 0 END as isFeatured,
+               COALESCE(likes, 0) as likes
         FROM photos 
         WHERE folder_id = ? 
         ORDER BY uploaded_at DESC
@@ -267,7 +269,8 @@ class D1DatabaseManager {
         const result = await db.prepare(`
           SELECT id, folder_id as folderId, filename, original_name as originalName, 
                  url, uploaded_at as uploadedAt, 
-                 0 as isFeatured
+                 0 as isFeatured,
+                 COALESCE(likes, 0) as likes
           FROM photos 
           WHERE folder_id = ? 
           ORDER BY uploaded_at DESC
@@ -280,22 +283,37 @@ class D1DatabaseManager {
     }
   }
 
-  async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): Promise<CatPhoto> {
+  async addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt' | 'likes'>): Promise<CatPhoto> {
     const db = this.ensureDatabase();
     
     const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
     const uploadedAt = new Date().toISOString();
 
     await db.prepare(`
-      INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO photos (id, folder_id, filename, original_name, url, uploaded_at, likes)
+      VALUES (?, ?, ?, ?, ?, ?, 0)
     `).bind(id, photo.folderId, photo.filename, photo.originalName, photo.url, uploadedAt).run();
 
     return {
       id,
       ...photo,
-      uploadedAt
+      uploadedAt,
+      likes: 0
     };
+  }
+
+  async incrementLikes(photoId: string): Promise<number> {
+    const db = this.ensureDatabase();
+    
+    await db.prepare(`
+      UPDATE photos SET likes = likes + 1 WHERE id = ?
+    `).bind(photoId).run();
+
+    const result = await db.prepare(`
+      SELECT COALESCE(likes, 0) as likes FROM photos WHERE id = ?
+    `).bind(photoId).first();
+    
+    return result?.likes || 0;
   }
 
   async deletePhoto(id: string): Promise<boolean> {

@@ -15,6 +15,7 @@ export interface CatPhoto {
   originalName: string;
   url: string;
   uploadedAt: string;
+  likes: number;
 }
 
 class MemoryDatabase {
@@ -103,18 +104,27 @@ class MemoryDatabase {
       );
   }
 
-  addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt'>): CatPhoto {
+  addPhoto(photo: Omit<CatPhoto, 'id' | 'uploadedAt' | 'likes'>): CatPhoto {
     const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
     const uploadedAt = new Date().toISOString();
 
     const newPhoto: CatPhoto = {
       id,
       ...photo,
-      uploadedAt
+      uploadedAt,
+      likes: 0
     };
 
     this.photos.push(newPhoto);
     return newPhoto;
+  }
+
+  incrementLikes(photoId: string): number {
+    const photo = this.photos.find(p => p.id === photoId);
+    if (!photo) return 0;
+    
+    photo.likes = (photo.likes || 0) + 1;
+    return photo.likes;
   }
 
   deletePhoto(id: string): boolean {
