@@ -304,7 +304,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative flex flex-col">
       {/* Space stars background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="stars"></div>
@@ -400,7 +400,7 @@ export default function Home() {
         </div>
       </motion.header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 relative z-10 flex-grow">
         <AnimatePresence>
           {error && (
             <motion.div 
@@ -914,12 +914,12 @@ onClick={async () => {
 
       {/* Footer */}
       <motion.footer 
-        className="bg-slate-800/70 backdrop-blur-md border-t border-blue-500/30 mt-8 relative z-10"
+        className="bg-slate-800/70 backdrop-blur-md border-t border-blue-500/30 mt-4 relative z-10"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center space-y-6">
             {/* Social Links */}
             <div className="flex justify-center gap-2 sm:gap-6">
