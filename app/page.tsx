@@ -280,11 +280,11 @@ export default function Home() {
             bottom: 0;
           }
           .stars {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.7"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.5"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.8"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.6"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.4"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.7"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.6"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.5"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
             animation: move-stars 200s linear infinite;
           }
           .twinkling {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/></svg>') repeat;
             animation: move-twinkling 100s linear infinite;
           }
           @keyframes move-stars {
@@ -316,11 +316,11 @@ export default function Home() {
           bottom: 0;
         }
         .stars {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.7"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.5"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.8"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.6"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.4"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.7"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.6"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.5"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
           animation: move-stars 200s linear infinite;
         }
         .twinkling {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/></svg>') repeat;
           animation: move-twinkling 100s linear infinite;
         }
         @keyframes move-stars {
