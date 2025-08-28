@@ -1,49 +1,47 @@
-@import "tailwindcss";
-
 :root {
   --background: #0f172a;
   --foreground: #e2e8f0;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-geist-sans: var(--font-geist-sans);
+  --font-geist-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
 }
 
-/* Improved touch targets for mobile */
-@media (max-width: 640px) {
-  button, [role="button"], input[type="file"] + *, .cursor-pointer {
-    min-height: 48px;
-    min-width: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* Star field animation for space theme */
+.stars, .twinkling {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-/* Extra small screens - better mobile support */
-@media (max-width: 480px) {
-  .text-responsive {
-    font-size: 0.875rem;
-  }
-  
-  .gap-responsive {
-    gap: 0.75rem;
-  }
-  
-  .p-responsive {
-    padding: 1rem;
-  }
+.stars {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.7"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.5"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.8"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.6"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.4"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.7"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.6"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.5"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+  animation: move-stars 200s linear infinite;
+}
+
+.twinkling {
+  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/></svg>') repeat;
+  animation: move-twinkling 100s linear infinite;
+}
+
+@keyframes move-stars {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100px); }
+}
+
+@keyframes move-twinkling {
+  from { transform: translateX(0); }
+  to { transform: translateX(-200px); }
 }
 
 /* Custom scrollbar for webkit browsers */
@@ -69,39 +67,15 @@ body {
 
 /* Focus visible styles for accessibility */
 *:focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid #3b82f6 !important;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Smooth transitions for all interactive elements */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
-/* Prevent text selection on UI elements */
-button, [role="button"] {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-}
-
-/* Enhance image loading experience */
-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-/* Mobile-optimized spacing */
-.mobile-grid {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-@media (max-width: 768px) {
-  .mobile-grid {
-    grid-template-columns: 1fr;
+/* Improve touch targets on mobile */
+@media (max-width: 640px) {
+  button {
+    min-height: 44px;
   }
 }
 
@@ -119,9 +93,35 @@ img {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* Enhance image loading experience */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
 /* Backdrop blur support fallback */
 @supports not (backdrop-filter: blur(10px)) {
-  .backdrop-blur-md {
-    background-color: rgba(30, 41, 59, 0.9);
+  .chakra-ui-blur {
+    background-color: rgba(30, 41, 59, 0.9) !important;
+  }
+}
+
+/* Ensure proper spacing for responsive design */
+.chakra-container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .chakra-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .chakra-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
