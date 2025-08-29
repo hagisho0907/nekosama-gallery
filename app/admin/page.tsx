@@ -1061,12 +1061,12 @@ export default function AdminPage() {
                     <Flex 
                       direction={{ base: "column", sm: "row" }} 
                       align={{ sm: "center" }} 
-                      justify={{ sm: "space-between" }} 
                       gap={3}
                       h="full"
                       minH={{ base: "100px", sm: "80px" }}
+                      w="full"
                     >
-                      <Flex align="center" gap={{ base: 2, sm: 4 }} minW={0} flex={1}>
+                      <Flex align="center" gap={{ base: 2, sm: 4 }} minW={0} w={{ base: "full", sm: "calc(100% - 500px)" }}>
                       {editingFolder === folder.id ? (
                         <VStack spacing={2} align="stretch" w="full">
                           <Flex direction={{ base: "column", sm: "row" }} gap={2} w="full">
@@ -1182,7 +1182,7 @@ export default function AdminPage() {
                       )}
                       </Flex>
                     {editingFolder !== folder.id && (
-                      <Box minW={{ sm: "480px" }} flexShrink={0}>
+                      <Box w={{ base: "full", sm: "480px" }} flexShrink={0}>
                         <VStack spacing={2} display={{ base: "flex", sm: "none" }} w="full">
                           <HStack spacing={2} w="full">
                           <MotionButton
@@ -1294,7 +1294,7 @@ export default function AdminPage() {
                       </VStack>
 
                       {/* デスクトップ: 横並びのボタン */}
-                      <HStack spacing={2} display={{ base: "none", sm: "flex" }} minW="480px">
+                      <HStack spacing={2} display={{ base: "none", sm: "flex" }} w="480px">
                         <MotionButton
                           onClick={() => fetchPhotos(folder.id)}
                           isDisabled={submitting}
