@@ -638,6 +638,33 @@ export default function Home() {
                   </MotionButton>
                 </HStack>
                 
+                {/* Status Description */}
+                <MotionBox
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                  textAlign="center"
+                  mb={4}
+                >
+                  <Text 
+                    color="blue.300" 
+                    fontSize={{ base: "md", sm: "lg" }}
+                    fontWeight="medium"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    gap={2}
+                    flexWrap="wrap"
+                  >
+                    <Stars />
+                    {activeTab === 'enrolled' 
+                      ? '拝啓ねこ様の宇宙船で大活躍のねこ様たち！'
+                      : '惑星へ飛び立ったねこ様たちの元気な姿！'
+                    }
+                    <Stars />
+                  </Text>
+                </MotionBox>
+
                 {/* Tab Content */}
                 <Box w="full">
                   {activeTab === 'enrolled' ? (
