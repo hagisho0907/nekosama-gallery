@@ -968,8 +968,8 @@ export default function AdminPage() {
                   フォルダをドラッグ&ドロップして表示順序を変更
                 </Text>
               </Box>
-          <motion.div 
-            className="space-y-4"
+          <MotionVStack
+            spacing={4}
             initial="hidden"
             animate="visible"
             variants={{
@@ -1392,10 +1392,9 @@ export default function AdminPage() {
                     </Flex>
                   </CardBody>
                 </MotionCard>
-                </motion.div>
               ))
             )}
-          </motion.div>
+          </MotionVStack>
             </VStack>
           </CardBody>
         </MotionCard>
