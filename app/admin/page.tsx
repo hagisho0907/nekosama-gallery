@@ -1205,117 +1205,190 @@ export default function AdminPage() {
                           >
                             写真管理
                           </MotionButton>
-                          <motion.button
+                          <MotionButton
                             onClick={() => handleToggleStatus(folder.id)}
-                            disabled={submitting}
-                            className={`disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur min-h-[44px] flex items-center justify-center shadow-lg border font-medium ${
-                              folder.status === 'enrolled' 
-                                ? 'bg-yellow-600/80 hover:bg-yellow-600 border-yellow-400/30' 
-                                : 'bg-green-600/80 hover:bg-green-600 border-green-400/30'
-                            }`}
+                            isDisabled={submitting}
+                            bg={folder.status === 'enrolled' ? "yellow.600" : "green.600"}
+                            _hover={{ 
+                              bg: folder.status === 'enrolled' ? "yellow.500" : "green.500" 
+                            }}
+                            _disabled={{ bg: "gray.600" }}
+                            color="white"
+                            px={4}
+                            py={3}
+                            borderRadius="lg"
+                            size="sm"
+                            backdropFilter="blur(4px)"
+                            border="1px solid"
+                            borderColor={folder.status === 'enrolled' ? "yellow.400" : "green.400"}
+                            boxShadow="lg"
+                            minH="44px"
+                            flex={1}
+                            fontWeight="medium"
                             title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
+                            leftIcon={folder.status === 'enrolled' ? 
+                              <Sparkles size="1rem" /> : 
+                              <Stars size="1rem" />
+                            }
                           >
-                            {folder.status === 'enrolled' ? (
-                              <>
-                                <Sparkles className="w-4 h-4 mr-1" />
-                                卒業へ
-                              </>
-                            ) : (
-                              <>
-                                <Stars className="w-4 h-4 mr-1" />
-                                在籍へ
-                              </>
-                            )}
-                          </motion.button>
-                        </div>
+                            {folder.status === 'enrolled' ? '卒業へ' : '在籍へ'}
+                          </MotionButton>
+                        </HStack>
                         
-                        {/* モバイル: 下段のボタン */}
-                        <div className="flex gap-2 sm:hidden">
-                          <motion.button
+                        <HStack spacing={2} w="full">
+                          <MotionButton
                             onClick={() => handleEditFolder(folder.id)}
-                            disabled={submitting}
-                            className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur min-h-[44px] flex items-center justify-center border border-blue-400/30 shadow-lg font-medium"
+                            isDisabled={submitting}
+                            bg="blue.600"
+                            _hover={{ bg: "blue.500" }}
+                            _disabled={{ bg: "gray.600" }}
+                            color="white"
+                            px={4}
+                            py={3}
+                            borderRadius="lg"
+                            size="sm"
+                            backdropFilter="blur(4px)"
+                            border="1px solid"
+                            borderColor="blue.400"
+                            boxShadow="lg"
+                            minH="44px"
+                            flex={1}
+                            fontWeight="medium"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
+                            leftIcon={<Edit3 size="1rem" />}
                           >
-                            <Edit3 className="w-4 h-4 mr-1" />
                             編集
-                          </motion.button>
-                          <motion.button
+                          </MotionButton>
+                          <MotionButton
                             onClick={() => handleDeleteFolder(folder.id)}
-                            disabled={submitting}
-                            className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur min-h-[44px] flex items-center justify-center border border-red-400/30 shadow-lg font-medium"
+                            isDisabled={submitting}
+                            bg="red.600"
+                            _hover={{ bg: "red.500" }}
+                            _disabled={{ bg: "gray.600" }}
+                            color="white"
+                            px={4}
+                            py={3}
+                            borderRadius="lg"
+                            size="sm"
+                            backdropFilter="blur(4px)"
+                            border="1px solid"
+                            borderColor="red.400"
+                            boxShadow="lg"
+                            minH="44px"
+                            flex={1}
+                            fontWeight="medium"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
+                            leftIcon={<Trash2 size="1rem" />}
                           >
-                            <Trash2 className="w-4 h-4 mr-1" />
                             削除
-                          </motion.button>
-                        </div>
+                          </MotionButton>
+                        </HStack>
+                      </VStack>
 
-                        {/* デスクトップ: 横並びのボタン */}
-                        <div className="hidden sm:flex gap-2">
-                          <motion.button
-                            onClick={() => fetchPhotos(folder.id)}
-                            disabled={submitting}
-                            className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur border border-purple-400/30 shadow-lg min-h-[44px] flex items-center gap-2"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Camera className="w-4 h-4" />
-                            写真管理
-                          </motion.button>
-                          <motion.button
-                            onClick={() => handleToggleStatus(folder.id)}
-                            disabled={submitting}
-                            className={`disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur min-h-[44px] flex items-center gap-2 shadow-lg border ${
-                              folder.status === 'enrolled' 
-                                ? 'bg-yellow-600/80 hover:bg-yellow-600 border-yellow-400/30' 
-                                : 'bg-green-600/80 hover:bg-green-600 border-green-400/30'
-                            }`}
-                            title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            {folder.status === 'enrolled' ? (
-                              <>
-                                <Sparkles className="w-4 h-4" />
-                                卒業へ
-                              </>
-                            ) : (
-                              <>
-                                <Stars className="w-4 h-4" />
-                                在籍へ
-                              </>
-                            )}
-                          </motion.button>
-                          <motion.button
-                            onClick={() => handleEditFolder(folder.id)}
-                            disabled={submitting}
-                            className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur min-h-[44px] flex items-center gap-2 border border-blue-400/30 shadow-lg"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Edit3 className="w-4 h-4" />
-                            編集
-                          </motion.button>
-                          <motion.button
-                            onClick={() => handleDeleteFolder(folder.id)}
-                            disabled={submitting}
-                            className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur min-h-[44px] flex items-center gap-2 border border-red-400/30 shadow-lg"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            削除
-                          </motion.button>
-                        </div>
-                      </div>
+                      <HStack spacing={2} display={{ base: "none", sm: "flex" }}>
+                        <MotionButton
+                          onClick={() => fetchPhotos(folder.id)}
+                          isDisabled={submitting}
+                          bg="purple.600"
+                          _hover={{ bg: "purple.500" }}
+                          _disabled={{ bg: "gray.600" }}
+                          color="white"
+                          px={4}
+                          py={3}
+                          borderRadius="lg"
+                          size="sm"
+                          backdropFilter="blur(4px)"
+                          border="1px solid"
+                          borderColor="purple.400"
+                          boxShadow="lg"
+                          minH="44px"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          leftIcon={<Camera size="1rem" />}
+                        >
+                          写真管理
+                        </MotionButton>
+                        <MotionButton
+                          onClick={() => handleToggleStatus(folder.id)}
+                          isDisabled={submitting}
+                          bg={folder.status === 'enrolled' ? "yellow.600" : "green.600"}
+                          _hover={{ 
+                            bg: folder.status === 'enrolled' ? "yellow.500" : "green.500" 
+                          }}
+                          _disabled={{ bg: "gray.600" }}
+                          color="white"
+                          px={4}
+                          py={3}
+                          borderRadius="lg"
+                          size="sm"
+                          backdropFilter="blur(4px)"
+                          border="1px solid"
+                          borderColor={folder.status === 'enrolled' ? "yellow.400" : "green.400"}
+                          boxShadow="lg"
+                          minH="44px"
+                          title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          leftIcon={folder.status === 'enrolled' ? 
+                            <Sparkles size="1rem" /> : 
+                            <Stars size="1rem" />
+                          }
+                        >
+                          {folder.status === 'enrolled' ? '卒業へ' : '在籍へ'}
+                        </MotionButton>
+                        <MotionButton
+                          onClick={() => handleEditFolder(folder.id)}
+                          isDisabled={submitting}
+                          bg="blue.600"
+                          _hover={{ bg: "blue.500" }}
+                          _disabled={{ bg: "gray.600" }}
+                          color="white"
+                          px={4}
+                          py={3}
+                          borderRadius="lg"
+                          size="sm"
+                          backdropFilter="blur(4px)"
+                          border="1px solid"
+                          borderColor="blue.400"
+                          boxShadow="lg"
+                          minH="44px"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          leftIcon={<Edit3 size="1rem" />}
+                        >
+                          編集
+                        </MotionButton>
+                        <MotionButton
+                          onClick={() => handleDeleteFolder(folder.id)}
+                          isDisabled={submitting}
+                          bg="red.600"
+                          _hover={{ bg: "red.500" }}
+                          _disabled={{ bg: "gray.600" }}
+                          color="white"
+                          px={4}
+                          py={3}
+                          borderRadius="lg"
+                          size="sm"
+                          backdropFilter="blur(4px)"
+                          border="1px solid"
+                          borderColor="red.400"
+                          boxShadow="lg"
+                          minH="44px"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          leftIcon={<Trash2 size="1rem" />}
+                        >
+                          削除
+                        </MotionButton>
+                      </HStack>
                     )}
-                  </div>
-                  </div>
+                    </Flex>
+                  </CardBody>
+                </MotionCard>
                 </motion.div>
               ))
             )}
@@ -1326,32 +1399,65 @@ export default function AdminPage() {
 
         {/* Photo Management Section */}
         {selectedFolder && (
-          <motion.div 
-            className="bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl p-4 sm:p-6 mt-6 sm:mt-8 border border-purple-500/30"
+          <MotionCard
+            bg="rgba(30, 41, 59, 0.6)"
+            backdropFilter="blur(12px)"
+            borderRadius="xl"
+            boxShadow="xl"
+            p={{ base: 4, sm: 6 }}
+            mt={{ base: 6, sm: 8 }}
+            border="1px solid"
+            borderColor="purple.500"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.6 }}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent flex items-center gap-3">
-                <Camera className="w-6 h-6 text-purple-400" />
-                写真管理 - {folders.find(f => f.id === selectedFolder)?.name}
-              </h2>
-              <motion.button
-                onClick={() => {
-                  setSelectedFolder(null);
-                  setPhotos([]);
-                  setSelectedPhotos([]);
-                  setShowPhotoSelection(false);
-                  setPendingStatusChange(null);
-                }}
-                className="bg-slate-600/80 hover:bg-slate-500 text-white px-4 py-3 sm:px-6 sm:py-4 rounded-lg transition-all duration-200 text-sm sm:text-base self-start sm:self-auto backdrop-blur border border-slate-500/50 shadow-lg"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <CardBody>
+              <Flex 
+                direction={{ base: "column", sm: "row" }} 
+                align={{ sm: "center" }} 
+                justify={{ sm: "space-between" }} 
+                gap={{ base: 3, sm: 0 }} 
+                mb={{ base: 4, sm: 6 }}
               >
-                閉じる
-              </motion.button>
-            </div>
+                <Heading
+                  size={{ base: "lg", sm: "xl", lg: "2xl" }}
+                  bgGradient="linear(to-r, purple.400, cyan.400)"
+                  bgClip="text"
+                  color="transparent"
+                  display="flex"
+                  alignItems="center"
+                  gap={3}
+                >
+                  <Camera size="1.5rem" color="rgba(167, 139, 250, 1)" />
+                  写真管理 - {folders.find(f => f.id === selectedFolder)?.name}
+                </Heading>
+                <MotionButton
+                  onClick={() => {
+                    setSelectedFolder(null);
+                    setPhotos([]);
+                    setSelectedPhotos([]);
+                    setShowPhotoSelection(false);
+                    setPendingStatusChange(null);
+                  }}
+                  bg="gray.600"
+                  _hover={{ bg: "gray.500" }}
+                  color="white"
+                  px={{ base: 4, sm: 6 }}
+                  py={{ base: 3, sm: 4 }}
+                  borderRadius="lg"
+                  size={{ base: "sm", sm: "md" }}
+                  backdropFilter="blur(4px)"
+                  border="1px solid"
+                  borderColor="gray.500"
+                  boxShadow="lg"
+                  alignSelf={{ base: "flex-start", sm: "auto" }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  閉じる
+                </MotionButton>
+              </Flex>
 
             {/* Photo Selection Warning for Graduated Folders */}
             {showPhotoSelection && (
