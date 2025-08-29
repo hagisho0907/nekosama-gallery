@@ -1149,6 +1149,7 @@ export default function AdminPage() {
                             color="white" 
                             noOfLines={1}
                             flex={1}
+                            maxW={{ sm: "200px", md: "300px" }}
                           >
                             {folder.name}
                           </Heading>
@@ -1181,7 +1182,7 @@ export default function AdminPage() {
                       )}
                       </Flex>
                     {editingFolder !== folder.id && (
-                      <Box>
+                      <Box minW={{ sm: "480px" }} flexShrink={0}>
                         <VStack spacing={2} display={{ base: "flex", sm: "none" }} w="full">
                           <HStack spacing={2} w="full">
                           <MotionButton
@@ -1293,7 +1294,7 @@ export default function AdminPage() {
                       </VStack>
 
                       {/* デスクトップ: 横並びのボタン */}
-                      <HStack spacing={2} display={{ base: "none", sm: "flex" }}>
+                      <HStack spacing={2} display={{ base: "none", sm: "flex" }} minW="480px">
                         <MotionButton
                           onClick={() => fetchPhotos(folder.id)}
                           isDisabled={submitting}
@@ -1630,11 +1631,11 @@ export default function AdminPage() {
                   base: "repeat(3, 1fr)", 
                   xs: "repeat(4, 1fr)", 
                   sm: "repeat(6, 1fr)", 
-                  md: "repeat(8, 1fr)", 
-                  lg: "repeat(10, 1fr)", 
-                  xl: "repeat(12, 1fr)" 
+                  md: "repeat(10, 1fr)", 
+                  lg: "repeat(14, 1fr)", 
+                  xl: "repeat(16, 1fr)" 
                 }}
-                gap={{ base: 1, sm: 2 }}
+                gap={{ base: 1, sm: 1.5 }}
               >
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
@@ -1670,7 +1671,7 @@ export default function AdminPage() {
                           borderColor: showPhotoSelection && !isSelected ? "blue.400" : undefined,
                           boxShadow: "0 8px 25px rgba(0, 0, 0, 0.6)"
                         }}
-                        minH={{ base: "60px", sm: "80px" }}
+                        minH={{ base: "60px", sm: "60px" }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}

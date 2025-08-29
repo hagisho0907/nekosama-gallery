@@ -1217,6 +1217,10 @@ function FolderDetailView({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.6 }}
+            mt={{ base: 6, sm: 8 }}
+            pt={{ base: 4, sm: 6 }}
+            borderTop="1px solid"
+            borderColor="whiteAlpha.200"
           >
             <MotionButton
               size="lg"
