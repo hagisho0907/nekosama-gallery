@@ -894,6 +894,8 @@ function FolderCard({
         borderColor: "rgba(168, 85, 247, 0.5)"
       }}
       transition={{ type: "spring", stiffness: 300 }}
+      display="flex"
+      flexDirection="column"
     >
       <Box p={4} pb={2}>
         <Flex justify="space-between" align="center">
@@ -916,14 +918,14 @@ function FolderCard({
         </Flex>
       </Box>
       
-      <Box pt={0} px={4} onClick={() => onSelectFolder(folder.id)}>
-        <VStack spacing={3}>
+      <Box pt={0} px={4} onClick={() => onSelectFolder(folder.id)} flex="1" display="flex" alignItems="center">
+        <VStack spacing={3} w="full">
           <Text color="blue.300" fontSize="sm" display="flex" alignItems="center" gap={2}>
             <Sparkles size="1rem" />
             {folder.photoCount}枚の写真
           </Text>
           
-          <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full" h={24}>
+          <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full">
             {folder.photos.slice(0, 3).map((photo) => (
               <MotionBox
                 key={photo.id}
@@ -961,7 +963,7 @@ function FolderCard({
         </VStack>
       </Box>
       
-      <Flex justify="center" px={4} pb={3} pt={3}>
+      <Flex justify="center" px={4} pb={3} pt={3} flexShrink={0}>
         <input
           type="file"
           multiple
