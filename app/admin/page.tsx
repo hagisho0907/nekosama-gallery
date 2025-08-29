@@ -57,6 +57,7 @@ const MotionButton = motion(Button);
 const MotionCard = motion(Card);
 const MotionFlex = motion(Flex);
 
+
 type CatFolder = {
   id: string;
   name: string;
@@ -821,6 +822,7 @@ export default function AdminPage() {
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 placeholder="ねこ様の名前を入力..."
+                aria-label="新しいフォルダの名前"
                 flex="1"
                 bg="rgba(71, 85, 105, 0.5)"
                 border="1px solid"
@@ -967,14 +969,14 @@ export default function AdminPage() {
                 </Text>
               </Box>
           <motion.div 
-            className="space-y-4 transition-all duration-300"
+            className="space-y-4"
             initial="hidden"
             animate="visible"
             variants={{
               visible: {
                 transition: {
-                  delayChildren: 0.2,
-                  staggerChildren: 0.1
+                  delayChildren: 0.1,
+                  staggerChildren: 0.05
                 }
               }
             }}
@@ -990,10 +992,9 @@ export default function AdminPage() {
                 <motion.div 
                   className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl"
                   animate={{ 
-                    scale: [1, 1.05, 1],
-                    rotate: [0, 2, -2, 0]
+                    scale: [1, 1.02, 1]
                   }}
-                  transition={{ duration: 3, repeat: Infinity }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 >
                   {activeTab === 'enrolled' ? (
                     <Stars className="w-8 h-8 text-white" />
@@ -1006,16 +1007,18 @@ export default function AdminPage() {
                 </p>
               </motion.div>
             ) : (
-              filteredFolders.map((folder, index) => (
+              filteredFolders.map((folder) => (
                 <motion.div 
                   key={folder.id} 
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
-                  whileHover={{ y: -2, scale: 1.01 }}
+                  whileHover={{ y: -1 }}
                 >
                   <div
+                    role="listitem"
+                    tabIndex={0}
                     className={`bg-slate-700/50 backdrop-blur-md border rounded-xl p-3 sm:p-4 transition-all duration-200 shadow-lg ${
                       draggedFolder === folder.id 
                         ? 'opacity-50 scale-95' 
@@ -1046,7 +1049,8 @@ export default function AdminPage() {
                             value={editingName}
                             onChange={(e) => setEditingName(e.target.value)}
                             className="flex-1 px-3 py-2 bg-slate-600/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200 text-sm sm:text-base"
-                            onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit()}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
+                            aria-label="フォルダ名を編集"
                             disabled={submitting}
                             autoFocus
                           />
@@ -1122,81 +1126,126 @@ export default function AdminPage() {
                       )}
                     </div>
                     {editingFolder !== folder.id && (
-                      <div className="flex flex-wrap gap-1 sm:gap-2">
-                        <motion.button
-                          onClick={() => fetchPhotos(folder.id)}
-                          disabled={submitting}
-                          className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur border border-purple-400/30 shadow-lg min-h-[40px] sm:min-h-[44px] flex items-center justify-center"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <span className="hidden sm:flex items-center gap-1">
-                            <Camera className="w-3 h-3" />
+                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 w-full sm:w-auto">
+                        {/* モバイル: 上段のボタン */}
+                        <div className="flex gap-2 sm:hidden">
+                          <motion.button
+                            onClick={() => fetchPhotos(folder.id)}
+                            disabled={submitting}
+                            className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur border border-purple-400/30 shadow-lg min-h-[44px] flex items-center justify-center font-medium"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Camera className="w-4 h-4 mr-1" />
                             写真管理
-                          </span>
-                          <span className="sm:hidden flex items-center justify-center w-full">
-                            管理
-                          </span>
-                        </motion.button>
-                        <motion.button
-                          onClick={() => handleToggleStatus(folder.id)}
-                          disabled={submitting}
-                          className={`disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur min-h-[40px] sm:min-h-[44px] flex items-center justify-center shadow-lg border ${
-                            folder.status === 'enrolled' 
-                              ? 'bg-yellow-600/80 hover:bg-yellow-600 border-yellow-400/30' 
-                              : 'bg-green-600/80 hover:bg-green-600 border-green-400/30'
-                          }`}
-                          title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <span className="hidden sm:flex items-center gap-1">
+                          </motion.button>
+                          <motion.button
+                            onClick={() => handleToggleStatus(folder.id)}
+                            disabled={submitting}
+                            className={`disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur min-h-[44px] flex items-center justify-center shadow-lg border font-medium ${
+                              folder.status === 'enrolled' 
+                                ? 'bg-yellow-600/80 hover:bg-yellow-600 border-yellow-400/30' 
+                                : 'bg-green-600/80 hover:bg-green-600 border-green-400/30'
+                            }`}
+                            title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
                             {folder.status === 'enrolled' ? (
                               <>
-                                <Sparkles className="w-3 h-3" />
+                                <Sparkles className="w-4 h-4 mr-1" />
                                 卒業へ
                               </>
                             ) : (
                               <>
-                                <Stars className="w-3 h-3" />
+                                <Stars className="w-4 h-4 mr-1" />
                                 在籍へ
                               </>
                             )}
-                          </span>
-                          <span className="sm:hidden flex items-center justify-center w-full">
-                            {folder.status === 'enrolled' ? '卒業' : '在籍'}
-                          </span>
-                        </motion.button>
-                        <motion.button
-                          onClick={() => handleEditFolder(folder.id)}
-                          disabled={submitting}
-                          className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur min-h-[40px] sm:min-h-[44px] flex items-center justify-center border border-blue-400/30 shadow-lg"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <span className="hidden sm:flex items-center gap-1">
-                            <Edit3 className="w-3 h-3" />
+                          </motion.button>
+                        </div>
+                        
+                        {/* モバイル: 下段のボタン */}
+                        <div className="flex gap-2 sm:hidden">
+                          <motion.button
+                            onClick={() => handleEditFolder(folder.id)}
+                            disabled={submitting}
+                            className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur min-h-[44px] flex items-center justify-center border border-blue-400/30 shadow-lg font-medium"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Edit3 className="w-4 h-4 mr-1" />
                             編集
-                          </span>
-                          <span className="sm:hidden flex items-center justify-center w-full">
+                          </motion.button>
+                          <motion.button
+                            onClick={() => handleDeleteFolder(folder.id)}
+                            disabled={submitting}
+                            className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur min-h-[44px] flex items-center justify-center border border-red-400/30 shadow-lg font-medium"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <Trash2 className="w-4 h-4 mr-1" />
+                            削除
+                          </motion.button>
+                        </div>
+
+                        {/* デスクトップ: 横並びのボタン */}
+                        <div className="hidden sm:flex gap-2">
+                          <motion.button
+                            onClick={() => fetchPhotos(folder.id)}
+                            disabled={submitting}
+                            className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur border border-purple-400/30 shadow-lg min-h-[44px] flex items-center gap-2"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Camera className="w-4 h-4" />
+                            写真管理
+                          </motion.button>
+                          <motion.button
+                            onClick={() => handleToggleStatus(folder.id)}
+                            disabled={submitting}
+                            className={`disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur min-h-[44px] flex items-center gap-2 shadow-lg border ${
+                              folder.status === 'enrolled' 
+                                ? 'bg-yellow-600/80 hover:bg-yellow-600 border-yellow-400/30' 
+                                : 'bg-green-600/80 hover:bg-green-600 border-green-400/30'
+                            }`}
+                            title={folder.status === 'enrolled' ? '卒業に変更' : '在籍に変更'}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            {folder.status === 'enrolled' ? (
+                              <>
+                                <Sparkles className="w-4 h-4" />
+                                卒業へ
+                              </>
+                            ) : (
+                              <>
+                                <Stars className="w-4 h-4" />
+                                在籍へ
+                              </>
+                            )}
+                          </motion.button>
+                          <motion.button
+                            onClick={() => handleEditFolder(folder.id)}
+                            disabled={submitting}
+                            className="bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur min-h-[44px] flex items-center gap-2 border border-blue-400/30 shadow-lg"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Edit3 className="w-4 h-4" />
                             編集
-                          </span>
-                        </motion.button>
-                        <motion.button
-                          onClick={() => handleDeleteFolder(folder.id)}
-                          disabled={submitting}
-                          className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur min-h-[40px] sm:min-h-[44px] flex items-center justify-center border border-red-400/30 shadow-lg"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <span className="hidden sm:flex items-center gap-1">
-                            <Trash2 className="w-3 h-3" />
+                          </motion.button>
+                          <motion.button
+                            onClick={() => handleDeleteFolder(folder.id)}
+                            disabled={submitting}
+                            className="bg-red-600/80 hover:bg-red-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 backdrop-blur min-h-[44px] flex items-center gap-2 border border-red-400/30 shadow-lg"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Trash2 className="w-4 h-4" />
                             削除
-                          </span>
-                          <span className="sm:hidden flex items-center justify-center w-full">
-                            削除
-                          </span>
-                        </motion.button>
+                          </motion.button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -1340,30 +1389,13 @@ export default function AdminPage() {
                 <p className="text-blue-300">この宇宙領域には写真がありません</p>
               </motion.div>
             ) : (
-              <motion.div 
-                className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4"
-                initial="hidden"
-                animate="visible"
-                variants={{
-                  visible: {
-                    transition: {
-                      delayChildren: 0.2,
-                      staggerChildren: 0.05
-                    }
-                  }
-                }}
-              >
+              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
                   return (
-                    <motion.div 
+                    <div 
                       key={photo.id} 
                       className="relative group"
-                      variants={{
-                        hidden: { opacity: 0, y: 20 },
-                        visible: { opacity: 1, y: 0 }
-                      }}
-                      whileHover={{ y: -5, scale: 1.02 }}
                     >
                       <div 
                         className={`aspect-square bg-slate-700/50 rounded-lg overflow-hidden border shadow-lg transition-all duration-200 min-h-[120px] sm:min-h-[140px] ${
@@ -1463,10 +1495,10 @@ export default function AdminPage() {
                           </p>
                         )}
                       </div>
-                    </motion.div>
+                    </div>
                   );
                 })}
-              </motion.div>
+              </div>
             )}
           </motion.div>
         )}
