@@ -1029,7 +1029,6 @@ export default function AdminPage() {
                   backdropFilter="blur(12px)"
                   borderRadius="xl"
                   p={{ base: 3, sm: 4 }}
-                  transition="all 0.2s"
                   boxShadow="lg"
                   border="1px solid"
                   borderColor={
