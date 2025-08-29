@@ -1462,67 +1462,113 @@ export default function AdminPage() {
 
             {/* Photo Selection Warning for Graduated Folders */}
             {showPhotoSelection && (
-              <motion.div
+              <MotionBox
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-yellow-900/30 backdrop-blur border border-yellow-400/50 text-yellow-300 px-4 py-3 rounded-lg mb-6 shadow-lg"
+                bg="yellow.900"
+                opacity={0.3}
+                backdropFilter="blur(4px)"
+                border="1px solid"
+                borderColor="yellow.400"
+                borderOpacity={0.5}
+                color="yellow.300"
+                p={4}
+                borderRadius="lg"
+                mb={6}
+                boxShadow="lg"
               >
-                <div className="flex items-start gap-3">
-                  <Info className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="font-semibold mb-2">
+                <HStack spacing={3} align="flex-start">
+                  <Box color="yellow.400" flexShrink={0} mt={0.5}>
+                    <Info size="1.25rem" />
+                  </Box>
+                  <VStack spacing={2} align="stretch">
+                    <Heading size="sm" color="yellow.300">
                       {pendingStatusChange ? '卒業生への変更 - 写真削減' : '卒業生フォルダ - 写真制限'}
-                    </h3>
-                    <p className="text-sm mb-2">
+                    </Heading>
+                    <Text fontSize="sm" color="yellow.300">
                       {pendingStatusChange 
                         ? `このフォルダを卒業生に変更するため、${photos.length}枚の写真から5枚を選択してください。選択されなかった写真は削除され、その後卒業生ステータスに変更されます。`
                         : `このフォルダには${photos.length}枚の写真があります。卒業生フォルダは最大10枚まで保存できるため、残したい5枚の写真を選択してください。選択されなかった写真は削除されます。`
                       }
-                    </p>
-                    <p className="text-xs text-yellow-400/80">
+                    </Text>
+                    <Text fontSize="xs" color="yellow.400" opacity={0.8}>
                       選択済み: {selectedPhotos.length}/5枚
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+                    </Text>
+                  </VStack>
+                </HStack>
+              </MotionBox>
             )}
 
             {/* Bulk Delete Controls for Photo Selection */}
             {showPhotoSelection && (
-              <motion.div
+              <MotionBox
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-slate-700/50 backdrop-blur border border-blue-500/30 rounded-lg p-4 mb-6 shadow-lg"
+                bg="gray.700"
+                opacity={0.5}
+                backdropFilter="blur(4px)"
+                border="1px solid"
+                borderColor="blue.500"
+                borderOpacity={0.3}
+                borderRadius="lg"
+                p={4}
+                mb={6}
+                boxShadow="lg"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-white mb-2">写真選択モード</h3>
-                    <p className="text-sm text-blue-300">
+                <Flex 
+                  direction={{ base: "column", sm: "row" }} 
+                  align={{ sm: "center" }} 
+                  justify={{ sm: "space-between" }} 
+                  gap={4}
+                >
+                  <VStack spacing={2} align="stretch">
+                    <Heading size="md" color="white">
+                      写真選択モード
+                    </Heading>
+                    <Text fontSize="sm" color="blue.300">
                       残したい写真をクリックして選択してください ({selectedPhotos.length}/5枚選択済み)
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <motion.button
+                    </Text>
+                  </VStack>
+                  <HStack spacing={2}>
+                    <MotionButton
                       onClick={handleBulkDeletePhotos}
-                      disabled={selectedPhotos.length !== 5 || submitting}
-                      className={`px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-lg ${
+                      isDisabled={selectedPhotos.length !== 5 || submitting}
+                      bgGradient={
                         selectedPhotos.length === 5 && !submitting
-                          ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white'
-                          : 'bg-slate-600 cursor-not-allowed text-slate-400'
-                      }`}
+                          ? "linear(to-r, red.600, red.700)"
+                          : "none"
+                      }
+                      bg={
+                        selectedPhotos.length === 5 && !submitting
+                          ? undefined
+                          : "gray.600"
+                      }
+                      _hover={
+                        selectedPhotos.length === 5 && !submitting
+                          ? { bgGradient: "linear(to-r, red.500, red.600)" }
+                          : {}
+                      }
+                      color={
+                        selectedPhotos.length === 5 && !submitting
+                          ? "white"
+                          : "gray.400"
+                      }
+                      px={4}
+                      py={2}
+                      borderRadius="lg"
+                      size="sm"
+                      boxShadow="lg"
                       whileHover={selectedPhotos.length === 5 && !submitting ? { scale: 1.05 } : {}}
                       whileTap={selectedPhotos.length === 5 && !submitting ? { scale: 0.95 } : {}}
+                      leftIcon={submitting ? <Spinner size="sm" /> : undefined}
                     >
                       {submitting ? (
-                        <span className="flex items-center gap-2">
-                          <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
-                          削除中...
-                        </span>
+                        "削除中..."
                       ) : (
                         pendingStatusChange ? '削除して卒業生に変更' : '選択外の写真を削除'
                       )}
-                    </motion.button>
-                    <motion.button
+                    </MotionButton>
+                    <MotionButton
                       onClick={() => {
                         setShowPhotoSelection(false);
                         setSelectedPhotos([]);
@@ -1530,16 +1576,24 @@ export default function AdminPage() {
                         setSelectedFolder(null);
                         setPhotos([]);
                       }}
-                      disabled={submitting}
-                      className="bg-slate-600/80 hover:bg-slate-500 disabled:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-lg"
+                      isDisabled={submitting}
+                      bg="gray.600"
+                      _hover={{ bg: "gray.500" }}
+                      _disabled={{ bg: "gray.700" }}
+                      color="white"
+                      px={4}
+                      py={2}
+                      borderRadius="lg"
+                      size="sm"
+                      boxShadow="lg"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
                       キャンセル
-                    </motion.button>
-                  </div>
-                </div>
-              </motion.div>
+                    </MotionButton>
+                  </HStack>
+                </Flex>
+              </MotionBox>
             )}
             
             {photos.length === 0 ? (
