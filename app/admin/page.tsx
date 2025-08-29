@@ -808,7 +808,7 @@ export default function AdminPage() {
               <Box display="flex" alignItems="center" gap={4}>
                 <Plus size="2rem" color="rgba(96, 165, 250, 1)" />
                 <Heading
-                  size={{ base: "xl", sm: "2xl" }}
+                  size={{ base: "lg", sm: "xl" }}
                   bgGradient="linear(to-r, blue.400, purple.400)"
                   bgClip="text"
                   color="transparent"
