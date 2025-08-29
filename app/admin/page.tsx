@@ -1597,26 +1597,44 @@ export default function AdminPage() {
             )}
             
             {photos.length === 0 ? (
-              <motion.div 
-                className="text-center py-6 sm:py-8"
+              <MotionVStack
+                spacing={4}
+                py={{ base: 6, sm: 8 }}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6 }}
               >
-                <motion.div 
-                  className="w-16 h-16 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl"
+                <MotionBox
+                  w={16}
+                  h={16}
+                  bgGradient="linear(to-br, purple.500, cyan.500)"
+                  borderRadius="2xl"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="xl"
                   animate={{ 
                     scale: [1, 1.05, 1],
                     rotate: [0, 2, -2, 0]
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
                 >
-                  <Camera className="w-8 h-8 text-white" />
-                </motion.div>
-                <p className="text-blue-300">この宇宙領域には写真がありません</p>
-              </motion.div>
+                  <Camera size="2rem" color="white" />
+                </MotionBox>
+                <Text color="blue.300">この宇宙領域には写真がありません</Text>
+              </MotionVStack>
             ) : (
-              <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+              <Grid 
+                templateColumns={{ 
+                  base: "repeat(1, 1fr)", 
+                  xs: "repeat(2, 1fr)", 
+                  sm: "repeat(3, 1fr)", 
+                  md: "repeat(4, 1fr)", 
+                  lg: "repeat(5, 1fr)", 
+                  xl: "repeat(6, 1fr)" 
+                }}
+                gap={{ base: 3, sm: 4 }}
+              >
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
                   return (
@@ -1725,7 +1743,7 @@ export default function AdminPage() {
                     </div>
                   );
                 })}
-              </div>
+              </Grid>
             )}
             </CardBody>
           </MotionCard>
