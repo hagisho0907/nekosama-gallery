@@ -84,7 +84,7 @@ export default function Home() {
   const itemsPerPage = 10;
   const detailUploadRef = useRef<HTMLInputElement>(null);
 
-  const bgGradient = 'linear(to-br, slate.900, purple.900, slate.900)';
+  const bgGradient = 'linear(to-br, gray.900, indigo.900, purple.900, gray.900)';
 
   const triggerFileUpload = (folderId: string) => {
     const input = document.createElement('input');
@@ -401,13 +401,13 @@ export default function Home() {
       {/* Header */}
       <MotionFlex
         as="header"
-        bg="slate.800"
-        backdropFilter="blur(10px)"
+        bg="rgba(17, 24, 39, 0.85)"
+        backdropFilter="blur(15px)"
         borderBottom="1px solid"
-        borderColor="blue.500"
+        borderColor="purple.400"
         borderBottomWidth="1px"
         borderBottomStyle="solid"
-        borderBottomColor="rgba(59, 130, 246, 0.3)"
+        borderBottomColor="rgba(147, 51, 234, 0.4)"
         zIndex={10}
         position="relative"
         initial={{ y: -100, opacity: 0 }}
@@ -454,7 +454,7 @@ export default function Home() {
               <VStack align="start" gap={0}>
                 <Heading 
                   size={{ base: "md", sm: "lg", md: "xl" }}
-                  bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
+                  bgGradient="linear(to-r, purple.400, indigo.400, pink.400, blue.400)"
                   bgClip="text"
                   display="flex"
                   alignItems="center"
@@ -465,7 +465,7 @@ export default function Home() {
                   <Stars />
                   Space Cat Station
                 </Heading>
-                <Text color="blue.300" fontSize="sm" display={{ base: "none", sm: "flex" }} alignItems="center" gap={1}>
+                <Text color="purple.300" fontSize="sm" display={{ base: "none", sm: "flex" }} alignItems="center" gap={1}>
                   <Sparkles />
                   Presented by 拝啓ねこ様
                 </Text>
@@ -474,11 +474,11 @@ export default function Home() {
             <Box position="absolute" right={{ base: 2, sm: 4 }} top="50%" transform="translateY(-50%)" zIndex={20}>
               <Link href="/admin" style={{ textDecoration: 'none' }}>
                 <MotionButton
-                  bg="rgba(71, 85, 105, 0.7)"
-                  color="rgba(147, 197, 253, 1)"
-                  border="1px solid rgba(71, 85, 105, 0.5)"
+                  bg="rgba(88, 28, 135, 0.7)"
+                  color="rgba(196, 181, 253, 1)"
+                  border="1px solid rgba(147, 51, 234, 0.5)"
                   _hover={{
-                    bg: "rgba(71, 85, 105, 1)",
+                    bg: "rgba(88, 28, 135, 1)",
                     color: "white",
                   }}
                   whileHover={{ scale: 1.05 }}
@@ -581,7 +581,7 @@ export default function Home() {
               <VStack spacing={4} textAlign="center">
               <Heading
                 size={{ base: "lg", sm: "xl", md: "2xl" }}
-                bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
+                bgGradient="linear(to-r, purple.400, indigo.400, pink.400, blue.400)"
                 bgClip="text"
                 display="flex"
                 alignItems="center"
@@ -591,7 +591,7 @@ export default function Home() {
                 <FolderOpen />
                 拝啓ねこ様フォトギャラリー
               </Heading>
-              <Text color="blue.300" fontSize={{ base: "sm", sm: "md", md: "lg" }} display="flex" alignItems="center" gap={2} flexWrap="wrap">
+              <Text color="purple.300" fontSize={{ base: "sm", sm: "md", md: "lg" }} display="flex" alignItems="center" gap={2} flexWrap="wrap">
                 阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！
               </Text>
               </VStack>
@@ -608,9 +608,9 @@ export default function Home() {
                 <HStack spacing={4} justify="center">
                   <MotionButton
                     onClick={() => setActiveTab('enrolled')}
-                    bg={activeTab === 'enrolled' ? 'rgba(22, 163, 74, 1)' : 'transparent'}
-                    color={activeTab === 'enrolled' ? 'white' : 'rgba(134, 239, 172, 1)'}
-                    border="2px solid rgba(34, 197, 94, 1)"
+                    bg={activeTab === 'enrolled' ? 'rgba(147, 51, 234, 1)' : 'transparent'}
+                    color={activeTab === 'enrolled' ? 'white' : 'rgba(196, 181, 253, 1)'}
+                    border="2px solid rgba(147, 51, 234, 1)"
                     whileHover={{ y: -2, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     size="lg"
@@ -623,9 +623,9 @@ export default function Home() {
                   </MotionButton>
                   <MotionButton
                     onClick={() => setActiveTab('graduated')}
-                    bg={activeTab === 'graduated' ? 'rgba(202, 138, 4, 1)' : 'transparent'}
-                    color={activeTab === 'graduated' ? 'white' : 'rgba(254, 240, 138, 1)'}
-                    border="2px solid rgba(251, 191, 36, 1)"
+                    bg={activeTab === 'graduated' ? 'rgba(59, 130, 246, 1)' : 'transparent'}
+                    color={activeTab === 'graduated' ? 'white' : 'rgba(147, 197, 253, 1)'}
+                    border="2px solid rgba(59, 130, 246, 1)"
                     whileHover={{ y: -2, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     size="lg"
@@ -647,7 +647,7 @@ export default function Home() {
                   mb={4}
                 >
                   <Text 
-                    color="blue.300" 
+                    color="purple.300" 
                     fontSize={{ base: "md", sm: "lg" }}
                     fontWeight="medium"
                     display="flex"
@@ -712,13 +712,13 @@ export default function Home() {
       {/* Footer */}
       <MotionFlex
         as="footer"
-        bg="slate.800"
+        bg="rgba(17, 24, 39, 0.9)"
         backdropFilter="blur(10px)"
         borderTop="1px solid"
-        borderColor="blue.500"
+        borderColor="purple.400"
         borderTopWidth="1px"
         borderTopStyle="solid"
-        borderTopColor="rgba(59, 130, 246, 0.3)"
+        borderTopColor="rgba(147, 51, 234, 0.4)"
         mt={4}
         zIndex={10}
         position="relative"
@@ -1103,7 +1103,7 @@ function FolderDetailView({
         <VStack spacing={4} textAlign="center">
         <Heading
           size="2xl"
-          bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
+          bgGradient="linear(to-r, purple.400, indigo.400, pink.400, blue.400)"
           bgClip="text"
         >
           {selectedFolderData.status === 'graduated' 
@@ -1111,7 +1111,7 @@ function FolderDetailView({
             : `${selectedFolderData.name}の宇宙航海`
           }
         </Heading>
-        <Text color="blue.300" fontSize="md" display="flex" alignItems="center" gap={2}>
+        <Text color="purple.300" fontSize="md" display="flex" alignItems="center" gap={2}>
           <Sparkles />
           {selectedFolderData.photos.length}枚の写真
         </Text>
