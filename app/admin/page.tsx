@@ -896,7 +896,7 @@ export default function AdminPage() {
           <CardBody p={0}>
             <VStack spacing={{ base: 4, sm: 6 }} align="stretch">
               <Heading
-                size={{ base: "xl", sm: "2xl" }}
+                size={{ base: "lg", sm: "xl" }}
                 bgGradient="linear(to-r, blue.400, purple.400)"
                 bgClip="text"
                 color="transparent"
