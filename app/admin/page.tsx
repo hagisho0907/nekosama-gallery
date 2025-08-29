@@ -789,105 +789,183 @@ export default function AdminPage() {
           )}
         </AnimatePresence>
 
-        <motion.div 
-          className="bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl p-4 sm:p-6 mb-6 sm:mb-8 border border-blue-500/30"
+        <MotionCard
+          bg="rgba(30, 41, 59, 0.6)"
+          backdropFilter="blur(12px)"
+          borderRadius="xl"
+          boxShadow="xl"
+          p={{ base: 4, sm: 6 }}
+          mb={{ base: 6, sm: 8 }}
+          border="1px solid"
+          borderColor="rgba(59, 130, 246, 0.3)"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 sm:mb-6 flex items-center gap-3">
-            <Plus className="w-6 h-6 text-blue-400" />
-            新しいフォルダを作成
-          </h2>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            <input
-              type="text"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              placeholder="ねこ様の名前を入力..."
-              className="flex-1 px-3 py-2 sm:px-4 sm:py-2 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200 text-sm sm:text-base"
-              onKeyPress={(e) => e.key === 'Enter' && handleAddFolder()}
-              disabled={submitting}
-            />
-            <motion.button
-              onClick={handleAddFolder}
-              disabled={submitting || !newFolderName.trim()}
-              className={`px-4 py-2 sm:px-6 sm:py-2 rounded-lg transition-all duration-200 text-sm sm:text-base whitespace-nowrap shadow-lg ${
-                submitting || !newFolderName.trim()
-                  ? 'bg-slate-600 cursor-not-allowed text-slate-400'
-                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white'
-              }`}
-              whileHover={submitting || !newFolderName.trim() ? {} : { scale: 1.05 }}
-              whileTap={submitting || !newFolderName.trim() ? {} : { scale: 0.95 }}
+          <CardBody p={0}>
+            <Heading
+              size={{ base: "xl", sm: "2xl" }}
+              bgGradient="linear(to-r, blue.400, purple.400)"
+              bgClip="text"
+              color="transparent"
+              mb={{ base: 4, sm: 6 }}
+              display="flex"
+              alignItems="center"
+              gap={3}
             >
-              <span className="flex items-center gap-2">
+              <Plus size="1.5rem" color="rgba(96, 165, 250, 1)" />
+              新しいフォルダを作成
+            </Heading>
+            <Flex direction={{ base: "column", sm: "row" }} gap={{ base: 3, sm: 4 }}>
+              <Input
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                placeholder="ねこ様の名前を入力..."
+                flex="1"
+                bg="rgba(71, 85, 105, 0.5)"
+                border="1px solid"
+                borderColor="rgba(59, 130, 246, 0.3)"
+                color="white"
+                _placeholder={{ color: "rgba(147, 197, 253, 0.5)" }}
+                _focus={{
+                  borderColor: "blue.400",
+                  boxShadow: "0 0 0 1px rgba(59, 130, 246, 0.5)"
+                }}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddFolder()}
+                isDisabled={submitting}
+                size={{ base: "md", sm: "lg" }}
+              />
+              <MotionButton
+                onClick={handleAddFolder}
+                isDisabled={submitting || !newFolderName.trim()}
+                bg={submitting || !newFolderName.trim() 
+                  ? "rgba(71, 85, 105, 1)" 
+                  : "linear-gradient(to right, #059669, #10b981)"}
+                _hover={submitting || !newFolderName.trim() ? {} : {
+                  bg: "linear-gradient(to right, #047857, #059669)"
+                }}
+                color={submitting || !newFolderName.trim() ? "rgba(148, 163, 184, 1)" : "white"}
+                px={{ base: 4, sm: 6 }}
+                py={{ base: 2, sm: 2 }}
+                size={{ base: "md", sm: "lg" }}
+                whiteSpace="nowrap"
+                boxShadow="lg"
+                whileHover={submitting || !newFolderName.trim() ? {} : { scale: 1.05 }}
+                whileTap={submitting || !newFolderName.trim() ? {} : { scale: 0.95 }}
+                display="flex"
+                alignItems="center"
+                gap={2}
+              >
                 {submitting ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
+                    <Spinner size="sm" color="blue.300" />
                     作成中...
                   </>
                 ) : (
                   <>
-                    <Plus className="w-4 h-4" />
+                    <Plus size="1rem" />
                     作成
                   </>
                 )}
-              </span>
-            </motion.button>
-          </div>
-        </motion.div>
+              </MotionButton>
+            </Flex>
+          </CardBody>
+        </MotionCard>
 
-        <motion.div 
-          className="bg-slate-800/60 backdrop-blur-md rounded-xl shadow-xl p-4 sm:p-6 border border-blue-500/30"
+        <MotionCard
+          bg="rgba(30, 41, 59, 0.6)"
+          backdropFilter="blur(12px)"
+          borderRadius="xl"
+          boxShadow="xl"
+          p={{ base: 4, sm: 6 }}
+          border="1px solid"
+          borderColor="rgba(59, 130, 246, 0.3)"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
         >
-          <div className="mb-4 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4 flex items-center gap-3">
-              <Settings className="w-6 h-6 text-blue-400" />
-              管理センター
-            </h2>
-            
-            {/* タブナビゲーション */}
-            <div className="border-b border-blue-500/30 mb-4">
-              <nav className="-mb-px flex space-x-8">
-                <motion.button
-                  onClick={() => setActiveTab('enrolled')}
-                  className={`py-3 px-6 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 min-h-[48px] flex items-center justify-center ${
-                    activeTab === 'enrolled'
-                      ? 'border-green-400 text-green-300'
-                      : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
-                  }`}
-                  whileHover={{ y: -2 }}
+          <CardBody p={0}>
+            <VStack spacing={{ base: 4, sm: 6 }} align="stretch">
+              <Heading
+                size={{ base: "xl", sm: "2xl" }}
+                bgGradient="linear(to-r, blue.400, purple.400)"
+                bgClip="text"
+                color="transparent"
+                mb={4}
+                display="flex"
+                alignItems="center"
+                gap={3}
+              >
+                <Settings size="1.5rem" color="rgba(96, 165, 250, 1)" />
+                管理センター
+              </Heading>
+              
+              {/* Custom Tab Navigation */}
+              <Box>
+                <Box borderBottom="1px solid" borderBottomColor="rgba(59, 130, 246, 0.3)" mb={4}>
+                  <HStack spacing={8} mb="-2px">
+                    <MotionButton
+                      onClick={() => setActiveTab('enrolled')}
+                      variant="ghost"
+                      py={3}
+                      px={6}
+                      borderBottom="2px solid"
+                      borderBottomColor={activeTab === 'enrolled' ? "green.400" : "transparent"}
+                      color={activeTab === 'enrolled' ? "green.300" : "rgba(147, 197, 253, 0.7)"}
+                      _hover={activeTab !== 'enrolled' ? { 
+                        color: "blue.300", 
+                        borderBottomColor: "rgba(59, 130, 246, 0.5)" 
+                      } : {}}
+                      fontWeight="medium"
+                      fontSize={{ base: "sm", sm: "md" }}
+                      css={{ transition: "all 0.2s" }}
+                      minH="48px"
+                      whileHover={{ y: -2 }}
+                      borderRadius={0}
+                    >
+                      <HStack spacing={2}>
+                        <Stars size="1rem" />
+                        <Text>在籍生 ({folders.filter(f => f.status === 'enrolled').length})</Text>
+                      </HStack>
+                    </MotionButton>
+                    <MotionButton
+                      onClick={() => setActiveTab('graduated')}
+                      variant="ghost"
+                      py={3}
+                      px={6}
+                      borderBottom="2px solid"
+                      borderBottomColor={activeTab === 'graduated' ? "yellow.400" : "transparent"}
+                      color={activeTab === 'graduated' ? "yellow.300" : "rgba(147, 197, 253, 0.7)"}
+                      _hover={activeTab !== 'graduated' ? { 
+                        color: "blue.300", 
+                        borderBottomColor: "rgba(59, 130, 246, 0.5)" 
+                      } : {}}
+                      fontWeight="medium"
+                      fontSize={{ base: "sm", sm: "md" }}
+                      css={{ transition: "all 0.2s" }}
+                      minH="48px"
+                      whileHover={{ y: -2 }}
+                      borderRadius={0}
+                    >
+                      <HStack spacing={2}>
+                        <Sparkles size="1rem" />
+                        <Text>卒業生 ({folders.filter(f => f.status === 'graduated').length})</Text>
+                      </HStack>
+                    </MotionButton>
+                  </HStack>
+                </Box>
+                
+                <Text 
+                  fontSize={{ base: "xs", sm: "sm" }} 
+                  color="rgba(147, 197, 253, 0.7)"
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
                 >
-                  <span className="flex items-center gap-2">
-                    <Stars className="w-4 h-4" />
-                    在籍生 ({folders.filter(f => f.status === 'enrolled').length})
-                  </span>
-                </motion.button>
-                <motion.button
-                  onClick={() => setActiveTab('graduated')}
-                  className={`py-3 px-6 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 min-h-[48px] flex items-center justify-center ${
-                    activeTab === 'graduated'
-                      ? 'border-yellow-400 text-yellow-300'
-                      : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
-                  }`}
-                  whileHover={{ y: -2 }}
-                >
-                  <span className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4" />
-                    卒業生 ({folders.filter(f => f.status === 'graduated').length})
-                  </span>
-                </motion.button>
-              </nav>
-            </div>
-            
-            <p className="text-xs sm:text-sm text-blue-300/70 flex items-center gap-2">
-              <GripVertical className="w-4 h-4" />
-              フォルダをドラッグ&ドロップして表示順序を変更
-            </p>
-          </div>
+                  <GripVertical size="1rem" />
+                  フォルダをドラッグ&ドロップして表示順序を変更
+                </Text>
+              </Box>
           <motion.div 
             className="space-y-4 transition-all duration-300"
             initial="hidden"
@@ -1127,7 +1205,9 @@ export default function AdminPage() {
               ))
             )}
           </motion.div>
-        </motion.div>
+            </VStack>
+          </CardBody>
+        </MotionCard>
 
         {/* Photo Management Section */}
         {selectedFolder && (
