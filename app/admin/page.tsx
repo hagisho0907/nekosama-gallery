@@ -1029,6 +1029,7 @@ export default function AdminPage() {
                   backdropFilter="blur(12px)"
                   borderRadius="xl"
                   p={{ base: 3, sm: 4 }}
+                  minH={{ base: "120px", sm: "100px" }}
                   boxShadow="lg"
                   border="1px solid"
                   borderColor={
@@ -1062,6 +1063,8 @@ export default function AdminPage() {
                       align={{ sm: "center" }} 
                       justify={{ sm: "space-between" }} 
                       gap={3}
+                      h="full"
+                      minH={{ base: "100px", sm: "80px" }}
                     >
                       <Flex align="center" gap={{ base: 2, sm: 4 }} minW={0} flex={1}>
                       {editingFolder === folder.id ? (
@@ -1624,14 +1627,14 @@ export default function AdminPage() {
             ) : (
               <Grid 
                 templateColumns={{ 
-                  base: "repeat(2, 1fr)", 
-                  xs: "repeat(3, 1fr)", 
-                  sm: "repeat(4, 1fr)", 
-                  md: "repeat(6, 1fr)", 
-                  lg: "repeat(8, 1fr)", 
-                  xl: "repeat(10, 1fr)" 
+                  base: "repeat(3, 1fr)", 
+                  xs: "repeat(4, 1fr)", 
+                  sm: "repeat(6, 1fr)", 
+                  md: "repeat(8, 1fr)", 
+                  lg: "repeat(10, 1fr)", 
+                  xl: "repeat(12, 1fr)" 
                 }}
-                gap={{ base: 2, sm: 3 }}
+                gap={{ base: 1, sm: 2 }}
               >
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
@@ -1639,6 +1642,7 @@ export default function AdminPage() {
                     <MotionBox
                       key={photo.id}
                       position="relative"
+                      className="photo-card"
                       whileHover={{ y: -4, scale: 1.02 }}
                       transition={{ duration: 0.2 }}
                     >
@@ -1666,7 +1670,7 @@ export default function AdminPage() {
                           borderColor: showPhotoSelection && !isSelected ? "blue.400" : undefined,
                           boxShadow: "0 8px 25px rgba(0, 0, 0, 0.6)"
                         }}
-                        minH={{ base: "80px", sm: "100px" }}
+                        minH={{ base: "60px", sm: "80px" }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
@@ -1772,8 +1776,13 @@ export default function AdminPage() {
                           position="absolute" 
                           top={{ base: 1, sm: 2 }} 
                           right={{ base: 1, sm: 2 }}
-                          opacity={{ base: 0.8, sm: 0 }}
-                          _groupHover={{ opacity: 1 }}
+                          opacity={{ base: 0.9, sm: 0.7 }}
+                          _hover={{ opacity: 1 }}
+                          sx={{
+                            ".photo-card:hover &": {
+                              opacity: 1
+                            }
+                          }}
                           transition="opacity 0.2s"
                         >
                           <MotionButton
