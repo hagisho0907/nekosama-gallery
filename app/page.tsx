@@ -576,7 +576,7 @@ export default function Home() {
             >
               <VStack spacing={4} textAlign="center">
               <Heading
-                size="2xl"
+                size={{ base: "lg", sm: "xl", md: "2xl" }}
                 bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
                 bgClip="text"
                 display="flex"
@@ -587,7 +587,7 @@ export default function Home() {
                 <FolderOpen />
                 拝啓ねこ様フォトギャラリー
               </Heading>
-              <Text color="blue.300" fontSize="lg" display="flex" alignItems="center" gap={2} flexWrap="wrap">
+              <Text color="blue.300" fontSize={{ base: "sm", sm: "md", md: "lg" }} display="flex" alignItems="center" gap={2} flexWrap="wrap">
                 阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！
               </Text>
               </VStack>
