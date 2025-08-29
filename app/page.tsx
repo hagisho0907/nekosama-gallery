@@ -525,7 +525,19 @@ export default function Home() {
         </Box>
       </MotionFlex>
 
-      <Container maxW="7xl" py={8} zIndex={10} position="relative">
+      <Container 
+        maxW="7xl" 
+        py={8} 
+        zIndex={10} 
+        position="relative"
+        bg="rgba(55, 25, 95, 0.8)"
+        backdropFilter="blur(15px)"
+        borderRadius="3xl"
+        border="1px solid rgba(147, 51, 234, 0.3)"
+        boxShadow="0 8px 32px rgba(0, 0, 0, 0.4)"
+        mt={4}
+        mx="auto"
+      >
         <AnimatePresence>
           {error && (
             <MotionBox
@@ -1104,6 +1116,12 @@ function FolderDetailView({
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
+      bg="rgba(55, 25, 95, 0.8)"
+      backdropFilter="blur(15px)"
+      borderRadius="3xl"
+      border="1px solid rgba(147, 51, 234, 0.3)"
+      boxShadow="0 8px 32px rgba(0, 0, 0, 0.4)"
+      p={8}
     >
       <VStack spacing={8}>
       <Box alignSelf="flex-start">
