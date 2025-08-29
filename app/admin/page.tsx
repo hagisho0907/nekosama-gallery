@@ -1636,109 +1636,201 @@ export default function AdminPage() {
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
                   return (
-                    <div 
-                      key={photo.id} 
-                      className="relative group"
+                    <MotionBox
+                      key={photo.id}
+                      position="relative"
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      transition={{ duration: 0.2 }}
                     >
-                      <div 
-                        className={`aspect-square bg-slate-700/50 rounded-lg overflow-hidden border shadow-lg transition-all duration-200 min-h-[120px] sm:min-h-[140px] ${
+                      <MotionCard
+                        aspectRatio={1}
+                        bg="gray.800"
+                        borderRadius="xl"
+                        overflow="hidden"
+                        border="2px solid"
+                        borderColor={
                           showPhotoSelection
-                            ? `cursor-pointer ${
-                                isSelected 
-                                  ? 'border-green-400 ring-2 ring-green-400/50 bg-green-900/20' 
-                                  : 'border-blue-500/30 hover:border-blue-400'
-                              }`
-                            : 'border-blue-500/30'
-                        }`}
+                            ? isSelected 
+                              ? "green.400"
+                              : "gray.600"
+                            : "gray.600"
+                        }
+                        boxShadow={
+                          isSelected 
+                            ? "0 0 20px rgba(72, 187, 120, 0.4)" 
+                            : "0 4px 12px rgba(0, 0, 0, 0.4)"
+                        }
+                        cursor={showPhotoSelection ? "pointer" : "default"}
                         onClick={showPhotoSelection ? () => handlePhotoSelection(photo.id, !isSelected) : undefined}
+                        _hover={{
+                          borderColor: showPhotoSelection && !isSelected ? "blue.400" : undefined,
+                          boxShadow: "0 8px 25px rgba(0, 0, 0, 0.6)"
+                        }}
+                        minH={{ base: "120px", sm: "140px" }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
                       >
-                        <img
-                          src={photo.url}
-                          alt={photo.originalName}
-                          className={`w-full h-full object-cover transition-all duration-300 ${
-                            showPhotoSelection && !isSelected 
-                              ? 'group-hover:scale-110 opacity-60' 
-                              : 'group-hover:scale-110'
-                          }`}
-                          onError={(e) => {
-                            e.currentTarget.src = '/placeholder.jpg';
-                          }}
-                        />
+                        <MotionBox
+                          position="relative"
+                          w="full"
+                          h="full"
+                          overflow="hidden"
+                          whileHover={showPhotoSelection && !isSelected ? { scale: 1.1 } : { scale: 1.05 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <Image
+                            src={photo.url}
+                            alt={photo.originalName}
+                            w="full"
+                            h="full"
+                            objectFit="cover"
+                            opacity={showPhotoSelection && !isSelected ? 0.7 : 1}
+                            transition="opacity 0.2s"
+                            fallbackSrc="/placeholder.jpg"
+                          />
+                          
+                          {/* グラデーションオーバーレイ */}
+                          <Box
+                            position="absolute"
+                            top={0}
+                            left={0}
+                            right={0}
+                            bottom={0}
+                            bgGradient="linear(to-t, blackAlpha.600, transparent 30%)"
+                            opacity={isSelected ? 0.8 : 0.3}
+                            transition="opacity 0.2s"
+                          />
+                        </MotionBox>
+                        
                         {showPhotoSelection && (
-                          <div className="absolute top-2 left-2">
-                            <motion.div
-                              className={`w-7 h-7 sm:w-8 sm:h-8 rounded flex items-center justify-center border-2 transition-all duration-200 min-w-[28px] min-h-[28px] sm:min-w-[32px] sm:min-h-[32px] shadow-lg ${
-                                isSelected
-                                  ? 'bg-green-500 border-green-400 text-white'
-                                  : 'bg-white/20 backdrop-blur border-white/50 text-white/70'
-                              }`}
+                          <Box position="absolute" top={3} left={3}>
+                            <MotionBox
+                              w={{ base: 7, sm: 8 }}
+                              h={{ base: 7, sm: 8 }}
+                              minW={{ base: "28px", sm: "32px" }}
+                              minH={{ base: "28px", sm: "32px" }}
+                              borderRadius="md"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                              border="2px solid"
+                              borderColor={isSelected ? "green.300" : "whiteAlpha.600"}
+                              bg={isSelected ? "green.500" : "whiteAlpha.200"}
+                              color={isSelected ? "white" : "whiteAlpha.800"}
+                              backdropFilter="blur(8px)"
+                              boxShadow="lg"
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
+                              transition={{ duration: 0.15 }}
                             >
                               {isSelected ? (
-                                <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <CheckSquare size="1rem" />
                               ) : (
-                                <Square className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <Square size="1rem" />
                               )}
-                            </motion.div>
-                          </div>
+                            </MotionBox>
+                          </Box>
                         )}
                         {!showPhotoSelection && (
-                          <div className="absolute top-2 left-2">
-                            <motion.button
+                          <Box position="absolute" top={3} left={3}>
+                            <MotionButton
+                              size="sm"
+                              variant="ghost"
+                              w={{ base: 7, sm: 8 }}
+                              h={{ base: 7, sm: 8 }}
+                              minW={{ base: "28px", sm: "32px" }}
+                              minH={{ base: "28px", sm: "32px" }}
+                              borderRadius="full"
+                              border="2px solid"
+                              borderColor={photo.isFeatured ? "yellow.300" : "whiteAlpha.600"}
+                              bg={photo.isFeatured ? "yellow.500" : "whiteAlpha.200"}
+                              color={photo.isFeatured ? "white" : "whiteAlpha.800"}
+                              backdropFilter="blur(8px)"
+                              boxShadow="lg"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleToggleFeatured(photo.id);
                               }}
-                              disabled={submitting}
-                              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-200 min-w-[28px] min-h-[28px] sm:min-w-[32px] sm:min-h-[32px] ${
-                                photo.isFeatured
-                                  ? 'bg-yellow-500 border-yellow-400 text-white shadow-lg'
-                                  : 'bg-white/20 backdrop-blur border-white/50 text-white/70 hover:bg-yellow-500/20 hover:border-yellow-400/50 shadow-md'
-                              }`}
+                              isDisabled={submitting}
                               title={photo.isFeatured ? '代表写真から除外' : '代表写真に設定'}
                               whileHover={{ scale: 1.1 }}
                               whileTap={{ scale: 0.9 }}
+                              _hover={{
+                                bg: photo.isFeatured ? "yellow.600" : "yellow.500",
+                                borderColor: "yellow.300"
+                              }}
                             >
-                              <Star className={`w-3 h-3 sm:w-4 sm:h-4 ${photo.isFeatured ? 'fill-current' : ''}`} />
-                            </motion.button>
-                          </div>
+                              <Star size="0.875rem" fill={photo.isFeatured ? "currentColor" : "none"} />
+                            </MotionButton>
+                          </Box>
                         )}
-                      </div>
+                      </MotionCard>
+                      
                       {!showPhotoSelection && (
-                        <div className="absolute top-1 right-1 sm:top-2 sm:right-2 opacity-80 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                          <motion.button
+                        <Box 
+                          position="absolute" 
+                          top={{ base: 1, sm: 2 }} 
+                          right={{ base: 1, sm: 2 }}
+                          opacity={{ base: 0.8, sm: 0 }}
+                          _groupHover={{ opacity: 1 }}
+                          transition="opacity 0.2s"
+                        >
+                          <MotionButton
+                            size="sm"
+                            variant="ghost"
+                            w={{ base: 8, sm: 9 }}
+                            h={{ base: 8, sm: 9 }}
+                            minW={{ base: "32px", sm: "36px" }}
+                            minH={{ base: "32px", sm: "36px" }}
+                            borderRadius="full"
+                            bg="red.600"
+                            color="white"
+                            border="1px solid"
+                            borderColor="red.400"
+                            backdropFilter="blur(8px)"
+                            boxShadow="lg"
                             onClick={() => handleDeletePhoto(photo.id)}
-                            disabled={submitting}
-                            className="bg-red-600/90 hover:bg-red-600 disabled:bg-slate-600 text-white p-1.5 sm:p-2 rounded-full shadow-lg transition-all duration-200 backdrop-blur border border-red-400/50 min-w-[32px] min-h-[32px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center"
+                            isDisabled={submitting}
                             title="写真を削除"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
+                            _hover={{ bg: "red.500" }}
+                            _disabled={{ bg: "gray.600", borderColor: "gray.500" }}
                           >
-                            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                          </motion.button>
-                        </div>
+                            <Trash2 size="0.875rem" />
+                          </MotionButton>
+                        </Box>
                       )}
-                      <div className="mt-1 sm:mt-2">
-                        <p className="text-xs sm:text-sm text-blue-300 truncate" title={photo.originalName}>
+                      <VStack spacing={1} mt={{ base: 1, sm: 2 }} align="start">
+                        <Text 
+                          fontSize={{ base: "xs", sm: "sm" }}
+                          color="blue.300"
+                          isTruncated
+                          maxW="100%"
+                          title={photo.originalName}
+                          fontWeight="medium"
+                        >
                           {photo.originalName}
-                        </p>
-                        <p className="text-xs text-blue-400/70">
+                        </Text>
+                        <Text fontSize="xs" color="blue.400" opacity={0.7}>
                           {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
-                        </p>
+                        </Text>
                         {showPhotoSelection && isSelected && (
-                          <p className="text-xs text-green-400 mt-1">
+                          <Text fontSize="xs" color="green.400" mt={1}>
                             ✓ 保持される写真
-                          </p>
+                          </Text>
                         )}
                         {!showPhotoSelection && photo.isFeatured && (
-                          <p className="text-xs text-yellow-400 mt-1 flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-current" />
-                            代表写真
-                          </p>
+                          <HStack spacing={1} mt={1}>
+                            <Star size="0.75rem" fill="currentColor" />
+                            <Text fontSize="xs" color="yellow.400">
+                              代表写真
+                            </Text>
+                          </HStack>
                         )}
-                      </div>
-                    </div>
+                      </VStack>
+                    </MotionBox>
                   );
                 })}
               </Grid>
