@@ -961,7 +961,7 @@ function FolderCard({
         </VStack>
       </Box>
       
-      <Flex justify="center" px={4} pb={2} mt={4}>
+      <Flex justify="center" px={4} pb={2} mt={2}>
         <input
           type="file"
           multiple
