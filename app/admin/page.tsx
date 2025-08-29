@@ -1051,10 +1051,10 @@ export default function AdminPage() {
                     bg: "rgba(71, 85, 105, 0.7)"
                   }}
                   draggable={editingFolder !== folder.id}
-                  onDragStart={(e) => handleDragStart(e, folder.id)}
-                  onDragOver={(e) => handleDragOver(e, folder.id)}
+                  onDragStart={(e) => handleDragStart(e as any, folder.id)}
+                  onDragOver={(e) => handleDragOver(e as any, folder.id)}
                   onDragLeave={handleDragLeave}
-                  onDrop={(e) => handleDrop(e, folder.id)}
+                  onDrop={(e) => handleDrop(e as any, folder.id)}
                 >
                   <CardBody p={0}>
                     <Flex 
