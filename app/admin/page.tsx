@@ -1632,14 +1632,14 @@ export default function AdminPage() {
             ) : (
               <Grid 
                 templateColumns={{ 
-                  base: "repeat(8, 1fr)", 
-                  xs: "repeat(12, 1fr)", 
-                  sm: "repeat(16, 1fr)", 
-                  md: "repeat(24, 1fr)", 
-                  lg: "repeat(32, 1fr)", 
-                  xl: "repeat(40, 1fr)" 
+                  base: "repeat(2, 1fr)", 
+                  xs: "repeat(3, 1fr)", 
+                  sm: "repeat(4, 1fr)", 
+                  md: "repeat(5, 1fr)", 
+                  lg: "repeat(6, 1fr)", 
+                  xl: "repeat(7, 1fr)" 
                 }}
-                gap={0.5}
+                gap={{ base: 4, sm: 6 }}
               >
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
@@ -1648,45 +1648,42 @@ export default function AdminPage() {
                       key={photo.id}
                       position="relative"
                       className="photo-card"
-                      whileHover={{ y: -4, scale: 1.02 }}
+                      whileHover={{ 
+                        y: -5, 
+                        scale: 1.02,
+                        borderColor: showPhotoSelection && !isSelected ? "rgba(168, 85, 247, 0.5)" : undefined
+                      }}
                       transition={{ duration: 0.2 }}
                     >
                       <MotionCard
-                        aspectRatio={1}
-                        bg="gray.800"
+                        bg="rgba(30, 41, 59, 0.8)"
+                        backdropFilter="blur(10px)"
                         borderRadius="xl"
                         overflow="hidden"
-                        border="2px solid"
+                        border="1px solid"
                         borderColor={
                           showPhotoSelection
                             ? isSelected 
                               ? "green.400"
-                              : "gray.600"
-                            : "gray.600"
+                              : "rgba(59, 130, 246, 0.3)"
+                            : "rgba(59, 130, 246, 0.3)"
                         }
                         boxShadow={
                           isSelected 
                             ? "0 0 20px rgba(72, 187, 120, 0.4)" 
-                            : "0 4px 12px rgba(0, 0, 0, 0.4)"
+                            : "0 4px 12px rgba(0, 0, 0, 0.15)"
                         }
                         cursor={showPhotoSelection ? "pointer" : "default"}
                         onClick={showPhotoSelection ? () => handlePhotoSelection(photo.id, !isSelected) : undefined}
-                        _hover={{
-                          borderColor: showPhotoSelection && !isSelected ? "blue.400" : undefined,
-                          boxShadow: "0 8px 25px rgba(0, 0, 0, 0.6)"
-                        }}
-                        minH={{ base: "20px", sm: "20px" }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
                       >
                         <MotionBox
                           position="relative"
-                          w="full"
-                          h="full"
+                          aspectRatio={1}
                           overflow="hidden"
-                          whileHover={showPhotoSelection && !isSelected ? { scale: 1.1 } : { scale: 1.05 }}
-                          transition={{ duration: 0.3 }}
+                          role="group"
                         >
                           <Image
                             src={photo.url}
@@ -1694,31 +1691,27 @@ export default function AdminPage() {
                             w="full"
                             h="full"
                             objectFit="cover"
-                            opacity={showPhotoSelection && !isSelected ? 0.7 : 1}
-                            transition="opacity 0.2s"
                             fallbackSrc="/placeholder.jpg"
                           />
                           
-                          {/* グラデーションオーバーレイ */}
-                          <Box
+                          {/* ホバーオーバーレイ */}
+                          <MotionBox
                             position="absolute"
-                            top={0}
-                            left={0}
-                            right={0}
-                            bottom={0}
-                            bgGradient="linear(to-t, blackAlpha.600, transparent 30%)"
-                            opacity={isSelected ? 0.8 : 0.3}
+                            inset={0}
+                            bg="rgba(59, 130, 246, 0.1)"
+                            opacity={0}
+                            _groupHover={{ opacity: 1 }}
                             transition="opacity 0.2s"
                           />
                         </MotionBox>
                         
                         {showPhotoSelection && (
-                          <Box position="absolute" top={1} left={1}>
+                          <Box position="absolute" top={3} left={3}>
                             <MotionBox
-                              w={{ base: 4, sm: 5 }}
-                              h={{ base: 4, sm: 5 }}
-                              minW={{ base: "16px", sm: "20px" }}
-                              minH={{ base: "16px", sm: "20px" }}
+                              w={{ base: 7, sm: 8 }}
+                              h={{ base: 7, sm: 8 }}
+                              minW={{ base: "28px", sm: "32px" }}
+                              minH={{ base: "28px", sm: "32px" }}
                               borderRadius="md"
                               display="flex"
                               alignItems="center"
@@ -1734,22 +1727,22 @@ export default function AdminPage() {
                               transition={{ duration: 0.15 }}
                             >
                               {isSelected ? (
-                                <CheckSquare size="0.75rem" />
+                                <CheckSquare size="1rem" />
                               ) : (
-                                <Square size="0.75rem" />
+                                <Square size="1rem" />
                               )}
                             </MotionBox>
                           </Box>
                         )}
                         {!showPhotoSelection && (
-                          <Box position="absolute" top={1} left={1}>
+                          <Box position="absolute" top={3} left={3}>
                             <MotionButton
-                              size="xs"
+                              size="sm"
                               variant="ghost"
-                              w={{ base: 4, sm: 5 }}
-                              h={{ base: 4, sm: 5 }}
-                              minW={{ base: "16px", sm: "20px" }}
-                              minH={{ base: "16px", sm: "20px" }}
+                              w={{ base: 7, sm: 8 }}
+                              h={{ base: 7, sm: 8 }}
+                              minW={{ base: "28px", sm: "32px" }}
+                              minH={{ base: "28px", sm: "32px" }}
                               borderRadius="full"
                               border="2px solid"
                               borderColor={photo.isFeatured ? "yellow.300" : "whiteAlpha.600"}
@@ -1770,7 +1763,7 @@ export default function AdminPage() {
                                 borderColor: "yellow.300"
                               }}
                             >
-                              <Star size="0.625rem" fill={photo.isFeatured ? "currentColor" : "none"} />
+                              <Star size="0.875rem" fill={photo.isFeatured ? "currentColor" : "none"} />
                             </MotionButton>
                           </Box>
                         )}
@@ -1779,8 +1772,8 @@ export default function AdminPage() {
                       {!showPhotoSelection && (
                         <Box 
                           position="absolute" 
-                          top={0.5} 
-                          right={0.5}
+                          top={{ base: 1, sm: 2 }} 
+                          right={{ base: 1, sm: 2 }}
                           opacity={{ base: 0.9, sm: 0.7 }}
                           _hover={{ opacity: 1 }}
                           sx={{
@@ -1791,12 +1784,12 @@ export default function AdminPage() {
                           transition="opacity 0.2s"
                         >
                           <MotionButton
-                            size="xs"
+                            size="sm"
                             variant="ghost"
-                            w={{ base: 5, sm: 6 }}
-                            h={{ base: 5, sm: 6 }}
-                            minW={{ base: "20px", sm: "24px" }}
-                            minH={{ base: "20px", sm: "24px" }}
+                            w={{ base: 8, sm: 9 }}
+                            h={{ base: 8, sm: 9 }}
+                            minW={{ base: "32px", sm: "36px" }}
+                            minH={{ base: "32px", sm: "36px" }}
                             borderRadius="full"
                             bg="red.600"
                             color="white"
@@ -1812,38 +1805,66 @@ export default function AdminPage() {
                             _hover={{ bg: "red.500" }}
                             _disabled={{ bg: "gray.600", borderColor: "gray.500" }}
                           >
-                            <Trash2 size="0.625rem" />
+                            <Trash2 size="0.875rem" />
                           </MotionButton>
                         </Box>
                       )}
-                      <VStack spacing={1} mt={{ base: 1, sm: 2 }} align="start">
-                        <Text 
-                          fontSize={{ base: "xs", sm: "sm" }}
-                          color="blue.300"
-                          isTruncated
-                          maxW="100%"
-                          title={photo.originalName}
-                          fontWeight="medium"
+                        
+                        {/* メインページスタイルのフッター */}
+                        <Box 
+                          p={3} 
+                          bg="rgba(30, 41, 59, 0.8)" 
+                          backdropFilter="blur(10px)"
                         >
-                          {photo.originalName}
-                        </Text>
-                        <Text fontSize="xs" color="blue.400" opacity={0.7}>
-                          {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
-                        </Text>
-                        {showPhotoSelection && isSelected && (
-                          <Text fontSize="xs" color="green.400" mt={1}>
-                            ✓ 保持される写真
-                          </Text>
-                        )}
-                        {!showPhotoSelection && photo.isFeatured && (
-                          <HStack spacing={1} mt={1}>
-                            <Star size="0.75rem" fill="currentColor" />
-                            <Text fontSize="xs" color="yellow.400">
-                              代表写真
+                          <Flex justify="space-between" align="center" fontSize="xs">
+                            <Text color="blue.300" isTruncated display="flex" alignItems="center" gap={1}>
+                              📅 {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
                             </Text>
-                          </HStack>
-                        )}
-                      </VStack>
+                            
+                            <HStack spacing={1}>
+                              {photo.isFeatured && (
+                                <Box
+                                  bg="rgba(71, 85, 105, 1)"
+                                  color="yellow.400"
+                                  px={2}
+                                  py={1}
+                                  borderRadius="md"
+                                  fontSize="2xs"
+                                  display="flex"
+                                  alignItems="center"
+                                  gap={1}
+                                >
+                                  <Star size="0.625rem" fill="currentColor" />
+                                  代表
+                                </Box>
+                              )}
+                              
+                              {showPhotoSelection && isSelected && (
+                                <Box
+                                  bg="rgba(71, 85, 105, 1)"
+                                  color="green.400"
+                                  px={2}
+                                  py={1}
+                                  borderRadius="md"
+                                  fontSize="2xs"
+                                >
+                                  ✓ 保持
+                                </Box>
+                              )}
+                            </HStack>
+                          </Flex>
+                          
+                          <Text 
+                            fontSize="2xs"
+                            color="blue.400" 
+                            opacity={0.8}
+                            isTruncated
+                            mt={1}
+                            title={photo.originalName}
+                          >
+                            {photo.originalName}
+                          </Text>
+                        </Box>
                     </MotionBox>
                   );
                 })}
