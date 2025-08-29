@@ -804,26 +804,28 @@ export default function AdminPage() {
           transition={{ duration: 0.6 }}
         >
           <CardBody p={0}>
-            <Heading
-              size={{ base: "xl", sm: "2xl" }}
-              bgGradient="linear(to-r, blue.400, purple.400)"
-              bgClip="text"
-              color="transparent"
-              mb={{ base: 4, sm: 6 }}
-              display="flex"
-              alignItems="center"
-              gap={3}
-            >
-              <Plus size="1.5rem" color="rgba(96, 165, 250, 1)" />
-              新しいフォルダを作成
-            </Heading>
-            <Flex direction={{ base: "column", sm: "row" }} gap={{ base: 3, sm: 4 }}>
+            <VStack spacing={4} mb={{ base: 6, sm: 8 }}>
+              <Box display="flex" alignItems="center" gap={4}>
+                <Plus size="2rem" color="rgba(96, 165, 250, 1)" />
+                <Heading
+                  size={{ base: "xl", sm: "2xl" }}
+                  bgGradient="linear(to-r, blue.400, purple.400)"
+                  bgClip="text"
+                  color="transparent"
+                  textAlign="center"
+                >
+                  新しいフォルダを作成
+                </Heading>
+              </Box>
+            </VStack>
+            <VStack spacing={4} w="full">
               <Input
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 placeholder="ねこ様の名前を入力..."
                 aria-label="新しいフォルダの名前"
-                flex="1"
+                w="full"
+                maxW="400px"
                 bg="rgba(71, 85, 105, 0.5)"
                 border="1px solid"
                 borderColor="rgba(59, 130, 246, 0.3)"
@@ -836,6 +838,7 @@ export default function AdminPage() {
                 onKeyDown={(e) => e.key === 'Enter' && handleAddFolder()}
                 isDisabled={submitting}
                 size={{ base: "md", sm: "lg" }}
+                textAlign="center"
               />
               <MotionButton
                 onClick={handleAddFolder}
@@ -847,16 +850,20 @@ export default function AdminPage() {
                   bg: "linear-gradient(to right, #047857, #059669)"
                 }}
                 color={submitting || !newFolderName.trim() ? "rgba(148, 163, 184, 1)" : "white"}
-                px={{ base: 4, sm: 6 }}
-                py={{ base: 2, sm: 2 }}
+                px={{ base: 6, sm: 8 }}
+                py={{ base: 3, sm: 4 }}
                 size={{ base: "md", sm: "lg" }}
+                maxW="200px"
+                w="full"
                 whiteSpace="nowrap"
                 boxShadow="lg"
+                borderRadius="xl"
                 whileHover={submitting || !newFolderName.trim() ? {} : { scale: 1.05 }}
                 whileTap={submitting || !newFolderName.trim() ? {} : { scale: 0.95 }}
                 display="flex"
                 alignItems="center"
                 gap={2}
+                justifyContent="center"
               >
                 {submitting ? (
                   <>
@@ -870,7 +877,7 @@ export default function AdminPage() {
                   </>
                 )}
               </MotionButton>
-            </Flex>
+            </VStack>
           </CardBody>
         </MotionCard>
 
