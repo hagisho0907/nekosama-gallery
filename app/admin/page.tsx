@@ -1631,14 +1631,7 @@ export default function AdminPage() {
               </MotionVStack>
             ) : (
               <Grid 
-                templateColumns={{ 
-                  base: "repeat(2, 1fr)", 
-                  xs: "repeat(3, 1fr)", 
-                  sm: "repeat(4, 1fr)", 
-                  md: "repeat(5, 1fr)", 
-                  lg: "repeat(6, 1fr)", 
-                  xl: "repeat(7, 1fr)" 
-                }}
+                templateColumns="repeat(3, 1fr)"
                 gap={{ base: 4, sm: 6 }}
               >
                 {photos.map(photo => {
