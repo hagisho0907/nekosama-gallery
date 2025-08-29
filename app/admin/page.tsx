@@ -692,7 +692,7 @@ export default function AdminPage() {
                 <Settings size="1.75rem" color="white" />
               </MotionBox>
               <Heading
-                size={{ base: "lg", sm: "xl", lg: "2xl", xl: "3xl" }}
+                size={{ base: "md", sm: "lg", lg: "xl", xl: "2xl" }}
                 bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
                 bgClip="text"
                 color="transparent"
