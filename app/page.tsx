@@ -884,7 +884,7 @@ function FolderCard({
       borderRadius="xl"
       border="1px solid"
       borderColor="rgba(59, 130, 246, 0.3)"
-      h="18rem"
+      h="20rem"
       cursor="pointer"
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -961,7 +961,7 @@ function FolderCard({
         </VStack>
       </Box>
       
-      <Flex justify="center" px={4} pb={2}>
+      <Flex justify="center" px={4} pb={2} mt={4}>
         <input
           type="file"
           multiple
