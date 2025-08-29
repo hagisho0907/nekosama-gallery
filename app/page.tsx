@@ -526,18 +526,19 @@ export default function Home() {
       </MotionFlex>
 
       <Container 
-        maxW="7xl" 
-        py={8} 
+        maxW="100vw" 
+        p={0}
         zIndex={10} 
         position="relative"
-        bg="rgba(55, 25, 95, 0.8)"
-        backdropFilter="blur(15px)"
-        borderRadius="3xl"
-        border="1px solid rgba(147, 51, 234, 0.3)"
-        boxShadow="0 8px 32px rgba(0, 0, 0, 0.4)"
-        mt={4}
-        mx="auto"
+        bgGradient="linear(to-b, rgba(33, 27, 65, 0.95), rgba(90, 23, 139, 0.95))"
+        minH="calc(100vh - 120px)"
       >
+        <Box
+          maxW="7xl"
+          mx="auto"
+          py={8}
+          px={4}
+        >
         <AnimatePresence>
           {error && (
             <MotionBox
@@ -690,7 +691,7 @@ export default function Home() {
                 >
                   <Text 
                     color="blue.300" 
-                    fontSize={{ base: "md", sm: "lg" }}
+                    fontSize={{ base: "sm", sm: "lg" }}
                     fontWeight="medium"
                     display="flex"
                     alignItems="center"
@@ -749,18 +750,19 @@ export default function Home() {
             triggerFileUpload={triggerFileUpload}
           />
         )}
+        </Box>
       </Container>
 
       {/* Footer */}
       <MotionFlex
         as="footer"
-        bg="rgba(15, 23, 42, 0.8)"
+        bgGradient="linear(to-b, rgba(33, 27, 65, 0.95), rgba(90, 23, 139, 0.95))"
         backdropFilter="blur(15px)"
         borderTop="1px solid"
-        borderColor="blue.400"
+        borderColor="purple.400"
         borderTopWidth="1px"
         borderTopStyle="solid"
-        borderTopColor="rgba(59, 130, 246, 0.3)"
+        borderTopColor="rgba(147, 51, 234, 0.4)"
         mt={4}
         zIndex={10}
         position="relative"
