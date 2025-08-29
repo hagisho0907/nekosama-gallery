@@ -1695,7 +1695,7 @@ export default function AdminPage() {
                           />
                           
                           {/* ホバーオーバーレイ */}
-                          <MotionBox
+                          <Box
                             position="absolute"
                             inset={0}
                             bg="rgba(59, 130, 246, 0.1)"
