@@ -13,29 +13,14 @@ import {
   Text,
   Heading,
   Button,
-  IconButton,
   Grid,
   GridItem,
   Badge,
-  Alert,
-  AlertIcon,
   CloseButton,
   Spinner,
   Center,
-  AspectRatio,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  useColorModeValue,
-  Tooltip,
-  Card,
-  CardBody,
-  CardHeader,
-  Avatar,
-  AvatarBadge,
 } from '@chakra-ui/react';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import {
   Rocket,
   Sparkles,
@@ -46,8 +31,6 @@ import {
   Upload,
   ArrowLeft,
   ExternalLink,
-  AlertCircle,
-  CheckCircle,
   Twitter,
   Heart,
   Instagram,
@@ -85,7 +68,6 @@ function formatFileSize(bytes: number): string {
 const MotionBox = motion(Box);
 const MotionFlex = motion(Flex);
 const MotionVStack = motion(VStack);
-const MotionCard = motion(Card);
 const MotionButton = motion(Button);
 
 export default function Home() {
@@ -102,10 +84,7 @@ export default function Home() {
   const itemsPerPage = 10;
   const detailUploadRef = useRef<HTMLInputElement>(null);
 
-  const bgGradient = useColorModeValue(
-    'linear(to-br, slate.900, purple.900, slate.900)',
-    'linear(to-br, slate.900, purple.900, slate.900)'
-  );
+  const bgGradient = 'linear(to-br, slate.900, purple.900, slate.900)';
 
   const triggerFileUpload = (folderId: string) => {
     const input = document.createElement('input');
@@ -366,12 +345,12 @@ export default function Home() {
           <Box className="twinkling" />
         </Box>
         <Center minH="100vh" zIndex={10} position="relative">
-          <MotionVStack
+          <MotionBox
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            spacing={6}
           >
+            <VStack spacing={6}>
             <MotionBox
               animate={{ 
                 rotate: 360,
@@ -390,7 +369,7 @@ export default function Home() {
                 position="absolute"
                 inset="-4"
                 border="2px solid"
-                borderColor="blue.400"
+                borderColor="rgba(59, 130, 246, 0.3)"
                 borderRadius="full"
                 opacity={0.3}
                 animate={{ rotate: -360 }}
@@ -405,7 +384,8 @@ export default function Home() {
                 宇宙船システム起動中...
               </Text>
             </MotionBox>
-          </MotionVStack>
+            </VStack>
+          </MotionBox>
         </Center>
       </Box>
     );
@@ -451,8 +431,7 @@ export default function Home() {
                 alignItems="center"
                 justifyContent="center"
                 border="1px solid"
-                borderColor="blue.400"
-                borderOpacity={0.3}
+                borderColor="rgba(59, 130, 246, 0.3)"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
@@ -472,7 +451,7 @@ export default function Home() {
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </MotionBox>
-              <VStack align="start" spacing={0}>
+              <VStack align="start" gap={0}>
                 <Heading 
                   size="xl"
                   bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
@@ -490,25 +469,26 @@ export default function Home() {
                 </Text>
               </VStack>
             </MotionFlex>
-            <MotionButton
-              as={Link}
-              href="/admin"
-              bg="slate.700"
-              color="blue.200"
-              borderColor="slate.600"
-              borderOpacity={0.5}
-              _hover={{
-                bg: "slate.600",
-                color: "white",
-                borderColor: "slate.500"
-              }}
-              leftIcon={<Zap />}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Text display={{ base: "none", sm: "block" }}>Control Center</Text>
-              <Text display={{ base: "block", sm: "none" }}>管理</Text>
-            </MotionButton>
+            <Link href="/admin" style={{ textDecoration: 'none' }}>
+              <MotionButton
+                bg="rgba(71, 85, 105, 0.7)"
+                color="rgba(147, 197, 253, 1)"
+                border="1px solid rgba(71, 85, 105, 0.5)"
+                _hover={{
+                  bg: "rgba(71, 85, 105, 1)",
+                  color: "white",
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                display="flex"
+                alignItems="center"
+                gap={2}
+              >
+                <Zap size="1rem" />
+                <Text display={{ base: "none", sm: "block" }}>Control Center</Text>
+                <Text display={{ base: "block", sm: "none" }}>管理</Text>
+              </MotionButton>
+            </Link>
           </Flex>
         </Container>
       </MotionFlex>
@@ -522,18 +502,28 @@ export default function Home() {
               exit={{ opacity: 0, y: -20 }}
               mb={6}
             >
-              <Alert status="error" borderRadius="lg" backdropFilter="blur(10px)">
-                <AlertIcon />
-                <Box flex="1">
-                  {error}
-                </Box>
-                <CloseButton
-                  onClick={() => setError(null)}
-                  position="absolute"
-                  right={2}
-                  top={2}
-                />
-              </Alert>
+              <Box
+                bg="rgba(127, 29, 29, 0.3)"
+                backdropFilter="blur(10px)"
+                border="1px solid rgba(248, 113, 113, 0.5)"
+                color="rgba(252, 165, 165, 1)"
+                borderRadius="lg"
+                p={4}
+                position="relative"
+              >
+                <Flex align="center" gap={3}>
+                  <AlertTriangle size="1.25rem" />
+                  <Box flex="1">
+                    {error}
+                  </Box>
+                  <CloseButton
+                    onClick={() => setError(null)}
+                    size="sm"
+                    color="rgba(252, 165, 165, 1)"
+                    _hover={{ bg: "rgba(127, 29, 29, 0.5)" }}
+                  />
+                </Flex>
+              </Box>
             </MotionBox>
           )}
         </AnimatePresence>
@@ -546,36 +536,45 @@ export default function Home() {
               exit={{ opacity: 0, y: -20 }}
               mb={6}
             >
-              <Alert status="success" borderRadius="lg" backdropFilter="blur(10px)">
-                <AlertIcon />
-                <Box flex="1">
-                  {successMessage}
-                </Box>
-                <CloseButton
-                  onClick={() => setSuccessMessage(null)}
-                  position="absolute"
-                  right={2}
-                  top={2}
-                />
-              </Alert>
+              <Box
+                bg="rgba(20, 83, 45, 0.3)"
+                backdropFilter="blur(10px)"
+                border="1px solid rgba(34, 197, 94, 0.5)"
+                color="rgba(134, 239, 172, 1)"
+                borderRadius="lg"
+                p={4}
+                position="relative"
+              >
+                <Flex align="center" gap={3}>
+                  <CheckCircle size="1.25rem" />
+                  <Box flex="1">
+                    {successMessage}
+                  </Box>
+                  <CloseButton
+                    onClick={() => setSuccessMessage(null)}
+                    size="sm"
+                    color="rgba(134, 239, 172, 1)"
+                    _hover={{ bg: "rgba(20, 83, 45, 0.5)" }}
+                  />
+                </Flex>
+              </Box>
             </MotionBox>
           )}
         </AnimatePresence>
 
         {!selectedFolder ? (
-          <MotionVStack
-            spacing={8}
+          <MotionBox
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
           >
-            <MotionVStack
-              spacing={4}
-              textAlign="center"
+            <VStack spacing={8}>
+            <MotionBox
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
+              <VStack spacing={4} textAlign="center">
               <Heading
                 size="2xl"
                 bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
@@ -591,7 +590,8 @@ export default function Home() {
               <Text color="blue.300" fontSize="lg" display="flex" alignItems="center" gap={2} flexWrap="wrap">
                 阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！
               </Text>
-            </MotionVStack>
+              </VStack>
+            </MotionBox>
 
             <MotionBox
               w="full"
@@ -599,33 +599,44 @@ export default function Home() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              <Tabs
-                index={activeTab === 'enrolled' ? 0 : 1}
-                onChange={(index) => setActiveTab(index === 0 ? 'enrolled' : 'graduated')}
-                variant="enclosed"
-                colorScheme={activeTab === 'enrolled' ? 'green' : 'yellow'}
-              >
-                <TabList justifyContent="center" mb={6}>
+              {/* Custom Tab Navigation */}
+              <VStack spacing={6}>
+                <HStack spacing={4} justify="center">
                   <MotionButton
-                    as={Tab}
-                    leftIcon={<Stars />}
-                    whileHover={{ y: -2 }}
+                    onClick={() => setActiveTab('enrolled')}
+                    bg={activeTab === 'enrolled' ? 'rgba(22, 163, 74, 1)' : 'transparent'}
+                    color={activeTab === 'enrolled' ? 'white' : 'rgba(134, 239, 172, 1)'}
+                    border="2px solid rgba(34, 197, 94, 1)"
+                    whileHover={{ y: -2, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    size="lg"
+                    display="flex"
+                    alignItems="center"
+                    gap={2}
                   >
+                    <Stars size="1rem" />
                     在籍生 ({folders.filter(f => f.status === 'enrolled').length})
                   </MotionButton>
                   <MotionButton
-                    as={Tab}
-                    leftIcon={<Sparkles />}
-                    whileHover={{ y: -2 }}
+                    onClick={() => setActiveTab('graduated')}
+                    bg={activeTab === 'graduated' ? 'rgba(202, 138, 4, 1)' : 'transparent'}
+                    color={activeTab === 'graduated' ? 'white' : 'rgba(254, 240, 138, 1)'}
+                    border="2px solid rgba(251, 191, 36, 1)"
+                    whileHover={{ y: -2, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    size="lg"
+                    display="flex"
+                    alignItems="center"
+                    gap={2}
                   >
+                    <Sparkles size="1rem" />
                     卒業生 ({folders.filter(f => f.status === 'graduated').length})
                   </MotionButton>
-                </TabList>
+                </HStack>
                 
-                <TabPanels>
-                  <TabPanel>
+                {/* Tab Content */}
+                <Box w="full">
+                  {activeTab === 'enrolled' ? (
                     <FolderGrid 
                       folders={folders.filter(f => f.status === 'enrolled')}
                       onSelectFolder={handleFolderSelect}
@@ -633,8 +644,7 @@ export default function Home() {
                       uploadingFolder={uploadingFolder}
                       status="enrolled"
                     />
-                  </TabPanel>
-                  <TabPanel>
+                  ) : (
                     <FolderGrid 
                       folders={folders.filter(f => f.status === 'graduated')}
                       onSelectFolder={handleFolderSelect}
@@ -642,11 +652,12 @@ export default function Home() {
                       uploadingFolder={uploadingFolder}
                       status="graduated"
                     />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
+                  )}
+                </Box>
+              </VStack>
             </MotionBox>
-          </MotionVStack>
+            </VStack>
+          </MotionBox>
         ) : (
           <FolderDetailView
             selectedFolderData={selectedFolderData}
@@ -687,69 +698,74 @@ export default function Home() {
         <Container maxW="7xl" p={4}>
           <VStack spacing={6}>
             <HStack spacing={6} flexWrap="wrap" justify="center">
-              <MotionButton
-                as="a"
-                href="https://x.com/haikeinekosama"
-                target="_blank"
-                rel="noopener noreferrer"
-                leftIcon={<Twitter />}
-                bg="slate.700"
-                color="blue.200"
-                size="sm"
-                _hover={{ bg: "blue.600", color: "white" }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                X (Twitter)
-              </MotionButton>
+              <a href="https://x.com/haikeinekosama" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                <MotionButton
+                  bg="rgba(71, 85, 105, 0.7)"
+                  color="rgba(147, 197, 253, 1)"
+                  size="sm"
+                  _hover={{ bg: "rgba(37, 99, 235, 1)", color: "white" }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
+                >
+                  <Twitter size="1rem" />
+                  X (Twitter)
+                </MotionButton>
+              </a>
               
-              <MotionButton
-                as="a"
-                href="https://www.instagram.com/haikeinekosama/"
-                target="_blank"
-                rel="noopener noreferrer"
-                leftIcon={<Instagram />}
-                bg="slate.700"
-                color="blue.200"
-                size="sm"
-                _hover={{ bg: "pink.600", color: "white" }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Instagram
-              </MotionButton>
+              <a href="https://www.instagram.com/haikeinekosama/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                <MotionButton
+                  bg="rgba(71, 85, 105, 0.7)"
+                  color="rgba(147, 197, 253, 1)"
+                  size="sm"
+                  _hover={{ bg: "rgba(219, 39, 119, 1)", color: "white" }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
+                >
+                  <Instagram size="1rem" />
+                  Instagram
+                </MotionButton>
+              </a>
               
-              <MotionButton
-                as="a"
-                href="https://aboutme.style/haikeinekosama"
-                target="_blank"
-                rel="noopener noreferrer"
-                leftIcon={<Globe />}
-                bg="slate.700"
-                color="blue.200"
-                size="sm"
-                _hover={{ bg: "purple.600", color: "white" }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                HP
-              </MotionButton>
+              <a href="https://aboutme.style/haikeinekosama" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                <MotionButton
+                  bg="rgba(71, 85, 105, 0.7)"
+                  color="rgba(147, 197, 253, 1)"
+                  size="sm"
+                  _hover={{ bg: "rgba(147, 51, 234, 1)", color: "white" }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
+                >
+                  <Globe size="1rem" />
+                  HP
+                </MotionButton>
+              </a>
             </HStack>
             
-            <Text color="blue.300" fontSize="sm" textAlign="center" flexWrap="wrap">
+            <Text color="rgba(147, 197, 253, 1)" fontSize="sm" textAlign="center" flexWrap="wrap">
               Presented by{' '}
-              <MotionBox
-                as="a"
+              <a
                 href="https://x.com/kilomake0607"
                 target="_blank"
                 rel="noopener noreferrer"
-                color="cyan.400"
-                textDecoration="underline"
-                _hover={{ color: "cyan.300" }}
-                whileHover={{ scale: 1.05 }}
+                style={{
+                  color: '#06b6d4',
+                  textDecoration: 'underline',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={(e) => (e.target as HTMLElement).style.color = '#67e8f9'}
+                onMouseLeave={(e) => (e.target as HTMLElement).style.color = '#06b6d4'}
               >
                 きろめいく里親
-              </MotionBox>
+              </a>
             </Text>
           </VStack>
         </Container>
@@ -791,9 +807,8 @@ function FolderGrid({
           alignItems="center"
           justifyContent="center"
           border="2px dashed"
-          borderColor="blue.400"
-          borderOpacity={0.3}
-          animate={{ 
+          borderColor="rgba(59, 130, 246, 0.3)"
+                    animate={{ 
             scale: [1, 1.05, 1],
             rotate: [0, 2, -2, 0]
           }}
@@ -863,26 +878,24 @@ function FolderCard({
   };
 
   return (
-    <MotionCard
-      bg="slate.800"
+    <MotionBox
+      bg="rgba(30, 41, 59, 0.8)"
       backdropFilter="blur(10px)"
       borderRadius="xl"
       border="1px solid"
-      borderColor="blue.500"
-      borderOpacity={0.3}
-      h={72}
+      borderColor="rgba(59, 130, 246, 0.3)"
+      h="18rem"
       cursor="pointer"
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       whileHover={{ 
         y: -8, 
         scale: 1.02,
-        borderColor: "purple.400",
-        borderOpacity: 0.5
+        borderColor: "rgba(168, 85, 247, 0.5)"
       }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <CardHeader pb={2}>
+      <Box p={4} pb={2}>
         <Flex justify="space-between" align="center">
           <Heading size="md" color="white" isTruncated flex={1} mr={2}>
             {folder.name}
@@ -901,9 +914,9 @@ function FolderCard({
             {folder.status === 'enrolled' ? '在籍' : '卒業'}
           </Badge>
         </Flex>
-      </CardHeader>
+      </Box>
       
-      <CardBody pt={0} onClick={() => onSelectFolder(folder.id)}>
+      <Box pt={0} px={4} onClick={() => onSelectFolder(folder.id)}>
         <VStack spacing={3}>
           <Text color="blue.300" fontSize="sm" display="flex" alignItems="center" gap={2}>
             <Sparkles size="1rem" />
@@ -920,8 +933,7 @@ function FolderCard({
                 borderRadius="lg"
                 overflow="hidden"
                 border="1px solid"
-                borderColor="blue.400"
-                borderOpacity={0.3}
+                borderColor="rgba(59, 130, 246, 0.3)"
                 whileHover={{ scale: 1.08 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
@@ -937,7 +949,7 @@ function FolderCard({
             ))}
             {folder.photoCount === 0 && (
               <GridItem colSpan={3} h={24}>
-                <Center h="full" bg="slate.700" borderRadius="lg" border="2px dashed" borderColor="blue.400" borderOpacity={0.3}>
+                <Center h="full" bg="slate.700" borderRadius="lg" border="2px dashed" borderColor="rgba(59, 130, 246, 0.3)">
                   <VStack>
                     <Camera size="1.5rem" color="rgba(59, 130, 246, 0.7)" />
                     <Text color="blue.300" fontSize="xs" fontWeight="medium">写真がありません</Text>
@@ -947,7 +959,7 @@ function FolderCard({
             )}
           </Grid>
         </VStack>
-      </CardBody>
+      </Box>
       
       <Flex justify="center" px={4} pb={2}>
         <input
@@ -960,16 +972,9 @@ function FolderCard({
         />
         <MotionButton
           size="sm"
-          bg={uploadingFolder === folder.id ? "slate.600" : "linear(to-r, blue.600, purple.600)"}
+          bg={uploadingFolder === folder.id ? "rgba(71, 85, 105, 1)" : "linear-gradient(to right, #2563eb, #7c3aed)"}
           color="white"
           isDisabled={uploadingFolder === folder.id}
-          leftIcon={
-            uploadingFolder === folder.id ? (
-              <Spinner size="sm" />
-            ) : (
-              <Upload size="1rem" />
-            )
-          }
           onClick={(e) => {
             e.stopPropagation();
             if (uploadingFolder !== folder.id) {
@@ -978,18 +983,25 @@ function FolderCard({
           }}
           whileHover={uploadingFolder !== folder.id ? { scale: 1.02 } : {}}
           whileTap={uploadingFolder !== folder.id ? { scale: 0.98 } : {}}
+          display="flex"
+          alignItems="center"
+          gap={1}
         >
           {uploadingFolder === folder.id ? (
-            <Text display={{ base: "block", sm: "none" }}>転送中</Text>
+            <>
+              <Spinner size="sm" />
+              <Text display={{ base: "block", sm: "none" }}>転送中</Text>
+            </>
           ) : (
             <>
+              <Upload size="1rem" />
               <Text display={{ base: "none", sm: "block" }}>写真をアップロード</Text>
               <Text display={{ base: "block", sm: "none" }}>アップロード</Text>
             </>
           )}
         </MotionButton>
       </Flex>
-    </MotionCard>
+    </MotionBox>
   );
 }
 
@@ -1025,36 +1037,37 @@ function FolderDetailView({
   const totalPages = Math.ceil(selectedFolderData.photos.length / itemsPerPage);
 
   return (
-    <MotionVStack
-      spacing={8}
+    <MotionBox
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
     >
+      <VStack spacing={8}>
       <Box alignSelf="flex-start">
         <MotionButton
           onClick={onBack}
-          leftIcon={<ArrowLeft />}
           bg="linear(to-r, blue.600, purple.600)"
           color="white"
           border="1px solid"
-          borderColor="blue.400"
-          borderOpacity={0.3}
+          borderColor="rgba(59, 130, 246, 0.3)"
           whileHover={{ scale: 1.05, x: -5 }}
           whileTap={{ scale: 0.95 }}
+          display="flex"
+          alignItems="center"
+          gap={2}
         >
+          <ArrowLeft size="1rem" />
           <Text display={{ base: "none", sm: "block" }}>宇宙ステーションに戻る</Text>
           <Text display={{ base: "block", sm: "none" }}>戻る</Text>
         </MotionButton>
       </Box>
 
-      <MotionVStack
-        spacing={4}
-        textAlign="center"
+      <MotionBox
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
+        <VStack spacing={4} textAlign="center">
         <Heading
           size="2xl"
           bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
@@ -1069,7 +1082,8 @@ function FolderDetailView({
           <Sparkles />
           {selectedFolderData.photos.length}枚の写真
         </Text>
-      </MotionVStack>
+        </VStack>
+      </MotionBox>
 
       {selectedFolderData.photos.length === 0 ? (
         <MotionBox
@@ -1103,16 +1117,9 @@ function FolderDetailView({
             </Text>
             <MotionButton
               size="lg"
-              bg={uploadingFolder === selectedFolderData.id ? "slate.600" : "linear(to-r, blue.600, purple.600)"}
+              bg={uploadingFolder === selectedFolderData.id ? "rgba(71, 85, 105, 1)" : "linear-gradient(to right, #2563eb, #7c3aed)"}
               color="white"
               isDisabled={uploadingFolder === selectedFolderData.id}
-              leftIcon={
-                uploadingFolder === selectedFolderData.id ? (
-                  <Spinner />
-                ) : (
-                  <Rocket />
-                )
-              }
               onClick={() => {
                 if (uploadingFolder !== selectedFolderData.id) {
                   triggerFileUpload(selectedFolderData.id);
@@ -1120,8 +1127,21 @@ function FolderDetailView({
               }}
               whileHover={uploadingFolder !== selectedFolderData.id ? { scale: 1.05 } : {}}
               whileTap={uploadingFolder !== selectedFolderData.id ? { scale: 0.95 } : {}}
+              display="flex"
+              alignItems="center"
+              gap={3}
             >
-              {uploadingFolder === selectedFolderData.id ? '宇宙転送中...' : '写真をアップロード'}
+              {uploadingFolder === selectedFolderData.id ? (
+                <>
+                  <Spinner />
+                  宇宙転送中...
+                </>
+              ) : (
+                <>
+                  <Rocket />
+                  写真をアップロード
+                </>
+              )}
             </MotionButton>
           </VStack>
         </MotionBox>
@@ -1133,7 +1153,7 @@ function FolderDetailView({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <HStack justify="center" spacing={2}>
+              <HStack justify="center" gap={2}>
                 <MotionButton
                   onClick={() => {
                     setCurrentPage(Math.max(1, currentPage - 1));
@@ -1200,16 +1220,9 @@ function FolderDetailView({
           >
             <MotionButton
               size="lg"
-              bg={uploadingFolder === selectedFolderData.id ? "slate.600" : "linear(to-r, blue.600, purple.600)"}
+              bg={uploadingFolder === selectedFolderData.id ? "rgba(71, 85, 105, 1)" : "linear-gradient(to right, #2563eb, #7c3aed)"}
               color="white"
               isDisabled={uploadingFolder === selectedFolderData.id}
-              leftIcon={
-                uploadingFolder === selectedFolderData.id ? (
-                  <Spinner />
-                ) : (
-                  <Upload />
-                )
-              }
               onClick={() => {
                 if (uploadingFolder !== selectedFolderData.id) {
                   triggerFileUpload(selectedFolderData.id);
@@ -1217,13 +1230,27 @@ function FolderDetailView({
               }}
               whileHover={uploadingFolder !== selectedFolderData.id ? { scale: 1.05 } : {}}
               whileTap={uploadingFolder !== selectedFolderData.id ? { scale: 0.95 } : {}}
+              display="flex"
+              alignItems="center"
+              gap={3}
             >
-              {uploadingFolder === selectedFolderData.id ? '転送中...' : '追加アップロード'}
+              {uploadingFolder === selectedFolderData.id ? (
+                <>
+                  <Spinner />
+                  転送中...
+                </>
+              ) : (
+                <>
+                  <Upload />
+                  追加アップロード
+                </>
+              )}
             </MotionButton>
           </MotionBox>
         </>
       )}
-    </MotionVStack>
+      </VStack>
+    </MotionBox>
   );
 }
 
@@ -1238,21 +1265,19 @@ function PhotoCard({
   onLike: () => void;
 }) {
   return (
-    <MotionCard
-      bg="slate.800"
+    <MotionBox
+      bg="rgba(30, 41, 59, 0.8)"
       backdropFilter="blur(10px)"
       borderRadius="xl"
       overflow="hidden"
       border="1px solid"
-      borderColor="blue.500"
-      borderOpacity={0.3}
+      borderColor="rgba(59, 130, 246, 0.3)"
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       whileHover={{ 
         y: -5, 
         scale: 1.02,
-        borderColor: "purple.400",
-        borderOpacity: 0.5
+        borderColor: "rgba(168, 85, 247, 0.5)"
       }}
       transition={{ type: "spring", stiffness: 300 }}
     >
@@ -1268,14 +1293,14 @@ function PhotoCard({
         <MotionBox
           position="absolute"
           inset={0}
-          bg="blue.400"
+          bg="rgba(59, 130, 246, 0.1)"
           opacity={0}
-          _groupHover={{ opacity: 0.1 }}
-          transition="opacity 0.2s"
+          _groupHover={{ opacity: 1 }}
+          css={{ transition: "opacity 0.2s" }}
         />
       </Box>
       
-      <CardBody p={3} bg="slate.800" backdropFilter="blur(10px)">
+      <Box p={3} bg="rgba(30, 41, 59, 0.8)" backdropFilter="blur(10px)">
         <Flex justify="space-between" align="center" fontSize="xs">
           <Text color="blue.300" isTruncated display="flex" alignItems="center" gap={1}>
             📅 {new Date(photo.uploadedAt).toLocaleDateString('ja-JP')}
@@ -1283,9 +1308,9 @@ function PhotoCard({
           <HStack spacing={1}>
             <MotionButton
               size="xs"
-              bg="slate.700"
-              color={isLiked ? "red.500" : "gray.400"}
-              _hover={{ bg: "slate.600", color: isLiked ? "red.400" : "red.300" }}
+              bg="rgba(71, 85, 105, 1)"
+              color={isLiked ? "#ef4444" : "#9ca3af"}
+              _hover={{ bg: "rgba(71, 85, 105, 0.8)", color: isLiked ? "#f87171" : "#f87171" }}
               onClick={onLike}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -1296,23 +1321,21 @@ function PhotoCard({
               <Heart size="0.75rem" fill={isLiked ? "currentColor" : "none"} />
               <Text fontSize="2xs" fontWeight="medium">{photo.likes || 0}</Text>
             </MotionButton>
-            <MotionButton
-              as="a"
-              href={photo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              size="xs"
-              bg="slate.700"
-              color="blue.400"
-              _hover={{ bg: "slate.600", color: "blue.300" }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <ExternalLink size="0.75rem" />
-            </MotionButton>
+            <Link href={photo.url} target="_blank" rel="noopener noreferrer">
+              <MotionButton
+                size="xs"
+                bg="rgba(71, 85, 105, 1)"
+                color="#60a5fa"
+                _hover={{ bg: "rgba(71, 85, 105, 0.8)", color: "#93c5fd" }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <ExternalLink size="0.75rem" />
+              </MotionButton>
+            </Link>
           </HStack>
         </Flex>
-      </CardBody>
-    </MotionCard>
+      </Box>
+    </MotionBox>
   );
 }

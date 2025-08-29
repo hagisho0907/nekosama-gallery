@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ChakraProvider, createSystem, defaultConfig } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,7 +17,6 @@ const geistMono = Geist_Mono({
   display: 'swap',
 });
 
-const system = createSystem(defaultConfig);
 
 export const metadata: Metadata = {
   title: "拝啓ねこ様フォトギャラリー",
@@ -34,7 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ChakraProvider value={system}>
+        <ChakraProvider>
           {children}
         </ChakraProvider>
       </body>
