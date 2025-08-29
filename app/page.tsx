@@ -419,6 +419,7 @@ export default function Home() {
             <MotionFlex
               align="center"
               gap={4}
+              flex="1"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -451,7 +452,7 @@ export default function Home() {
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </MotionBox>
-              <VStack align="start" gap={0}>
+              <VStack align="start" gap={0} flex="1">
                 <Heading 
                   size={{ base: "md", sm: "lg", md: "xl" }}
                   bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
