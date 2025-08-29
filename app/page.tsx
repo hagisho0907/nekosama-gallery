@@ -415,11 +415,11 @@ export default function Home() {
         transition={{ duration: 0.8 }}
       >
         <Container maxW="6xl" p={4}>
-          <Flex justify="space-between" align="center">
+          <Flex justify={{ base: "flex-start", sm: "space-between" }} align="center" gap={4}>
             <MotionFlex
               align="center"
               gap={4}
-              flex="1"
+              flex={{ base: "none", sm: "1" }}
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -452,7 +452,7 @@ export default function Home() {
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </MotionBox>
-              <VStack align="start" gap={0} flex="1">
+              <VStack align="start" gap={0} flex={{ base: "none", sm: "1" }}>
                 <Heading 
                   size={{ base: "md", sm: "lg", md: "xl" }}
                   bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
@@ -470,7 +470,7 @@ export default function Home() {
                 </Text>
               </VStack>
             </MotionFlex>
-            <Link href="/admin" style={{ textDecoration: 'none' }}>
+            <Link href="/admin" style={{ textDecoration: 'none', position: 'absolute', right: '16px', display: 'block', zIndex: 20 }} className="sm:relative sm:right-auto sm:z-auto">
               <MotionButton
                 bg="rgba(71, 85, 105, 0.7)"
                 color="rgba(147, 197, 253, 1)"
