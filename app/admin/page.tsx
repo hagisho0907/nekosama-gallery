@@ -2,8 +2,35 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Box,
+  Container,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Input,
+  Button,
+  Flex,
+  Grid,
+  Image,
+  IconButton,
+  Badge,
+  Spinner,
+  Center,
+  Link,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Card,
+  CardBody,
+  CardHeader,
+  useToast,
+  CloseButton,
+} from '@chakra-ui/react';
 import { 
   Settings, 
   Stars, 
@@ -14,7 +41,7 @@ import {
   Edit3, 
   Trash2, 
   Camera,
-  AlertCircle,
+  AlertTriangle,
   CheckCircle,
   GripVertical,
   Square,
@@ -23,6 +50,12 @@ import {
   Star
 } from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
+
+const MotionBox = motion(Box);
+const MotionVStack = motion(VStack);
+const MotionButton = motion(Button);
+const MotionCard = motion(Card);
+const MotionFlex = motion(Flex);
 
 type CatFolder = {
   id: string;
@@ -550,19 +583,30 @@ export default function AdminPage() {
 
   if (!authenticated || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative flex items-center justify-center">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="stars"></div>
-          <div className="twinkling"></div>
-        </div>
-        <motion.div 
-          className="text-center relative z-10"
+      <Box
+        minH="100vh"
+        bgGradient="linear(to-br, slate.900, purple.900, slate.900)"
+        position="relative"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Box position="absolute" inset={0} overflow="hidden">
+          <Box className="stars" />
+          <Box className="twinkling" />
+        </Box>
+        <MotionBox
+          textAlign="center"
+          position="relative"
+          zIndex={10}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <motion.div
-            className="relative mx-auto mb-6"
+          <MotionBox
+            position="relative"
+            mx="auto"
+            mb={6}
             animate={{ 
               rotate: 360,
               scale: [1, 1.1, 1]
@@ -572,163 +616,176 @@ export default function AdminPage() {
               scale: { duration: 1.5, repeat: Infinity }
             }}
           >
-            <Settings className="w-16 h-16 text-blue-400 mx-auto" />
-            <motion.div
-              className="absolute -inset-4 rounded-full border-2 border-blue-400/30"
+            <Settings size="4rem" color="rgba(96, 165, 250, 1)" />
+            <MotionBox
+              position="absolute"
+              inset="-4"
+              borderRadius="full"
+              border="2px solid"
+              borderColor="rgba(96, 165, 250, 0.3)"
               animate={{ rotate: -360 }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             />
-          </motion.div>
-          <motion.p 
-            className="text-blue-300 text-lg font-medium"
+          </MotionBox>
+          <MotionBox
+            color="blue.300"
+            fontSize="lg"
+            fontWeight="medium"
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
             管理システム起動中...
-          </motion.p>
-        </motion.div>
-        <style jsx>{`
-          .stars, .twinkling {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-          }
-          .stars {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
-            animation: move-stars 200s linear infinite;
-          }
-          .twinkling {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
-            animation: move-twinkling 100s linear infinite;
-          }
-          @keyframes move-stars {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100px); }
-          }
-          @keyframes move-twinkling {
-            from { transform: translateX(0); }
-            to { transform: translateX(-200px); }
-          }
-        `}</style>
-      </div>
+          </MotionBox>
+        </MotionBox>
+      </Box>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative">
+    <Box
+      minH="100vh"
+      bgGradient="linear(to-br, slate.900, purple.900, slate.900)"
+      position="relative"
+    >
       {/* Space stars background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="stars"></div>
-        <div className="twinkling"></div>
-      </div>
-      <style jsx>{`
-        .stars, .twinkling {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-        }
-        .stars {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
-          animation: move-stars 200s linear infinite;
-        }
-        .twinkling {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
-          animation: move-twinkling 100s linear infinite;
-        }
-        @keyframes move-stars {
-          from { transform: translateX(0); }
-          to { transform: translateX(-100px); }
-        }
-        @keyframes move-twinkling {
-          from { transform: translateX(0); }
-          to { transform: translateX(-200px); }
-        }
-      `}</style>
+      <Box position="absolute" inset={0} overflow="hidden">
+        <Box className="stars" />
+        <Box className="twinkling" />
+      </Box>
 
-      <motion.header 
-        className="bg-slate-800/90 backdrop-blur-md shadow-lg border-b border-blue-500/30 relative z-10"
+      <MotionBox
+        as="header"
+        bg="rgba(30, 41, 59, 0.9)"
+        backdropFilter="blur(12px)"
+        boxShadow="lg"
+        borderBottom="1px solid"
+        borderBottomColor="rgba(59, 130, 246, 0.3)"
+        position="relative"
+        zIndex={10}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4 sm:py-6">
-            <motion.div 
-              className="flex items-center gap-3"
+        <Container maxW="7xl" px={{ base: 4, sm: 6, lg: 8 }}>
+          <Flex justify="space-between" align="center" py={{ base: 4, sm: 6 }}>
+            <MotionFlex
+              align="center"
+              gap={3}
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <motion.div 
-                className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-lg border border-blue-400/30"
+              <MotionBox
+                w={{ base: 12, sm: 14 }}
+                h={{ base: 12, sm: 14 }}
+                bgGradient="linear(to-br, blue.600, purple.600)"
+                borderRadius="lg"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="lg"
+                border="1px solid"
+                borderColor="rgba(59, 130, 246, 0.3)"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
-                <Settings className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-              </motion.div>
-              <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                <span className="hidden sm:inline">宇宙船管理センター</span>
-                <span className="sm:hidden">管理センター</span>
-              </h1>
-            </motion.div>
-            <div className="flex gap-2 sm:gap-3">
-              <motion.button
+                <Settings size="1.75rem" color="white" />
+              </MotionBox>
+              <Heading
+                size={{ base: "lg", sm: "xl", lg: "2xl", xl: "3xl" }}
+                bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
+                bgClip="text"
+                color="transparent"
+                fontWeight="bold"
+              >
+                <Text display={{ base: "none", sm: "inline" }}>宇宙船管理センター</Text>
+                <Text display={{ base: "inline", sm: "none" }}>管理センター</Text>
+              </Heading>
+            </MotionFlex>
+            <HStack spacing={{ base: 2, sm: 3 }}>
+              <MotionButton
                 onClick={handleLogout}
-                className="bg-red-600/80 hover:bg-red-600 text-white px-4 py-3 sm:px-6 sm:py-4 rounded-lg transition-all duration-200 text-sm sm:text-base backdrop-blur-sm border border-red-400/30 shadow-lg min-h-[48px] flex items-center justify-center"
+                bg="rgba(220, 38, 38, 0.8)"
+                _hover={{ bg: "rgba(220, 38, 38, 1)" }}
+                color="white"
+                px={{ base: 4, sm: 6 }}
+                py={{ base: 3, sm: 4 }}
+                size={{ base: "sm", sm: "md" }}
+                backdropFilter="blur(4px)"
+                border="1px solid"
+                borderColor="rgba(248, 113, 113, 0.3)"
+                boxShadow="lg"
+                minH="48px"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                display="flex"
+                alignItems="center"
+                gap={2}
               >
-                <span className="hidden sm:flex items-center gap-2">
-                  <LogOut className="w-4 h-4" />
+                <Text display={{ base: "none", sm: "flex" }} alignItems="center" gap={2}>
+                  <LogOut size="1rem" />
                   ログアウト
-                </span>
-                <span className="sm:hidden">
-                  <LogOut className="w-4 h-4" />
-                </span>
-              </motion.button>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link 
-                  href="/" 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-4 py-3 sm:px-6 sm:py-4 rounded-lg transition-all duration-200 text-sm sm:text-base shadow-lg border border-blue-400/30 flex items-center gap-2 min-h-[48px]"
+                </Text>
+                <Box display={{ base: "block", sm: "none" }}>
+                  <LogOut size="1rem" />
+                </Box>
+              </MotionButton>
+              <Link href="/" style={{ textDecoration: 'none' }}>
+                <MotionButton
+                  bg="linear-gradient(to right, #2563eb, #7c3aed)"
+                  _hover={{ bg: "linear-gradient(to right, #3b82f6, #8b5cf6)" }}
+                  color="white"
+                  px={{ base: 4, sm: 6 }}
+                  py={{ base: 3, sm: 4 }}
+                  size={{ base: "sm", sm: "md" }}
+                  boxShadow="lg"
+                  border="1px solid"
+                  borderColor="rgba(59, 130, 246, 0.3)"
+                  minH="48px"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
                 >
-                  <ArrowLeft className="w-4 h-4" />
-                  <span className="hidden sm:inline">宇宙ステーション</span>
-                  <span className="sm:hidden">戻る</span>
-                </Link>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </motion.header>
+                  <ArrowLeft size="1rem" />
+                  <Text display={{ base: "none", sm: "inline" }}>宇宙ステーション</Text>
+                  <Text display={{ base: "inline", sm: "none" }}>戻る</Text>
+                </MotionButton>
+              </Link>
+            </HStack>
+          </Flex>
+        </Container>
+      </MotionBox>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <Container maxW="7xl" px={{ base: 4, sm: 6, lg: 8 }} py={8} position="relative" zIndex={10}>
         <AnimatePresence>
           {error && (
-            <motion.div 
+            <MotionBox
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              className="bg-red-900/30 backdrop-blur border border-red-400/50 text-red-300 px-3 py-2 sm:px-4 sm:py-3 rounded-lg mb-4 sm:mb-6 text-sm sm:text-base shadow-lg"
+              bg="rgba(127, 29, 29, 0.3)"
+              backdropFilter="blur(10px)"
+              border="1px solid rgba(248, 113, 113, 0.5)"
+              color="rgba(252, 165, 165, 1)"
+              px={{ base: 3, sm: 4 }}
+              py={{ base: 2, sm: 3 }}
+              borderRadius="lg"
+              mb={{ base: 4, sm: 6 }}
+              fontSize={{ base: "sm", sm: "md" }}
+              boxShadow="lg"
             >
-              <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                <span className="flex-1">{error}</span>
-                <motion.button 
-                  onClick={() => setError(null)} 
-                  className="text-red-400 hover:text-red-200 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  ✕
-                </motion.button>
-              </div>
-            </motion.div>
+              <Flex align="center" gap={2}>
+                <AlertTriangle size="1rem" />
+                <Text flex="1">{error}</Text>
+                <CloseButton
+                  onClick={() => setError(null)}
+                  color="rgba(252, 165, 165, 1)"
+                  _hover={{ bg: "rgba(127, 29, 29, 0.5)" }}
+                  size="sm"
+                />
+              </Flex>
+            </MotionBox>
           )}
         </AnimatePresence>
 
@@ -1333,7 +1390,7 @@ export default function AdminPage() {
             )}
           </motion.div>
         )}
-      </main>
-    </div>
+      </Container>
+    </Box>
   );
 }
