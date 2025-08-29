@@ -414,12 +414,11 @@ export default function Home() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <Container maxW="6xl" p={{ base: 2, sm: 4 }} w="100%">
+        <Box px={{ base: 2, sm: 4 }} w="100%">
           <Flex justify="flex-start" align="center" position="relative" w="100%">
             <MotionFlex
               align="center"
               gap={4}
-              flex="1"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -460,6 +459,8 @@ export default function Home() {
                   display="flex"
                   alignItems="center"
                   gap={2}
+                  textAlign="left"
+                  justifyContent="flex-start"
                 >
                   <Stars />
                   Space Cat Station
@@ -493,7 +494,7 @@ export default function Home() {
               </Link>
             </Box>
           </Flex>
-        </Container>
+        </Box>
       </MotionFlex>
 
       <Container maxW="7xl" py={8} zIndex={10} position="relative">
