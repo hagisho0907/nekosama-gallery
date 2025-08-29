@@ -982,163 +982,229 @@ export default function AdminPage() {
             }}
           >
             {filteredFolders.length === 0 ? (
-              <motion.div 
-                className="text-center py-8"
+              <MotionVStack 
+                spacing={4}
+                py={8}
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: { opacity: 1, y: 0 }
                 }}
               >
-                <motion.div 
-                  className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl"
+                <MotionBox
+                  w={16}
+                  h={16}
+                  bgGradient="linear(to-br, blue.500, purple.500)"
+                  borderRadius="2xl"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="xl"
                   animate={{ 
                     scale: [1, 1.02, 1]
                   }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 >
                   {activeTab === 'enrolled' ? (
-                    <Stars className="w-8 h-8 text-white" />
+                    <Stars size="2rem" color="white" />
                   ) : (
-                    <Sparkles className="w-8 h-8 text-white" />
+                    <Sparkles size="2rem" color="white" />
                   )}
-                </motion.div>
-                <p className="text-blue-300">
+                </MotionBox>
+                <Text color="blue.300">
                   {activeTab === 'enrolled' ? '在籍生の宇宙領域がありません' : '卒業生の宇宙領域がありません'}
-                </p>
-              </motion.div>
+                </Text>
+              </MotionVStack>
             ) : (
               filteredFolders.map((folder) => (
-                <motion.div 
-                  key={folder.id} 
+                <MotionCard
+                  key={folder.id}
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
                   }}
                   whileHover={{ y: -1 }}
+                  role="listitem"
+                  tabIndex={0}
+                  bg="rgba(71, 85, 105, 0.5)"
+                  backdropFilter="blur(12px)"
+                  borderRadius="xl"
+                  p={{ base: 3, sm: 4 }}
+                  transition="all 0.2s"
+                  boxShadow="lg"
+                  border="1px solid"
+                  borderColor={
+                    draggedFolder === folder.id
+                      ? "transparent"
+                      : isDragOver === folder.id
+                      ? activeTab === 'enrolled'
+                        ? "green.400"
+                        : "yellow.400"
+                      : activeTab === 'enrolled'
+                      ? "green.500"
+                      : "yellow.500"
+                  }
+                  borderLeftWidth={4}
+                  borderLeftColor={activeTab === 'enrolled' ? "green.400" : "yellow.400"}
+                  opacity={draggedFolder === folder.id ? 0.5 : 1}
+                  transform={draggedFolder === folder.id ? "scale(0.95)" : "none"}
+                  _hover={{
+                    borderColor: activeTab === 'enrolled' ? "green.400" : "yellow.400",
+                    bg: "rgba(71, 85, 105, 0.7)"
+                  }}
+                  draggable={editingFolder !== folder.id}
+                  onDragStart={(e) => handleDragStart(e, folder.id)}
+                  onDragOver={(e) => handleDragOver(e, folder.id)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, folder.id)}
                 >
-                  <div
-                    role="listitem"
-                    tabIndex={0}
-                    className={`bg-slate-700/50 backdrop-blur-md border rounded-xl p-3 sm:p-4 transition-all duration-200 shadow-lg ${
-                      draggedFolder === folder.id 
-                        ? 'opacity-50 scale-95' 
-                        : isDragOver === folder.id 
-                          ? activeTab === 'enrolled' 
-                            ? 'border-green-400 bg-green-900/30 shadow-green-400/20' 
-                            : 'border-yellow-400 bg-yellow-900/30 shadow-yellow-400/20'
-                          : activeTab === 'enrolled'
-                            ? 'border-green-500/30 hover:border-green-400 hover:bg-slate-600/50'
-                            : 'border-yellow-500/30 hover:border-yellow-400 hover:bg-slate-600/50'
-                    } ${
-                      activeTab === 'enrolled' 
-                        ? 'border-l-4 border-l-green-400' 
-                        : 'border-l-4 border-l-yellow-400'
-                    }`}
-                    draggable={editingFolder !== folder.id}
-                    onDragStart={(e) => handleDragStart(e, folder.id)}
-                    onDragOver={(e) => handleDragOver(e, folder.id)}
-                    onDragLeave={handleDragLeave}
-                    onDrop={(e) => handleDrop(e, folder.id)}
-                  >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                    <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                  <CardBody p={0}>
+                    <Flex 
+                      direction={{ base: "column", sm: "row" }} 
+                      align={{ sm: "center" }} 
+                      justify={{ sm: "space-between" }} 
+                      gap={3}
+                    >
+                      <Flex align="center" gap={{ base: 2, sm: 4 }} minW={0} flex={1}>
                       {editingFolder === folder.id ? (
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full">
-                          <input
-                            type="text"
-                            value={editingName}
-                            onChange={(e) => setEditingName(e.target.value)}
-                            className="flex-1 px-3 py-2 bg-slate-600/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200 text-sm sm:text-base"
-                            onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
-                            aria-label="フォルダ名を編集"
-                            disabled={submitting}
-                            autoFocus
-                          />
-                          <div className="flex gap-2">
-                            <motion.button
-                              onClick={handleSaveEdit}
-                              disabled={submitting || !editingName.trim()}
-                              className={`flex-1 sm:flex-none px-3 py-2 rounded-lg text-xs sm:text-sm transition-all duration-200 ${
-                                submitting || !editingName.trim()
-                                  ? 'bg-slate-600 cursor-not-allowed text-slate-400'
-                                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white shadow-lg'
-                              }`}
-                              whileHover={submitting || !editingName.trim() ? {} : { scale: 1.05 }}
-                              whileTap={submitting || !editingName.trim() ? {} : { scale: 0.95 }}
-                            >
-                              <span className="flex items-center gap-1">
-                                {submitting ? (
-                                  <>
-                                    <div className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
-                                    保存中...
-                                  </>
-                                ) : (
-                                  <>
-                                    <CheckCircle className="w-3 h-3" />
-                                    保存
-                                  </>
-                                )}
-                              </span>
-                            </motion.button>
-                            <motion.button
-                              onClick={() => {
-                                setEditingFolder(null);
-                                setEditingName('');
+                        <VStack spacing={2} align="stretch" w="full">
+                          <Flex direction={{ base: "column", sm: "row" }} gap={2} w="full">
+                            <Input
+                              value={editingName}
+                              onChange={(e) => setEditingName(e.target.value)}
+                              bg="rgba(71, 85, 105, 0.5)"
+                              border="1px solid"
+                              borderColor="blue.500"
+                              borderRadius="lg"
+                              color="white"
+                              _placeholder={{ color: "blue.300" }}
+                              _focus={{
+                                borderColor: "blue.400",
+                                boxShadow: "0 0 0 1px rgba(59, 130, 246, 0.5)"
                               }}
-                              disabled={submitting}
-                              className="flex-1 sm:flex-none bg-slate-600/80 hover:bg-slate-500 disabled:bg-slate-700 text-white px-3 py-2 rounded-lg text-xs sm:text-sm transition-all duration-200 shadow-lg border border-slate-500/50"
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              キャンセル
-                            </motion.button>
-                          </div>
-                        </div>
+                              onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
+                              aria-label="フォルダ名を編集"
+                              isDisabled={submitting}
+                              autoFocus
+                              flex={1}
+                              size={{ base: "sm", sm: "md" }}
+                            />
+                            <HStack spacing={2}>
+                              <MotionButton
+                                onClick={handleSaveEdit}
+                                isDisabled={submitting || !editingName.trim()}
+                                bgGradient={submitting || !editingName.trim() 
+                                  ? "none"
+                                  : "linear(to-r, green.600, green.500)"
+                                }
+                                bg={submitting || !editingName.trim() ? "gray.600" : undefined}
+                                color="white"
+                                _hover={submitting || !editingName.trim() ? {} : {
+                                  bgGradient: "linear(to-r, green.500, green.400)"
+                                }}
+                                px={3}
+                                py={2}
+                                borderRadius="lg"
+                                size={{ base: "xs", sm: "sm" }}
+                                boxShadow="lg"
+                                whileHover={submitting || !editingName.trim() ? {} : { scale: 1.05 }}
+                                whileTap={submitting || !editingName.trim() ? {} : { scale: 0.95 }}
+                                leftIcon={submitting ? <Spinner size="xs" /> : <CheckCircle size="0.75rem" />}
+                              >
+                                {submitting ? "保存中..." : "保存"}
+                              </MotionButton>
+                              <MotionButton
+                                onClick={() => {
+                                  setEditingFolder(null);
+                                  setEditingName('');
+                                }}
+                                isDisabled={submitting}
+                                bg="gray.600"
+                                _hover={{ bg: "gray.500" }}
+                                _disabled={{ bg: "gray.700" }}
+                                color="white"
+                                px={3}
+                                py={2}
+                                borderRadius="lg"
+                                size={{ base: "xs", sm: "sm" }}
+                                boxShadow="lg"
+                                border="1px solid"
+                                borderColor="gray.500"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                キャンセル
+                              </MotionButton>
+                            </HStack>
+                          </Flex>
+                        </VStack>
                       ) : (
-                        <>
-                          <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <GripVertical className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400/70 cursor-grab active:cursor-grabbing flex-shrink-0" />
-                            <h3 className="text-lg sm:text-xl font-semibold text-white truncate">{folder.name}</h3>
-                            <span className="text-xs sm:text-sm text-blue-300/70 whitespace-nowrap flex items-center gap-1">
-                              <Camera className="w-3 h-3" />
-                              {folder.photoCount}枚
-                            </span>
-                            {/* ステータスバッジ */}
-                            <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap border ${
-                              folder.status === 'enrolled' 
-                                ? 'bg-green-900/50 text-green-300 border-green-400/50 backdrop-blur' 
-                                : 'bg-yellow-900/50 text-yellow-300 border-yellow-400/50 backdrop-blur'
-                            }`}>
+                        <HStack spacing={2} minW={0} flex={1}>
+                          <Box color="blue.400" cursor="grab" _active={{ cursor: "grabbing" }} flexShrink={0}>
+                            <GripVertical size="1.25rem" />
+                          </Box>
+                          <Heading 
+                            size={{ base: "md", sm: "lg" }} 
+                            color="white" 
+                            noOfLines={1}
+                            flex={1}
+                          >
+                            {folder.name}
+                          </Heading>
+                          <HStack spacing={1} fontSize={{ base: "xs", sm: "sm" }} color="blue.300" flexShrink={0}>
+                            <Camera size="0.75rem" />
+                            <Text>{folder.photoCount}枚</Text>
+                          </HStack>
+                          <Badge
+                            fontSize="xs"
+                            px={2}
+                            py={1}
+                            borderRadius="full"
+                            border="1px solid"
+                            backdropFilter="blur(4px)"
+                            bg={folder.status === 'enrolled' ? "green.900" : "yellow.900"}
+                            color={folder.status === 'enrolled' ? "green.300" : "yellow.300"}
+                            borderColor={folder.status === 'enrolled' ? "green.400" : "yellow.400"}
+                            opacity={0.9}
+                          >
+                            <HStack spacing={1}>
                               {folder.status === 'enrolled' ? (
-                                <span className="flex items-center gap-1">
-                                  <Stars className="w-3 h-3" />
-                                  在籍
-                                </span>
+                                <Stars size="0.75rem" />
                               ) : (
-                                <span className="flex items-center gap-1">
-                                  <Sparkles className="w-3 h-3" />
-                                  卒業
-                                </span>
+                                <Sparkles size="0.75rem" />
                               )}
-                            </span>
-                          </div>
-                        </>
+                              <Text>{folder.status === 'enrolled' ? '在籍' : '卒業'}</Text>
+                            </HStack>
+                          </Badge>
+                        </HStack>
                       )}
-                    </div>
+                      </Flex>
                     {editingFolder !== folder.id && (
-                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 w-full sm:w-auto">
-                        {/* モバイル: 上段のボタン */}
-                        <div className="flex gap-2 sm:hidden">
-                          <motion.button
+                      <VStack spacing={2} display={{ base: "flex", sm: "none" }} w="full">
+                        <HStack spacing={2} w="full">
+                          <MotionButton
                             onClick={() => fetchPhotos(folder.id)}
-                            disabled={submitting}
-                            className="bg-purple-600/80 hover:bg-purple-600 disabled:bg-slate-600 text-white px-4 py-3 rounded-lg text-sm transition-all duration-200 flex-1 backdrop-blur border border-purple-400/30 shadow-lg min-h-[44px] flex items-center justify-center font-medium"
+                            isDisabled={submitting}
+                            bg="purple.600"
+                            _hover={{ bg: "purple.500" }}
+                            _disabled={{ bg: "gray.600" }}
+                            color="white"
+                            px={4}
+                            py={3}
+                            borderRadius="lg"
+                            size="sm"
+                            backdropFilter="blur(4px)"
+                            border="1px solid"
+                            borderColor="purple.400"
+                            boxShadow="lg"
+                            minH="44px"
+                            flex={1}
+                            fontWeight="medium"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
+                            leftIcon={<Camera size="1rem" />}
                           >
-                            <Camera className="w-4 h-4 mr-1" />
                             写真管理
-                          </motion.button>
+                          </MotionButton>
                           <motion.button
                             onClick={() => handleToggleStatus(folder.id)}
                             disabled={submitting}
