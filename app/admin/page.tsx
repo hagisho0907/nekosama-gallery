@@ -1508,7 +1508,6 @@ export default function AdminPage() {
                 backdropFilter="blur(4px)"
                 border="1px solid"
                 borderColor="blue.500"
-                borderOpacity={0.3}
                 borderRadius="lg"
                 p={4}
                 mb={6}
