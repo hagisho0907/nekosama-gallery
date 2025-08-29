@@ -1179,8 +1179,9 @@ export default function AdminPage() {
                       )}
                       </Flex>
                     {editingFolder !== folder.id && (
-                      <VStack spacing={2} display={{ base: "flex", sm: "none" }} w="full">
-                        <HStack spacing={2} w="full">
+                      <Box>
+                        <VStack spacing={2} display={{ base: "flex", sm: "none" }} w="full">
+                          <HStack spacing={2} w="full">
                           <MotionButton
                             onClick={() => fetchPhotos(folder.id)}
                             isDisabled={submitting}
@@ -1289,6 +1290,7 @@ export default function AdminPage() {
                         </HStack>
                       </VStack>
 
+                      {/* デスクトップ: 横並びのボタン */}
                       <HStack spacing={2} display={{ base: "none", sm: "flex" }}>
                         <MotionButton
                           onClick={() => fetchPhotos(folder.id)}
@@ -1385,6 +1387,7 @@ export default function AdminPage() {
                           削除
                         </MotionButton>
                       </HStack>
+                      </Box>
                     )}
                     </Flex>
                   </CardBody>
