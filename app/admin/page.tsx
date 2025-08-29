@@ -1632,14 +1632,14 @@ export default function AdminPage() {
             ) : (
               <Grid 
                 templateColumns={{ 
-                  base: "repeat(3, 1fr)", 
-                  xs: "repeat(4, 1fr)", 
-                  sm: "repeat(6, 1fr)", 
-                  md: "repeat(10, 1fr)", 
-                  lg: "repeat(14, 1fr)", 
-                  xl: "repeat(16, 1fr)" 
+                  base: "repeat(4, 1fr)", 
+                  xs: "repeat(6, 1fr)", 
+                  sm: "repeat(8, 1fr)", 
+                  md: "repeat(12, 1fr)", 
+                  lg: "repeat(16, 1fr)", 
+                  xl: "repeat(20, 1fr)" 
                 }}
-                gap={{ base: 1, sm: 1.5 }}
+                gap={{ base: 1, sm: 1 }}
               >
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
@@ -1675,7 +1675,7 @@ export default function AdminPage() {
                           borderColor: showPhotoSelection && !isSelected ? "blue.400" : undefined,
                           boxShadow: "0 8px 25px rgba(0, 0, 0, 0.6)"
                         }}
-                        minH={{ base: "60px", sm: "60px" }}
+                        minH={{ base: "40px", sm: "50px" }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
