@@ -453,7 +453,7 @@ export default function Home() {
               </MotionBox>
               <VStack align="start" gap={0}>
                 <Heading 
-                  size="xl"
+                  size={{ base: "md", sm: "lg", md: "xl" }}
                   bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
                   bgClip="text"
                   display="flex"
