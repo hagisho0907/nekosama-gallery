@@ -1674,7 +1674,8 @@ export default function AdminPage() {
                 })}
               </div>
             )}
-          </motion.div>
+            </CardBody>
+          </MotionCard>
         )}
       </Container>
     </Box>
