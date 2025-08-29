@@ -84,7 +84,7 @@ export default function Home() {
   const itemsPerPage = 10;
   const detailUploadRef = useRef<HTMLInputElement>(null);
 
-  const bgGradient = 'linear(to-br, gray.900, indigo.900, purple.900, gray.900)';
+  const bgGradient = 'linear(to-br, black, slate.900, purple.900, indigo.900, black)';
 
   const triggerFileUpload = (folderId: string) => {
     const input = document.createElement('input');
@@ -396,18 +396,44 @@ export default function Home() {
       <Box position="absolute" inset={0} overflow="hidden">
         <Box className="stars" />
         <Box className="twinkling" />
+        <style jsx>{`
+          .stars, .twinkling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+          .stars {
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.8"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.6"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.9"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.7"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.5"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.8"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.7"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.6"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.5"/></svg>') repeat;
+            animation: move-stars 200s linear infinite;
+          }
+          .twinkling {
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/><circle cx="23" cy="33" r="0.1" fill="purple" opacity="0.5"/><circle cx="77" cy="58" r="0.12" fill="pink" opacity="0.7"/></svg>') repeat;
+            animation: move-twinkling 100s linear infinite;
+          }
+          @keyframes move-stars {
+            from { transform: translateX(0); }
+            to { transform: translateX(-200px); }
+          }
+          @keyframes move-twinkling {
+            from { transform: translateX(0); }
+            to { transform: translateX(-200px); }
+          }
+        `}</style>
       </Box>
       
       {/* Header */}
       <MotionFlex
         as="header"
-        bg="rgba(17, 24, 39, 0.85)"
-        backdropFilter="blur(15px)"
+        bg="rgba(15, 23, 42, 0.9)"
+        backdropFilter="blur(20px)"
         borderBottom="1px solid"
-        borderColor="purple.400"
+        borderColor="blue.400"
         borderBottomWidth="1px"
         borderBottomStyle="solid"
-        borderBottomColor="rgba(147, 51, 234, 0.4)"
+        borderBottomColor="rgba(59, 130, 246, 0.3)"
+        boxShadow="0 8px 32px rgba(0, 0, 0, 0.4)"
         zIndex={10}
         position="relative"
         initial={{ y: -100, opacity: 0 }}
@@ -431,7 +457,8 @@ export default function Home() {
                 alignItems="center"
                 justifyContent="center"
                 border="1px solid"
-                borderColor="rgba(59, 130, 246, 0.3)"
+                borderColor="rgba(59, 130, 246, 0.5)"
+                boxShadow="0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(147, 51, 234, 0.2)"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
@@ -454,7 +481,7 @@ export default function Home() {
               <VStack align="start" gap={0}>
                 <Heading 
                   size={{ base: "md", sm: "lg", md: "xl" }}
-                  bgGradient="linear(to-r, purple.400, indigo.400, pink.400, blue.400)"
+                  bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
                   bgClip="text"
                   display="flex"
                   alignItems="center"
@@ -465,7 +492,7 @@ export default function Home() {
                   <Stars />
                   Space Cat Station
                 </Heading>
-                <Text color="purple.300" fontSize="sm" display={{ base: "none", sm: "flex" }} alignItems="center" gap={1}>
+                <Text color="blue.300" fontSize="sm" display={{ base: "none", sm: "flex" }} alignItems="center" gap={1}>
                   <Sparkles />
                   Presented by 拝啓ねこ様
                 </Text>
@@ -474,13 +501,14 @@ export default function Home() {
             <Box position="absolute" right={{ base: 2, sm: 4 }} top="50%" transform="translateY(-50%)" zIndex={20}>
               <Link href="/admin" style={{ textDecoration: 'none' }}>
                 <MotionButton
-                  bg="rgba(88, 28, 135, 0.7)"
-                  color="rgba(196, 181, 253, 1)"
-                  border="1px solid rgba(147, 51, 234, 0.5)"
+                  bg="rgba(71, 85, 105, 0.7)"
+                  color="rgba(147, 197, 253, 1)"
+                  border="1px solid rgba(71, 85, 105, 0.5)"
                   _hover={{
-                    bg: "rgba(88, 28, 135, 1)",
+                    bg: "rgba(71, 85, 105, 1)",
                     color: "white",
                   }}
+                  boxShadow="0 4px 16px rgba(0, 0, 0, 0.3)"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   display="flex"
@@ -581,7 +609,7 @@ export default function Home() {
               <VStack spacing={4} textAlign="center">
               <Heading
                 size={{ base: "lg", sm: "xl", md: "2xl" }}
-                bgGradient="linear(to-r, purple.400, indigo.400, pink.400, blue.400)"
+                bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
                 bgClip="text"
                 display="flex"
                 alignItems="center"
@@ -591,7 +619,7 @@ export default function Home() {
                 <FolderOpen />
                 拝啓ねこ様フォトギャラリー
               </Heading>
-              <Text color="purple.300" fontSize={{ base: "sm", sm: "md", md: "lg" }} display="flex" alignItems="center" gap={2} flexWrap="wrap">
+              <Text color="blue.300" fontSize={{ base: "sm", sm: "md", md: "lg" }} display="flex" alignItems="center" gap={2} flexWrap="wrap">
                 阿佐ヶ谷の誇る名所、拝啓ねこ様のねこちゃん達の活き活きした姿をご覧あれ！
               </Text>
               </VStack>
@@ -608,9 +636,10 @@ export default function Home() {
                 <HStack spacing={4} justify="center">
                   <MotionButton
                     onClick={() => setActiveTab('enrolled')}
-                    bg={activeTab === 'enrolled' ? 'rgba(147, 51, 234, 1)' : 'transparent'}
-                    color={activeTab === 'enrolled' ? 'white' : 'rgba(196, 181, 253, 1)'}
-                    border="2px solid rgba(147, 51, 234, 1)"
+                    bg={activeTab === 'enrolled' ? 'rgba(34, 197, 94, 1)' : 'transparent'}
+                    color={activeTab === 'enrolled' ? 'white' : 'rgba(134, 239, 172, 1)'}
+                    border="2px solid rgba(34, 197, 94, 1)"
+                    boxShadow={activeTab === 'enrolled' ? '0 0 20px rgba(34, 197, 94, 0.4)' : 'none'}
                     whileHover={{ y: -2, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     size="lg"
@@ -623,9 +652,10 @@ export default function Home() {
                   </MotionButton>
                   <MotionButton
                     onClick={() => setActiveTab('graduated')}
-                    bg={activeTab === 'graduated' ? 'rgba(59, 130, 246, 1)' : 'transparent'}
-                    color={activeTab === 'graduated' ? 'white' : 'rgba(147, 197, 253, 1)'}
-                    border="2px solid rgba(59, 130, 246, 1)"
+                    bg={activeTab === 'graduated' ? 'rgba(234, 179, 8, 1)' : 'transparent'}
+                    color={activeTab === 'graduated' ? 'white' : 'rgba(253, 224, 71, 1)'}
+                    border="2px solid rgba(234, 179, 8, 1)"
+                    boxShadow={activeTab === 'graduated' ? '0 0 20px rgba(234, 179, 8, 0.4)' : 'none'}
                     whileHover={{ y: -2, scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     size="lg"
@@ -647,7 +677,7 @@ export default function Home() {
                   mb={4}
                 >
                   <Text 
-                    color="purple.300" 
+                    color="blue.300" 
                     fontSize={{ base: "md", sm: "lg" }}
                     fontWeight="medium"
                     display="flex"
@@ -712,13 +742,13 @@ export default function Home() {
       {/* Footer */}
       <MotionFlex
         as="footer"
-        bg="rgba(17, 24, 39, 0.9)"
-        backdropFilter="blur(10px)"
+        bg="rgba(15, 23, 42, 0.8)"
+        backdropFilter="blur(15px)"
         borderTop="1px solid"
-        borderColor="purple.400"
+        borderColor="blue.400"
         borderTopWidth="1px"
         borderTopStyle="solid"
-        borderTopColor="rgba(147, 51, 234, 0.4)"
+        borderTopColor="rgba(59, 130, 246, 0.3)"
         mt={4}
         zIndex={10}
         position="relative"
@@ -1103,7 +1133,7 @@ function FolderDetailView({
         <VStack spacing={4} textAlign="center">
         <Heading
           size="2xl"
-          bgGradient="linear(to-r, purple.400, indigo.400, pink.400, blue.400)"
+          bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
           bgClip="text"
         >
           {selectedFolderData.status === 'graduated' 
@@ -1111,7 +1141,7 @@ function FolderDetailView({
             : `${selectedFolderData.name}の宇宙航海`
           }
         </Heading>
-        <Text color="purple.300" fontSize="md" display="flex" alignItems="center" gap={2}>
+        <Text color="blue.300" fontSize="md" display="flex" alignItems="center" gap={2}>
           <Sparkles />
           {selectedFolderData.photos.length}枚の写真
         </Text>
