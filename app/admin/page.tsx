@@ -1632,14 +1632,14 @@ export default function AdminPage() {
             ) : (
               <Grid 
                 templateColumns={{ 
-                  base: "repeat(4, 1fr)", 
-                  xs: "repeat(6, 1fr)", 
-                  sm: "repeat(8, 1fr)", 
-                  md: "repeat(12, 1fr)", 
-                  lg: "repeat(16, 1fr)", 
-                  xl: "repeat(20, 1fr)" 
+                  base: "repeat(6, 1fr)", 
+                  xs: "repeat(8, 1fr)", 
+                  sm: "repeat(12, 1fr)", 
+                  md: "repeat(18, 1fr)", 
+                  lg: "repeat(24, 1fr)", 
+                  xl: "repeat(30, 1fr)" 
                 }}
-                gap={{ base: 1, sm: 1 }}
+                gap={{ base: 0.5, sm: 0.5 }}
               >
                 {photos.map(photo => {
                   const isSelected = selectedPhotos.includes(photo.id);
@@ -1675,7 +1675,7 @@ export default function AdminPage() {
                           borderColor: showPhotoSelection && !isSelected ? "blue.400" : undefined,
                           boxShadow: "0 8px 25px rgba(0, 0, 0, 0.6)"
                         }}
-                        minH={{ base: "40px", sm: "50px" }}
+                        minH={{ base: "25px", sm: "30px" }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.3 }}
@@ -1713,12 +1713,12 @@ export default function AdminPage() {
                         </MotionBox>
                         
                         {showPhotoSelection && (
-                          <Box position="absolute" top={3} left={3}>
+                          <Box position="absolute" top={1} left={1}>
                             <MotionBox
-                              w={{ base: 7, sm: 8 }}
-                              h={{ base: 7, sm: 8 }}
-                              minW={{ base: "28px", sm: "32px" }}
-                              minH={{ base: "28px", sm: "32px" }}
+                              w={{ base: 4, sm: 5 }}
+                              h={{ base: 4, sm: 5 }}
+                              minW={{ base: "16px", sm: "20px" }}
+                              minH={{ base: "16px", sm: "20px" }}
                               borderRadius="md"
                               display="flex"
                               alignItems="center"
@@ -1734,22 +1734,22 @@ export default function AdminPage() {
                               transition={{ duration: 0.15 }}
                             >
                               {isSelected ? (
-                                <CheckSquare size="1rem" />
+                                <CheckSquare size="0.75rem" />
                               ) : (
-                                <Square size="1rem" />
+                                <Square size="0.75rem" />
                               )}
                             </MotionBox>
                           </Box>
                         )}
                         {!showPhotoSelection && (
-                          <Box position="absolute" top={3} left={3}>
+                          <Box position="absolute" top={1} left={1}>
                             <MotionButton
-                              size="sm"
+                              size="xs"
                               variant="ghost"
-                              w={{ base: 7, sm: 8 }}
-                              h={{ base: 7, sm: 8 }}
-                              minW={{ base: "28px", sm: "32px" }}
-                              minH={{ base: "28px", sm: "32px" }}
+                              w={{ base: 4, sm: 5 }}
+                              h={{ base: 4, sm: 5 }}
+                              minW={{ base: "16px", sm: "20px" }}
+                              minH={{ base: "16px", sm: "20px" }}
                               borderRadius="full"
                               border="2px solid"
                               borderColor={photo.isFeatured ? "yellow.300" : "whiteAlpha.600"}
@@ -1770,7 +1770,7 @@ export default function AdminPage() {
                                 borderColor: "yellow.300"
                               }}
                             >
-                              <Star size="0.875rem" fill={photo.isFeatured ? "currentColor" : "none"} />
+                              <Star size="0.625rem" fill={photo.isFeatured ? "currentColor" : "none"} />
                             </MotionButton>
                           </Box>
                         )}
@@ -1779,8 +1779,8 @@ export default function AdminPage() {
                       {!showPhotoSelection && (
                         <Box 
                           position="absolute" 
-                          top={{ base: 1, sm: 2 }} 
-                          right={{ base: 1, sm: 2 }}
+                          top={0.5} 
+                          right={0.5}
                           opacity={{ base: 0.9, sm: 0.7 }}
                           _hover={{ opacity: 1 }}
                           sx={{
@@ -1791,12 +1791,12 @@ export default function AdminPage() {
                           transition="opacity 0.2s"
                         >
                           <MotionButton
-                            size="sm"
+                            size="xs"
                             variant="ghost"
-                            w={{ base: 8, sm: 9 }}
-                            h={{ base: 8, sm: 9 }}
-                            minW={{ base: "32px", sm: "36px" }}
-                            minH={{ base: "32px", sm: "36px" }}
+                            w={{ base: 5, sm: 6 }}
+                            h={{ base: 5, sm: 6 }}
+                            minW={{ base: "20px", sm: "24px" }}
+                            minH={{ base: "20px", sm: "24px" }}
                             borderRadius="full"
                             bg="red.600"
                             color="white"
@@ -1812,7 +1812,7 @@ export default function AdminPage() {
                             _hover={{ bg: "red.500" }}
                             _disabled={{ bg: "gray.600", borderColor: "gray.500" }}
                           >
-                            <Trash2 size="0.875rem" />
+                            <Trash2 size="0.625rem" />
                           </MotionButton>
                         </Box>
                       )}
