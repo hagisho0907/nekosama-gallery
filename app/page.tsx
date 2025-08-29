@@ -405,11 +405,11 @@ export default function Home() {
             bottom: 0;
           }
           .stars {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.8"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.6"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.9"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.7"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.5"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.8"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.7"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.6"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.5"/></svg>') repeat;
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.8"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.6"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.9"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.7"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.5"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.8"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.7"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.6"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.5"/><circle cx="62" cy="18" r="0.3" fill="white" opacity="0.6"/><circle cx="33" cy="72" r="0.25" fill="white" opacity="0.7"/><circle cx="78" cy="55" r="0.2" fill="white" opacity="0.5"/><circle cx="12" cy="42" r="0.35" fill="white" opacity="0.8"/><circle cx="88" cy="15" r="0.15" fill="white" opacity="0.4"/><circle cx="52" cy="38" r="0.3" fill="white" opacity="0.6"/><circle cx="22" cy="92" r="0.2" fill="white" opacity="0.5"/><circle cx="95" cy="68" r="0.25" fill="white" opacity="0.7"/><circle cx="5" cy="25" r="0.4" fill="white" opacity="0.8"/><circle cx="68" cy="82" r="0.2" fill="white" opacity="0.6"/></svg>') repeat;
             animation: move-stars 200s linear infinite;
           }
           .twinkling {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/><circle cx="23" cy="33" r="0.1" fill="purple" opacity="0.5"/><circle cx="77" cy="58" r="0.12" fill="pink" opacity="0.7"/></svg>') repeat;
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/><circle cx="23" cy="33" r="0.1" fill="purple" opacity="0.5"/><circle cx="77" cy="58" r="0.12" fill="pink" opacity="0.7"/><circle cx="45" cy="8" r="0.12" fill="blue" opacity="0.6"/><circle cx="15" cy="85" r="0.15" fill="cyan" opacity="0.8"/><circle cx="92" cy="28" r="0.1" fill="yellow" opacity="0.5"/><circle cx="58" cy="78" r="0.13" fill="pink" opacity="0.7"/><circle cx="8" cy="45" r="0.1" fill="white" opacity="0.6"/><circle cx="75" cy="25" r="0.12" fill="purple" opacity="0.5"/><circle cx="35" cy="92" r="0.1" fill="cyan" opacity="0.7"/><circle cx="82" cy="52" r="0.15" fill="yellow" opacity="0.6"/></svg>') repeat;
             animation: move-twinkling 100s linear infinite;
           }
           @keyframes move-stars {
@@ -756,14 +756,13 @@ export default function Home() {
       {/* Footer */}
       <MotionFlex
         as="footer"
-        bgGradient="linear(to-b, rgba(33, 27, 65, 0.95), rgba(90, 23, 139, 0.95))"
-        backdropFilter="blur(15px)"
+        bg="rgba(15, 23, 42, 0.9)"
+        backdropFilter="blur(20px)"
         borderTop="1px solid"
-        borderColor="purple.400"
+        borderColor="blue.400"
         borderTopWidth="1px"
         borderTopStyle="solid"
-        borderTopColor="rgba(147, 51, 234, 0.4)"
-        mt={4}
+        borderTopColor="rgba(59, 130, 246, 0.3)"
         zIndex={10}
         position="relative"
         initial={{ opacity: 0, y: 50 }}
