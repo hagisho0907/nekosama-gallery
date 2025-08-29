@@ -980,6 +980,8 @@ export default function AdminPage() {
                 }
               }
             }}
+            w="full"
+            align="stretch"
           >
             {filteredFolders.length === 0 ? (
               <MotionVStack 
@@ -1030,6 +1032,8 @@ export default function AdminPage() {
                   borderRadius="xl"
                   p={{ base: 3, sm: 4 }}
                   minH={{ base: "120px", sm: "100px" }}
+                  w="full"
+                  maxW={{ base: "100%", sm: "1200px" }}
                   boxShadow="lg"
                   border="1px solid"
                   borderColor={
