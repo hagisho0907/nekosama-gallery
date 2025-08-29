@@ -3,8 +3,28 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Rocket, Shield, ArrowLeft, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import {
+  Box,
+  Container,
+  VStack,
+  Heading,
+  Text,
+  Input,
+  Button,
+  Flex,
+  IconButton,
+  InputGroup,
+  InputRightElement,
+  FormControl,
+  FormLabel,
+  Link,
+} from '@chakra-ui/react';
+import { Rocket, Shield, ArrowLeft, AlertTriangle, Eye, EyeOff } from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
+
+const MotionBox = motion(Box);
+const MotionVStack = motion(VStack);
+const MotionButton = motion(Button);
 
 export default function AdminLogin() {
   const [password, setPassword] = useState('');
@@ -55,162 +75,210 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative flex items-center justify-center">
+    <Box
+      minH="100vh"
+      bgGradient="linear(to-br, slate.900, purple.900, slate.900)"
+      position="relative"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
       {/* Space stars background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="stars"></div>
-        <div className="twinkling"></div>
-      </div>
-      <style jsx>{`
-        .stars, .twinkling {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-        }
-        .stars {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="0.5" fill="white" opacity="0.8"/><circle cx="30" cy="25" r="0.3" fill="white" opacity="0.6"/><circle cx="60" cy="15" r="0.4" fill="white" opacity="0.7"/><circle cx="80" cy="40" r="0.2" fill="white" opacity="0.5"/><circle cx="20" cy="60" r="0.3" fill="white" opacity="0.6"/><circle cx="70" cy="70" r="0.5" fill="white" opacity="0.8"/><circle cx="90" cy="80" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
-          animation: move-stars 200s linear infinite;
-        }
-        .twinkling {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="25" cy="35" r="0.2" fill="cyan" opacity="0.9"/><circle cx="75" cy="55" r="0.1" fill="yellow" opacity="0.8"/><circle cx="15" cy="80" r="0.15" fill="white" opacity="0.7"/></svg>') repeat;
-          animation: move-twinkling 100s linear infinite;
-        }
-        @keyframes move-stars {
-          from { transform: translateX(0); }
-          to { transform: translateX(-100px); }
-        }
-        @keyframes move-twinkling {
-          from { transform: translateX(0); }
-          to { transform: translateX(-200px); }
-        }
-      `}</style>
+      <Box position="absolute" inset={0} overflow="hidden">
+        <Box className="stars" />
+        <Box className="twinkling" />
+      </Box>
 
-      <motion.div 
-        className="bg-slate-800/60 backdrop-blur-md rounded-xl shadow-2xl p-8 w-full max-w-md relative z-10 border border-blue-500/30"
-        initial={{ opacity: 0, y: 50, scale: 0.9 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <motion.div 
-          className="text-center mb-8"
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
+      <Container maxW="md" p={4} position="relative" zIndex={10}>
+        <MotionBox
+          bg="rgba(30, 41, 59, 0.6)"
+          backdropFilter="blur(12px)"
+          borderRadius="xl"
+          boxShadow="2xl"
+          p={8}
+          w="full"
+          border="1px solid"
+          borderColor="rgba(59, 130, 246, 0.3)"
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <motion.div 
-            className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg border border-blue-400/30"
-            whileHover={{ rotate: 360, scale: 1.1 }}
-            transition={{ duration: 0.6 }}
+          <MotionVStack
+            spacing={8}
+            textAlign="center"
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
           >
-            <Shield className="w-8 h-8 text-white" />
-          </motion.div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent mb-2">
-            宇宙船管理センター
-          </h1>
-          <p className="text-blue-300 text-sm">
-            管理者認証が必要です
-          </p>
-        </motion.div>
-
-        {error && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            className="bg-red-900/30 backdrop-blur border border-red-400/50 text-red-300 px-4 py-3 rounded-lg mb-6 text-sm shadow-lg"
-          >
-            <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
-            </div>
-          </motion.div>
-        )}
-
-        <motion.form 
-          onSubmit={handleLogin} 
-          className="space-y-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-blue-300 mb-2">
-              アクセスコード
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="セキュリティコードを入力..."
-                className="w-full px-4 py-3 pr-12 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white/70 placeholder-blue-300/50 backdrop-blur transition-all duration-200"
-                disabled={loading}
-                required
-              />
-              <motion.button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-300/70 hover:text-blue-300 transition-colors duration-200 p-1"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                disabled={loading}
+            {/* Header */}
+            <VStack spacing={4}>
+              <MotionBox
+                w={16}
+                h={16}
+                bgGradient="linear(to-br, blue.600, purple.600)"
+                borderRadius="xl"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="lg"
+                border="1px solid"
+                borderColor="rgba(59, 130, 246, 0.3)"
+                whileHover={{ rotate: 360, scale: 1.1 }}
+                transition={{ duration: 0.6 }}
               >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
-                ) : (
-                  <Eye className="w-5 h-5" />
-                )}
-              </motion.button>
-            </div>
-          </div>
+                <Shield size="2rem" color="white" />
+              </MotionBox>
+              <VStack spacing={2}>
+                <Heading
+                  size="xl"
+                  bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
+                  bgClip="text"
+                  color="transparent"
+                >
+                  宇宙船管理センター
+                </Heading>
+                <Text color="blue.300" fontSize="sm">
+                  管理者認証が必要です
+                </Text>
+              </VStack>
+            </VStack>
 
-          <motion.button
-            type="submit"
-            disabled={loading || !password.trim()}
-            className={`
-              w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 shadow-lg
-              ${loading || !password.trim()
-                ? 'bg-slate-600 cursor-not-allowed text-slate-400'
-                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white'
-              }
-            `}
-            whileHover={loading || !password.trim() ? {} : { scale: 1.02 }}
-            whileTap={loading || !password.trim() ? {} : { scale: 0.98 }}
-          >
-            <span className="flex items-center justify-center gap-2">
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" />
-                  認証中...
-                </>
-              ) : (
-                <>
-                  <Rocket className="w-4 h-4" />
-                  管理センターにアクセス
-                </>
-              )}
-            </span>
-          </motion.button>
-        </motion.form>
+            {/* Error Alert */}
+            {error && (
+              <MotionBox
+                w="full"
+                bg="rgba(127, 29, 29, 0.3)"
+                backdropFilter="blur(10px)"
+                border="1px solid rgba(248, 113, 113, 0.5)"
+                color="rgba(252, 165, 165, 1)"
+                borderRadius="lg"
+                p={4}
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+              >
+                <Flex align="center" gap={2}>
+                  <AlertTriangle size="1rem" />
+                  <Text fontSize="sm">{error}</Text>
+                </Flex>
+              </MotionBox>
+            )}
 
-        <motion.div 
-          className="mt-6 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.6 }}
-        >
-          <motion.a 
-            href="/"
-            className="text-blue-400 hover:text-blue-300 text-sm flex items-center justify-center gap-2 transition-colors duration-200"
-            whileHover={{ x: -5 }}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            宇宙船に戻る
-          </motion.a>
-        </motion.div>
-      </motion.div>
-    </div>
+            {/* Form */}
+            <MotionBox
+              as="form"
+              onSubmit={handleLogin}
+              w="full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+            >
+              <VStack spacing={6}>
+                <FormControl>
+                  <FormLabel color="blue.300" fontSize="sm" fontWeight="medium">
+                    アクセスコード
+                  </FormLabel>
+                  <InputGroup>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="セキュリティコードを入力..."
+                      bg="rgba(71, 85, 105, 0.5)"
+                      border="1px solid"
+                      borderColor="rgba(59, 130, 246, 0.3)"
+                      color="rgba(255, 255, 255, 0.9)"
+                      _placeholder={{ color: "rgba(147, 197, 253, 0.5)" }}
+                      _focus={{
+                        borderColor: "blue.400",
+                        boxShadow: "0 0 0 1px rgba(59, 130, 246, 0.5)"
+                      }}
+                      isDisabled={loading}
+                      required
+                      size="lg"
+                    />
+                    <InputRightElement h="full">
+                      <IconButton
+                        aria-label={showPassword ? "パスワードを隠す" : "パスワードを表示"}
+                        icon={showPassword ? <EyeOff size="1.25rem" /> : <Eye size="1.25rem" />}
+                        onClick={() => setShowPassword(!showPassword)}
+                        size="sm"
+                        variant="ghost"
+                        color="rgba(147, 197, 253, 0.7)"
+                        _hover={{ color: "blue.300" }}
+                        isDisabled={loading}
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
+
+                <MotionButton
+                  type="submit"
+                  w="full"
+                  size="lg"
+                  bg={loading || !password.trim() ? "rgba(71, 85, 105, 1)" : "linear-gradient(to right, #2563eb, #7c3aed)"}
+                  color={loading || !password.trim() ? "rgba(148, 163, 184, 1)" : "white"}
+                  isDisabled={loading || !password.trim()}
+                  whileHover={loading || !password.trim() ? {} : { scale: 1.02 }}
+                  whileTap={loading || !password.trim() ? {} : { scale: 0.98 }}
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
+                >
+                  {loading ? (
+                    <>
+                      <Box
+                        w={4}
+                        h={4}
+                        border="2px solid"
+                        borderColor="blue.300"
+                        borderTopColor="transparent"
+                        borderRadius="full"
+                        css={{
+                          animation: 'spin 1s linear infinite',
+                          '@keyframes spin': {
+                            '0%': { transform: 'rotate(0deg)' },
+                            '100%': { transform: 'rotate(360deg)' },
+                          },
+                        }}
+                      />
+                      認証中...
+                    </>
+                  ) : (
+                    <>
+                      <Rocket size="1rem" />
+                      管理センターにアクセス
+                    </>
+                  )}
+                </MotionButton>
+              </VStack>
+            </MotionBox>
+
+            {/* Back Link */}
+            <MotionBox
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+            >
+              <Link href="/" style={{ textDecoration: 'none' }}>
+                <MotionBox
+                  color="blue.400"
+                  _hover={{ color: "blue.300" }}
+                  fontSize="sm"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  gap={2}
+                  css={{ transition: "color 0.2s" }}
+                  whileHover={{ x: -5 }}
+                >
+                  <ArrowLeft size="1rem" />
+                  宇宙船に戻る
+                </MotionBox>
+              </Link>
+            </MotionBox>
+          </MotionVStack>
+        </MotionBox>
+      </Container>
+    </Box>
   );
 }
