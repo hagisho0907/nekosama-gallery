@@ -6,6 +6,7 @@ export interface CatFolder {
   name: string;
   createdAt: string;
   updatedAt: string;
+  isNew: boolean;
 }
 
 export interface CatPhoto {
@@ -24,13 +25,15 @@ class MemoryDatabase {
       id: '1',
       name: 'ミケ',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      isNew: false
     },
     {
       id: '2',
       name: 'しろ',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      isNew: false
     }
   ];
 
@@ -59,7 +62,8 @@ class MemoryDatabase {
       id,
       name,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      isNew: true
     };
 
     this.folders.push(folder);
@@ -132,6 +136,19 @@ class MemoryDatabase {
     if (index === -1) return false;
 
     this.photos.splice(index, 1);
+    return true;
+  }
+
+  toggleNewBadge(folderId: string, isNew: boolean): boolean {
+    const index = this.folders.findIndex(f => f.id === folderId);
+    if (index === -1) return false;
+
+    this.folders[index] = {
+      ...this.folders[index],
+      isNew,
+      updatedAt: new Date().toISOString()
+    };
+
     return true;
   }
 }

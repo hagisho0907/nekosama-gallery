@@ -32,6 +32,7 @@ type CatFolder = {
   photoCount: number;
   createdAt: string;
   updatedAt: string;
+  isNew: boolean;
 };
 
 type Photo = {
@@ -542,6 +543,40 @@ export default function AdminPage() {
     }
   };
 
+  const handleToggleNewBadge = async (folderId: string, isNew: boolean) => {
+    try {
+      setSubmitting(true);
+      setError(null);
+      
+      const response = await fetch(`/api/folders/${folderId}/new-badge`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isNew }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setFolders(prev => prev.map(f => 
+          f.id === folderId 
+            ? { ...f, isNew }
+            : f
+        ));
+        // Signal that data was updated for main page refresh
+        localStorage.setItem('nekosama_data_updated', Date.now().toString());
+      } else {
+        setError(data.error || 'Failed to update new badge');
+      }
+    } catch (err) {
+      setError('Failed to update new badge');
+      console.error('Error updating new badge:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
@@ -970,6 +1005,13 @@ export default function AdminPage() {
                               <Camera className="w-3 h-3" />
                               {folder.photoCount}枚
                             </span>
+                            {/* Newバッジ */}
+                            {folder.isNew && (
+                              <span className="text-xs px-2 py-1 rounded-full whitespace-nowrap border bg-red-600 text-white border-red-400 backdrop-blur flex items-center gap-1">
+                                <Star className="w-3 h-3 fill-current" />
+                                New
+                              </span>
+                            )}
                             {/* ステータスバッジ */}
                             <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap border ${
                               folder.status === 'enrolled' 
@@ -994,6 +1036,26 @@ export default function AdminPage() {
                     </div>
                     {editingFolder !== folder.id && (
                       <div className="flex flex-wrap gap-1 sm:gap-2">
+                        <motion.button
+                          onClick={() => handleToggleNewBadge(folder.id, !folder.isNew)}
+                          disabled={submitting}
+                          className={`disabled:bg-slate-600 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-xs sm:text-sm transition-all duration-200 flex-1 sm:flex-none backdrop-blur shadow-lg border min-h-[40px] sm:min-h-[44px] flex items-center justify-center ${
+                            folder.isNew 
+                              ? 'bg-red-600/80 hover:bg-red-600 border-red-400/30' 
+                              : 'bg-slate-600/80 hover:bg-slate-500 border-slate-500/30'
+                          }`}
+                          title={folder.isNew ? 'Newバッジを非表示' : 'Newバッジを表示'}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <span className="hidden sm:flex items-center gap-1">
+                            <Star className={`w-3 h-3 ${folder.isNew ? 'fill-current' : ''}`} />
+                            {folder.isNew ? 'New OFF' : 'New ON'}
+                          </span>
+                          <span className="sm:hidden flex items-center justify-center w-full">
+                            <Star className={`w-3 h-3 ${folder.isNew ? 'fill-current' : ''}`} />
+                          </span>
+                        </motion.button>
                         <motion.button
                           onClick={() => fetchPhotos(folder.id)}
                           disabled={submitting}

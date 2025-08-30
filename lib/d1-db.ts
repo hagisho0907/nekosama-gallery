@@ -6,6 +6,7 @@ export interface CatFolder {
   status: 'enrolled' | 'graduated';
   createdAt: string;
   updatedAt: string;
+  isNew: boolean;
 }
 
 export interface CatPhoto {
@@ -78,7 +79,8 @@ class D1DatabaseManager {
                  WHEN status IN ('enrolled', 'graduated') THEN status
                  ELSE 'enrolled'
                END as status, 
-               created_at as createdAt, updated_at as updatedAt 
+               created_at as createdAt, updated_at as updatedAt,
+               COALESCE(is_new, 0) as isNew
         FROM folders 
         ORDER BY display_order ASC, created_at DESC
       `).all();
@@ -90,7 +92,8 @@ class D1DatabaseManager {
         const result = await db.prepare(`
           SELECT id, name, display_order as displayOrder, 
                  'enrolled' as status,
-                 created_at as createdAt, updated_at as updatedAt 
+                 created_at as createdAt, updated_at as updatedAt,
+                 0 as isNew
           FROM folders 
           ORDER BY display_order ASC, created_at DESC
         `).all();
@@ -113,7 +116,8 @@ class D1DatabaseManager {
                  WHEN status IN ('enrolled', 'graduated') THEN status
                  ELSE 'enrolled'
                END as status, 
-               created_at as createdAt, updated_at as updatedAt 
+               created_at as createdAt, updated_at as updatedAt,
+               COALESCE(is_new, 0) as isNew
         FROM folders 
         WHERE id = ?
       `).bind(id).first();
@@ -125,7 +129,8 @@ class D1DatabaseManager {
         const result = await db.prepare(`
           SELECT id, name, display_order as displayOrder, 
                  'enrolled' as status,
-                 created_at as createdAt, updated_at as updatedAt 
+                 created_at as createdAt, updated_at as updatedAt,
+                 0 as isNew
           FROM folders 
           WHERE id = ?
         `).bind(id).first();
@@ -174,7 +179,8 @@ class D1DatabaseManager {
       displayOrder,
       status: 'enrolled',
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      isNew: true
     };
   }
 
@@ -459,6 +465,35 @@ class D1DatabaseManager {
         `).bind(folderId).all();
         
         return result.results as CatPhoto[];
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async toggleNewBadge(folderId: string, isNew: boolean): Promise<boolean> {
+    const db = this.ensureDatabase();
+    
+    const now = new Date().toISOString();
+    
+    try {
+      const result = await db.prepare(`
+        UPDATE folders 
+        SET is_new = ?, updated_at = ? 
+        WHERE id = ?
+      `).bind(isNew ? 1 : 0, now, folderId).run();
+
+      return result.meta.changes > 0;
+    } catch (error: any) {
+      // If is_new column doesn't exist, just update the updated_at timestamp
+      if (error.message?.includes('no column named is_new') || error.message?.includes('no such column: is_new')) {
+        const result = await db.prepare(`
+          UPDATE folders 
+          SET updated_at = ? 
+          WHERE id = ?
+        `).bind(now, folderId).run();
+        
+        return result.meta.changes > 0;
       } else {
         throw error;
       }
