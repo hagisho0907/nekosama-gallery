@@ -1334,7 +1334,7 @@ function FolderDetailView({
             </MotionBox>
           )}
 
-          <Grid templateColumns={{ base: "repeat(2, 1fr)", sm: "repeat(3, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(5, 1fr)" }} gap={{ base: 4, sm: 5, lg: 6 }}>
+          <Grid templateColumns={{ base: "1fr", sm: "repeat(3, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(5, 1fr)" }} gap={{ base: 4, sm: 5, lg: 6 }}>
             {currentPhotos.map((photo) => (
               <PhotoCard
                 key={photo.id}
