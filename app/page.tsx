@@ -40,6 +40,7 @@ type CatFolder = {
   photoCount: number;
   createdAt: string;
   updatedAt: string;
+  isNew: boolean;
 };
 
 function formatFileSize(bytes: number): string {
@@ -1167,6 +1168,20 @@ function FolderCard({
           className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/10 to-cyan-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         />
         
+        
+        {/* Newバッジ（右上に配置） */}
+        {folder.isNew && (
+          <motion.div
+            className="absolute top-2 right-2 z-10 bg-red-600 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 shadow-lg border border-red-400"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 10 }}
+            whileHover={{ scale: 1.1 }}
+          >
+            <Stars className="w-3 h-3 fill-current" />
+            <span className="font-bold">New</span>
+          </motion.div>
+        )}
         
         <motion.div 
           className="relative p-4 sm:p-5 cursor-pointer flex-1 flex flex-col" 

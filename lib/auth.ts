@@ -15,7 +15,12 @@ export function getAuthCookie(): string | null {
   return null;
 }
 
-export function isAuthenticated(): boolean {
+export function isAuthenticated(): boolean;
+export function isAuthenticated(request: NextRequest): boolean;
+export function isAuthenticated(request?: NextRequest): boolean {
+  if (request) {
+    return checkAuth(request);
+  }
   const authValue = getAuthCookie();
   return authValue === 'authenticated';
 }
