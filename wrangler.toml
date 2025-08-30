@@ -3,6 +3,9 @@ main = "src/index.js"
 compatibility_date = "2024-08-21"
 account_id = "6cd645a137d7c4b4b83226e2bbb973e3"
 
+# Cloudflare Pages configuration
+pages_build_output_dir = ".next"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "nekosama-gallery-db"
