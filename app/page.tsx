@@ -393,9 +393,9 @@ export default function Home() {
 
   return (
     <Box minH="100vh" bg={bgGradient} position="relative">
-      <Box position="absolute" inset={0} overflow="hidden" className="star-field">
-        <Box className="stars" />
-        <Box className="twinkling" />
+      <Box position="absolute" inset={0} overflow="hidden" className="star-field" zIndex={5}>
+        <Box className="stars" zIndex={6} />
+        <Box className="twinkling" zIndex={7} />
         <style jsx global>{`
           .stars {
             position: absolute;
@@ -580,7 +580,7 @@ export default function Home() {
         p={0}
         zIndex={10} 
         position="relative"
-        bgGradient="linear(to-b, rgba(33, 27, 65, 0.95), rgba(90, 23, 139, 0.95))"
+        bgGradient="linear(to-br, rgba(33, 27, 65, 0.95), rgba(90, 23, 139, 0.95))"
         minH="calc(100vh - 140px)"
       >
         <Box
