@@ -341,13 +341,11 @@ class DatabaseManager {
     this.init();
     
     if (this.useD1DB) {
-      // TODO: Implement D1 version
-      return false;
+      return await d1Database.toggleNewBadge(folderId, isNew);
     }
 
     if (this.useMemoryDB) {
-      // TODO: Implement memory DB version
-      return false;
+      return memoryDatabase.toggleNewBadge(folderId, isNew);
     }
 
     if (!this.db) throw new Error('Database not initialized');
