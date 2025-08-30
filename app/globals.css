@@ -25,25 +25,49 @@ body {
 }
 
 .stars {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.8" fill="white" opacity="1"/><circle cx="45" cy="22" r="0.6" fill="cyan" opacity="0.9"/><circle cx="75" cy="12" r="1" fill="yellow" opacity="1"/><circle cx="25" cy="45" r="0.7" fill="white" opacity="0.9"/><circle cx="85" cy="35" r="0.5" fill="pink" opacity="0.8"/><circle cx="55" cy="65" r="0.9" fill="white" opacity="1"/><circle cx="8" cy="78" r="0.6" fill="lightblue" opacity="0.8"/><circle cx="92" cy="88" r="0.7" fill="white" opacity="0.9"/><circle cx="38" cy="85" r="0.5" fill="purple" opacity="0.7"/><circle cx="62" cy="35" r="0.4" fill="white" opacity="0.8"/><circle cx="28" cy="68" r="0.3" fill="cyan" opacity="0.6"/><circle cx="78" cy="58" r="0.6" fill="yellow" opacity="0.9"/></svg>') repeat;
-  animation: move-stars 150s linear infinite;
+  background: 
+    radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
+    radial-gradient(2px 2px at 40px 70px, #00ffff, transparent),
+    radial-gradient(1px 1px at 90px 40px, #ffff00, transparent),
+    radial-gradient(1px 1px at 130px 80px, #ff69b4, transparent),
+    radial-gradient(2px 2px at 160px 30px, #ffffff, transparent),
+    radial-gradient(1px 1px at 190px 90px, #87ceeb, transparent),
+    radial-gradient(1px 1px at 220px 60px, #ffffff, transparent),
+    radial-gradient(2px 2px at 250px 40px, #00ffff, transparent),
+    radial-gradient(1px 1px at 280px 10px, #ffff00, transparent),
+    radial-gradient(2px 2px at 310px 80px, #ffffff, transparent),
+    radial-gradient(1px 1px at 50px 120px, #ff69b4, transparent),
+    radial-gradient(2px 2px at 100px 140px, #87ceeb, transparent);
+  background-repeat: repeat;
+  background-size: 350px 160px;
+  animation: move-stars 100s linear infinite;
   z-index: 100;
+  opacity: 0.9;
 }
 
 .twinkling {
-  background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.3" fill="cyan" opacity="1"/><circle cx="68" cy="42" r="0.4" fill="yellow" opacity="1"/><circle cx="12" cy="65" r="0.25" fill="white" opacity="0.9"/><circle cx="88" cy="75" r="0.3" fill="pink" opacity="0.8"/><circle cx="50" cy="50" r="0.2" fill="lightblue" opacity="0.7"/><circle cx="20" cy="30" r="0.35" fill="purple" opacity="0.9"/></svg>') repeat;
-  animation: move-twinkling 80s linear infinite;
+  background: 
+    radial-gradient(1px 1px at 50px 20px, #00ffff, transparent),
+    radial-gradient(2px 2px at 100px 60px, #ffff00, transparent),
+    radial-gradient(1px 1px at 150px 40px, #ff69b4, transparent),
+    radial-gradient(1px 1px at 200px 80px, #87ceeb, transparent),
+    radial-gradient(2px 2px at 250px 30px, #9370db, transparent),
+    radial-gradient(1px 1px at 300px 70px, #ffffff, transparent);
+  background-repeat: repeat;
+  background-size: 350px 100px;
+  animation: move-twinkling 60s linear infinite;
   z-index: 101;
+  opacity: 0.8;
 }
 
 @keyframes move-stars {
   from { transform: translateX(0); }
-  to { transform: translateX(-100px); }
+  to { transform: translateX(-350px); }
 }
 
 @keyframes move-twinkling {
   from { transform: translateX(0); }
-  to { transform: translateX(-200px); }
+  to { transform: translateX(-350px); }
 }
 
 /* Enhanced star twinkling effect */

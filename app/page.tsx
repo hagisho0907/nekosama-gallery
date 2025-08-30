@@ -396,78 +396,6 @@ export default function Home() {
       <Box position="absolute" inset={0} overflow="hidden" className="star-field" zIndex={5}>
         <Box className="stars" zIndex={6} />
         <Box className="twinkling" zIndex={7} />
-        <style jsx global>{`
-          .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-          }
-          
-          .stars:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-              radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-              radial-gradient(2px 2px at 40px 70px, white, transparent),
-              radial-gradient(1px 1px at 90px 40px, #eee, transparent),
-              radial-gradient(1px 1px at 130px 80px, white, transparent),
-              radial-gradient(2px 2px at 160px 30px, #eee, transparent),
-              radial-gradient(1px 1px at 190px 90px, white, transparent),
-              radial-gradient(1px 1px at 220px 60px, #eee, transparent),
-              radial-gradient(2px 2px at 250px 40px, white, transparent),
-              radial-gradient(1px 1px at 280px 10px, #eee, transparent),
-              radial-gradient(2px 2px at 310px 80px, white, transparent);
-            background-repeat: repeat;
-            background-size: 350px 120px;
-            animation: sparkle 3s linear infinite;
-            opacity: 0.8;
-          }
-          
-          .twinkling {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-          }
-          
-          .twinkling:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-              radial-gradient(1px 1px at 50px 20px, cyan, transparent),
-              radial-gradient(1px 1px at 100px 60px, yellow, transparent),
-              radial-gradient(1px 1px at 150px 40px, pink, transparent),
-              radial-gradient(1px 1px at 200px 80px, lightblue, transparent),
-              radial-gradient(1px 1px at 250px 30px, purple, transparent);
-            background-repeat: repeat;
-            background-size: 300px 100px;
-            animation: twinkle 2s linear infinite;
-            opacity: 0.6;
-          }
-          
-          @keyframes sparkle {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-350px); }
-          }
-          
-          @keyframes twinkle {
-            0%, 50% { opacity: 0.6; }
-            25%, 75% { opacity: 1; }
-          }
-        `}</style>
       </Box>
       
       {/* Header */}
@@ -1417,13 +1345,13 @@ function PhotoCard({
       }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <Box position="relative" aspectRatio={1} overflow="hidden">
+      <Box position="relative" aspectRatio={{ base: 1.5, sm: 1 }} overflow="hidden">
         <Image 
           src={photo.url} 
           alt={photo.originalName} 
           fill
           style={{ objectFit: 'cover' }}
-          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+          sizes="(max-width: 768px) 75vw, (max-width: 1200px) 25vw, 20vw"
           unoptimized
         />
         <MotionBox
