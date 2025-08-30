@@ -1283,10 +1283,21 @@ function FolderDetailView({
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
                       size="sm"
-                      bg={currentPage === pageNum ? "linear(to-r, blue.600, purple.600)" : "slate.600"}
-                      color="white"
+                      bg={currentPage === pageNum ? "rgba(59, 130, 246, 1)" : "rgba(71, 85, 105, 0.6)"}
+                      color={currentPage === pageNum ? "white" : "rgba(203, 213, 225, 0.8)"}
+                      border={currentPage === pageNum ? "2px solid rgba(255, 255, 255, 0.9)" : "1px solid rgba(71, 85, 105, 0.3)"}
+                      boxShadow={currentPage === pageNum ? "0 0 20px rgba(59, 130, 246, 0.5)" : "none"}
+                      _hover={{
+                        bg: currentPage === pageNum ? "rgba(37, 99, 235, 1)" : "rgba(71, 85, 105, 0.8)",
+                        color: "white",
+                        borderColor: currentPage === pageNum ? "rgba(255, 255, 255, 1)" : "rgba(148, 163, 184, 0.6)",
+                        boxShadow: currentPage === pageNum ? "0 0 25px rgba(59, 130, 246, 0.7)" : "0 2px 8px rgba(0, 0, 0, 0.2)"
+                      }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      fontWeight={currentPage === pageNum ? "bold" : "normal"}
+                      minW="40px"
+                      h="40px"
                     >
                       {pageNum}
                     </MotionButton>
