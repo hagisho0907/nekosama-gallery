@@ -24,7 +24,6 @@ export interface CatFolder {
   name: string;
   createdAt: string;
   updatedAt: string;
-  isNew: boolean;
 }
 
 export interface CatPhoto {
@@ -83,8 +82,7 @@ class DatabaseManager {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL UNIQUE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        is_new INTEGER DEFAULT 0
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
@@ -105,13 +103,6 @@ class DatabaseManager {
     // Add likes column if it doesn't exist (for existing databases)
     try {
       this.db.exec(`ALTER TABLE photos ADD COLUMN likes INTEGER DEFAULT 0`);
-    } catch (error) {
-      // Column might already exist, ignore the error
-    }
-
-    // Add is_new column if it doesn't exist (for existing databases)
-    try {
-      this.db.exec(`ALTER TABLE folders ADD COLUMN is_new INTEGER DEFAULT 0`);
     } catch (error) {
       // Column might already exist, ignore the error
     }
@@ -137,8 +128,7 @@ class DatabaseManager {
     if (!this.db) throw new Error('Database not initialized');
     
     const stmt = this.db.prepare(`
-      SELECT id, name, created_at as createdAt, updated_at as updatedAt, 
-             COALESCE(is_new, 0) as isNew
+      SELECT id, name, created_at as createdAt, updated_at as updatedAt
       FROM folders 
       ORDER BY created_at DESC
     `);
@@ -159,8 +149,7 @@ class DatabaseManager {
     if (!this.db) throw new Error('Database not initialized');
     
     const stmt = this.db.prepare(`
-      SELECT id, name, created_at as createdAt, updated_at as updatedAt,
-             COALESCE(is_new, 0) as isNew
+      SELECT id, name, created_at as createdAt, updated_at as updatedAt
       FROM folders 
       WHERE id = ?
     `);
@@ -184,17 +173,16 @@ class DatabaseManager {
     const now = new Date().toISOString();
     
     const stmt = this.db.prepare(`
-      INSERT INTO folders (id, name, created_at, updated_at, is_new) 
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO folders (id, name, created_at, updated_at) 
+      VALUES (?, ?, ?, ?)
     `);
-    stmt.run(id, name, now, now, 1); // New folders are marked as new by default
+    stmt.run(id, name, now, now);
 
     return {
       id,
       name,
       createdAt: now,
-      updatedAt: now,
-      isNew: true
+      updatedAt: now
     };
   }
 
@@ -337,28 +325,6 @@ class DatabaseManager {
     return result.changes > 0;
   }
 
-  async toggleNewBadge(folderId: string, isNew: boolean): Promise<boolean> {
-    this.init();
-    
-    if (this.useD1DB) {
-      return await d1Database.toggleNewBadge(folderId, isNew);
-    }
-
-    if (this.useMemoryDB) {
-      return memoryDatabase.toggleNewBadge(folderId, isNew);
-    }
-
-    if (!this.db) throw new Error('Database not initialized');
-    
-    const now = new Date().toISOString();
-    const stmt = this.db.prepare(`
-      UPDATE folders 
-      SET is_new = ?, updated_at = ? 
-      WHERE id = ?
-    `);
-    const result = stmt.run(isNew ? 1 : 0, now, folderId);
-    return result.changes > 0;
-  }
 }
 
 export const database = new DatabaseManager();
