@@ -98,7 +98,7 @@ export default function Home() {
         console.error('Failed to parse liked photos from localStorage:', error);
       }
     }
-    fetchFolders();
+    fetchFolders(true); // Show loading delay on initial load
   }, []);
 
   // いいね状態をローカルストレージに保存
@@ -146,9 +146,15 @@ export default function Home() {
     };
   }, []);
 
-  const fetchFolders = async () => {
+  const fetchFolders = async (showLoadingDelay = false) => {
     try {
       setLoading(true);
+      
+      // Show loading screen for 1 second on initial load
+      if (showLoadingDelay) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
       const response = await fetch('/api/folders');
       const data = await response.json();
       
@@ -393,11 +399,11 @@ export default function Home() {
             bottom: 0;
           }
           .stars {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.7"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.5"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.8"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.6"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.4"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.7"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.6"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.5"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.7"/><circle cx="45" cy="22" r="0.2" fill="%23a5b4fc" opacity="0.6"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.8"/><circle cx="25" cy="45" r="0.3" fill="%23c084fc" opacity="0.6"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.4"/><circle cx="55" cy="65" r="0.4" fill="%2367e8f9" opacity="0.7"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.6"/><circle cx="92" cy="88" r="0.2" fill="%23fbbf24" opacity="0.5"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.4"/><circle cx="62" cy="35" r="0.15" fill="%23f87171" opacity="0.5"/><circle cx="18" cy="55" r="0.25" fill="%2334d399" opacity="0.6"/><circle cx="88" cy="15" r="0.3" fill="%23a78bfa" opacity="0.7"/><circle cx="5" cy="25" r="0.2" fill="white" opacity="0.5"/><circle cx="95" cy="62" r="0.35" fill="%2360a5fa" opacity="0.6"/><circle cx="32" cy="78" r="0.15" fill="%23fb7185" opacity="0.4"/><circle cx="72" cy="85" r="0.25" fill="%23fcd34d" opacity="0.6"/><circle cx="52" cy="15" r="0.2" fill="white" opacity="0.5"/><circle cx="12" cy="92" r="0.3" fill="%236ee7b7" opacity="0.7"/><circle cx="78" cy="42" r="0.15" fill="%23c4b5fd" opacity="0.5"/><circle cx="42" cy="58" r="0.25" fill="%2393c5fd" opacity="0.6"/></svg>') repeat;
             animation: move-stars 200s linear infinite;
           }
           .twinkling {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/></svg>') repeat;
+            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="%2367e8f9" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="%23fbbf24" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="%2367e8f9" opacity="0.6"/><circle cx="22" cy="35" r="0.12" fill="%23c084fc" opacity="0.8"/><circle cx="58" cy="78" r="0.18" fill="%23fb7185" opacity="0.7"/><circle cx="8" cy="42" r="0.1" fill="%2334d399" opacity="0.6"/><circle cx="92" cy="28" r="0.15" fill="%23a78bfa" opacity="0.8"/><circle cx="45" cy="88" r="0.12" fill="%2360a5fa" opacity="0.7"/><circle cx="78" cy="15" r="0.16" fill="%23fcd34d" opacity="0.9"/><circle cx="25" cy="62" r="0.11" fill="%236ee7b7" opacity="0.6"/><circle cx="65" cy="25" r="0.14" fill="%23f87171" opacity="0.8"/></svg>') repeat;
             animation: move-twinkling 100s linear infinite;
           }
           @keyframes move-stars {
@@ -429,11 +435,11 @@ export default function Home() {
           bottom: 0;
         }
         .stars {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.7"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.5"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.8"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.6"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.4"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.7"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.6"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.5"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.4"/></svg>') repeat;
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.7"/><circle cx="45" cy="22" r="0.2" fill="%23a5b4fc" opacity="0.6"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.8"/><circle cx="25" cy="45" r="0.3" fill="%23c084fc" opacity="0.6"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.4"/><circle cx="55" cy="65" r="0.4" fill="%2367e8f9" opacity="0.7"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.6"/><circle cx="92" cy="88" r="0.2" fill="%23fbbf24" opacity="0.5"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.4"/><circle cx="62" cy="35" r="0.15" fill="%23f87171" opacity="0.5"/><circle cx="18" cy="55" r="0.25" fill="%2334d399" opacity="0.6"/><circle cx="88" cy="15" r="0.3" fill="%23a78bfa" opacity="0.7"/><circle cx="5" cy="25" r="0.2" fill="white" opacity="0.5"/><circle cx="95" cy="62" r="0.35" fill="%2360a5fa" opacity="0.6"/><circle cx="32" cy="78" r="0.15" fill="%23fb7185" opacity="0.4"/><circle cx="72" cy="85" r="0.25" fill="%23fcd34d" opacity="0.6"/><circle cx="52" cy="15" r="0.2" fill="white" opacity="0.5"/><circle cx="12" cy="92" r="0.3" fill="%236ee7b7" opacity="0.7"/><circle cx="78" cy="42" r="0.15" fill="%23c4b5fd" opacity="0.5"/><circle cx="42" cy="58" r="0.25" fill="%2393c5fd" opacity="0.6"/></svg>') repeat;
           animation: move-stars 200s linear infinite;
         }
         .twinkling {
-          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/></svg>') repeat;
+          background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="%2367e8f9" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="%23fbbf24" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="%2367e8f9" opacity="0.6"/><circle cx="22" cy="35" r="0.12" fill="%23c084fc" opacity="0.8"/><circle cx="58" cy="78" r="0.18" fill="%23fb7185" opacity="0.7"/><circle cx="8" cy="42" r="0.1" fill="%2334d399" opacity="0.6"/><circle cx="92" cy="28" r="0.15" fill="%23a78bfa" opacity="0.8"/><circle cx="45" cy="88" r="0.12" fill="%2360a5fa" opacity="0.7"/><circle cx="78" cy="15" r="0.16" fill="%23fcd34d" opacity="0.9"/><circle cx="25" cy="62" r="0.11" fill="%236ee7b7" opacity="0.6"/><circle cx="65" cy="25" r="0.14" fill="%23f87171" opacity="0.8"/></svg>') repeat;
           animation: move-twinkling 100s linear infinite;
         }
         @keyframes move-stars {
@@ -492,7 +498,7 @@ export default function Home() {
                   transition={{ delay: 0.5 }}
                 >
                   <Sparkles className="w-3 h-3" />
-                  Presented by 拝啓ねこ様
+                  Developed by きろめいく里親
                 </motion.p>
               </div>
             </motion.div>
@@ -1093,7 +1099,7 @@ onClick={async () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <span>Presented by</span>
+                <span>Developed by</span>
                 <motion.a
                   href="https://x.com/kilomake0607"
                   target="_blank"

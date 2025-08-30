@@ -75,12 +75,18 @@ export default function AdminPage() {
     
     console.log('Authenticated, loading admin page');
     setAuthenticated(true);
-    fetchFolders();
+    fetchFolders(true); // Show loading delay on initial load
   }, [router]);
 
-  const fetchFolders = async () => {
+  const fetchFolders = async (showLoadingDelay = false) => {
     try {
       setLoading(true);
+      
+      // Show loading screen for 1 second on initial load
+      if (showLoadingDelay) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
       const response = await fetch('/api/folders');
       const data = await response.json();
       
