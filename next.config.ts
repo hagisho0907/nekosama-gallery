@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Cloudflare Pages configuration with static export + functions
-  output: 'export',
+  // Cloudflare Pages configuration
+  // Remove 'output: export' to allow API routes
   images: {
     unoptimized: true, // Required for Cloudflare Pages
     remotePatterns: [
