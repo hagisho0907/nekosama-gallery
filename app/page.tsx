@@ -393,9 +393,9 @@ export default function Home() {
 
   return (
     <Box minH="100vh" bg={bgGradient} position="relative">
-      <Box position="absolute" inset={0} overflow="hidden" className="star-field" zIndex={5}>
-        <Box className="stars" zIndex={6} />
-        <Box className="twinkling" zIndex={7} />
+      <Box position="absolute" inset={0} overflow="hidden" className="star-field" zIndex={1}>
+        <Box className="stars" zIndex={1} />
+        <Box className="twinkling" zIndex={2} />
       </Box>
       
       {/* Header */}

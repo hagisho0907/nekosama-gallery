@@ -41,7 +41,7 @@ body {
   background-repeat: repeat;
   background-size: 350px 160px;
   animation: move-stars 100s linear infinite;
-  z-index: 100;
+  z-index: 1;
   opacity: 0.9;
 }
 
@@ -56,7 +56,7 @@ body {
   background-repeat: repeat;
   background-size: 350px 100px;
   animation: move-twinkling 60s linear infinite;
-  z-index: 101;
+  z-index: 2;
   opacity: 0.8;
 }
 
@@ -97,7 +97,7 @@ body {
   background-size: 200px 100px;
   animation: star-twinkle 3s ease-in-out infinite;
   pointer-events: none;
-  z-index: 102;
+  z-index: 3;
 }
 
 /* Custom scrollbar for webkit browsers */

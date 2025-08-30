@@ -84,12 +84,12 @@ export default function AdminLogin() {
       justifyContent="center"
     >
       {/* Space stars background */}
-      <Box position="absolute" inset={0} overflow="hidden">
-        <Box className="stars" />
-        <Box className="twinkling" />
+      <Box position="absolute" inset={0} overflow="hidden" zIndex={1}>
+        <Box className="stars" style={{ zIndex: 1 }} />
+        <Box className="twinkling" style={{ zIndex: 2 }} />
       </Box>
 
-      <Container maxW="md" p={4} position="relative" zIndex={10}>
+      <Container maxW="md" p={4} position="relative" zIndex={1000}>
         <MotionBox
           bg="rgba(30, 41, 59, 0.6)"
           backdropFilter="blur(12px)"
@@ -171,13 +171,15 @@ export default function AdminLogin() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.6 }}
+              position="relative"
+              zIndex={1001}
             >
               <VStack spacing={6}>
                 <FormControl>
                   <FormLabel color="blue.300" fontSize="sm" fontWeight="medium">
                     アクセスコード
                   </FormLabel>
-                  <InputGroup>
+                  <InputGroup position="relative" zIndex={1002}>
                     <Input
                       type={showPassword ? "text" : "password"}
                       value={password}
@@ -195,6 +197,8 @@ export default function AdminLogin() {
                       isDisabled={loading}
                       required
                       size="lg"
+                      position="relative"
+                      zIndex={1003}
                     />
                     <InputRightElement h="full">
                       <IconButton
