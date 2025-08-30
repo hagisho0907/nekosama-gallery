@@ -1146,15 +1146,22 @@ function FolderDetailView({
       <Box alignSelf="flex-start">
         <MotionButton
           onClick={onBack}
-          bg="linear(to-r, blue.600, purple.600)"
+          bg="rgba(59, 130, 246, 0.9)"
           color="white"
-          border="1px solid"
-          borderColor="rgba(59, 130, 246, 0.3)"
+          border="2px solid"
+          borderColor="rgba(255, 255, 255, 0.8)"
+          boxShadow="0 4px 16px rgba(59, 130, 246, 0.4)"
+          _hover={{
+            bg: "rgba(37, 99, 235, 1)",
+            borderColor: "rgba(255, 255, 255, 1)",
+            boxShadow: "0 6px 24px rgba(59, 130, 246, 0.6)"
+          }}
           whileHover={{ scale: 1.05, x: -5 }}
           whileTap={{ scale: 0.95 }}
           display="flex"
           alignItems="center"
           gap={2}
+          fontWeight="medium"
         >
           <ArrowLeft size="1rem" />
           <Text display={{ base: "none", sm: "block" }}>宇宙ステーションに戻る</Text>
