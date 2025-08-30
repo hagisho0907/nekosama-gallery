@@ -4,7 +4,7 @@ import { isAuthenticated } from '@/lib/auth';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
@@ -24,6 +24,7 @@ export async function PUT(
       );
     }
 
+    const params = await context.params;
     const success = await database.toggleNewBadge(params.id, isNew);
     
     if (!success) {
