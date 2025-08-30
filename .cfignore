@@ -1,0 +1,41 @@
+# Cloudflare Pages ignore file
+# Exclude large files and unnecessary directories from deployment
+
+# Next.js cache files
+.next/cache/
+.next/cache/**
+cache/
+
+# Node modules
+node_modules/
+
+# Git files
+.git/
+.gitignore
+
+# Environment files
+.env*
+
+# Development files
+README.md
+*.md
+
+# Database files
+/data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Wrangler files
+.wrangler/
+wrangler.log
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Build artifacts that are too large
+.next/cache/webpack/

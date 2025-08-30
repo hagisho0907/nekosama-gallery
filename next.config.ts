@@ -25,6 +25,14 @@ const nextConfig: NextConfig = {
       allowedOrigins: ["localhost:3000", "*.vercel.app", "*.pages.dev"],
     },
   },
+  // Optimize build for Cloudflare Pages file size limits
+  webpack: (config, { dev }) => {
+    if (!dev) {
+      // Disable caching in production to reduce file sizes
+      config.cache = false;
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
