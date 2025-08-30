@@ -393,32 +393,79 @@ export default function Home() {
 
   return (
     <Box minH="100vh" bg={bgGradient} position="relative">
-      <Box position="absolute" inset={0} overflow="hidden">
+      <Box position="absolute" inset={0} overflow="hidden" className="star-field">
         <Box className="stars" />
         <Box className="twinkling" />
-        <style jsx>{`
-          .stars, .twinkling {
+        <style jsx global>{`
+          .stars {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
+            pointer-events: none;
           }
-          .stars {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="15" cy="8" r="0.4" fill="white" opacity="0.8"/><circle cx="45" cy="22" r="0.2" fill="white" opacity="0.6"/><circle cx="75" cy="12" r="0.5" fill="white" opacity="0.9"/><circle cx="25" cy="45" r="0.3" fill="white" opacity="0.7"/><circle cx="85" cy="35" r="0.2" fill="white" opacity="0.5"/><circle cx="55" cy="65" r="0.4" fill="white" opacity="0.8"/><circle cx="8" cy="78" r="0.3" fill="white" opacity="0.7"/><circle cx="92" cy="88" r="0.2" fill="white" opacity="0.6"/><circle cx="38" cy="85" r="0.2" fill="white" opacity="0.5"/><circle cx="62" cy="18" r="0.3" fill="white" opacity="0.6"/><circle cx="33" cy="72" r="0.25" fill="white" opacity="0.7"/><circle cx="78" cy="55" r="0.2" fill="white" opacity="0.5"/><circle cx="12" cy="42" r="0.35" fill="white" opacity="0.8"/><circle cx="88" cy="15" r="0.15" fill="white" opacity="0.4"/><circle cx="52" cy="38" r="0.3" fill="white" opacity="0.6"/><circle cx="22" cy="92" r="0.2" fill="white" opacity="0.5"/><circle cx="95" cy="68" r="0.25" fill="white" opacity="0.7"/><circle cx="5" cy="25" r="0.4" fill="white" opacity="0.8"/><circle cx="68" cy="82" r="0.2" fill="white" opacity="0.6"/></svg>') repeat;
-            animation: move-stars 200s linear infinite;
+          
+          .stars:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+              radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+              radial-gradient(2px 2px at 40px 70px, white, transparent),
+              radial-gradient(1px 1px at 90px 40px, #eee, transparent),
+              radial-gradient(1px 1px at 130px 80px, white, transparent),
+              radial-gradient(2px 2px at 160px 30px, #eee, transparent),
+              radial-gradient(1px 1px at 190px 90px, white, transparent),
+              radial-gradient(1px 1px at 220px 60px, #eee, transparent),
+              radial-gradient(2px 2px at 250px 40px, white, transparent),
+              radial-gradient(1px 1px at 280px 10px, #eee, transparent),
+              radial-gradient(2px 2px at 310px 80px, white, transparent);
+            background-repeat: repeat;
+            background-size: 350px 120px;
+            animation: sparkle 3s linear infinite;
+            opacity: 0.8;
           }
+          
           .twinkling {
-            background: transparent url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="32" cy="18" r="0.15" fill="cyan" opacity="0.9"/><circle cx="68" cy="42" r="0.2" fill="yellow" opacity="0.8"/><circle cx="12" cy="65" r="0.1" fill="white" opacity="0.7"/><circle cx="88" cy="75" r="0.15" fill="cyan" opacity="0.6"/><circle cx="23" cy="33" r="0.1" fill="purple" opacity="0.5"/><circle cx="77" cy="58" r="0.12" fill="pink" opacity="0.7"/><circle cx="45" cy="8" r="0.12" fill="blue" opacity="0.6"/><circle cx="15" cy="85" r="0.15" fill="cyan" opacity="0.8"/><circle cx="92" cy="28" r="0.1" fill="yellow" opacity="0.5"/><circle cx="58" cy="78" r="0.13" fill="pink" opacity="0.7"/><circle cx="8" cy="45" r="0.1" fill="white" opacity="0.6"/><circle cx="75" cy="25" r="0.12" fill="purple" opacity="0.5"/><circle cx="35" cy="92" r="0.1" fill="cyan" opacity="0.7"/><circle cx="82" cy="52" r="0.15" fill="yellow" opacity="0.6"/></svg>') repeat;
-            animation: move-twinkling 100s linear infinite;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
           }
-          @keyframes move-stars {
-            from { transform: translateX(0); }
-            to { transform: translateX(-200px); }
+          
+          .twinkling:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+              radial-gradient(1px 1px at 50px 20px, cyan, transparent),
+              radial-gradient(1px 1px at 100px 60px, yellow, transparent),
+              radial-gradient(1px 1px at 150px 40px, pink, transparent),
+              radial-gradient(1px 1px at 200px 80px, lightblue, transparent),
+              radial-gradient(1px 1px at 250px 30px, purple, transparent);
+            background-repeat: repeat;
+            background-size: 300px 100px;
+            animation: twinkle 2s linear infinite;
+            opacity: 0.6;
           }
-          @keyframes move-twinkling {
-            from { transform: translateX(0); }
-            to { transform: translateX(-200px); }
+          
+          @keyframes sparkle {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-350px); }
+          }
+          
+          @keyframes twinkle {
+            0%, 50% { opacity: 0.6; }
+            25%, 75% { opacity: 1; }
           }
         `}</style>
       </Box>
@@ -426,19 +473,21 @@ export default function Home() {
       {/* Header */}
       <MotionFlex
         as="header"
-        bg="rgba(15, 23, 42, 0.9)"
+        bg="rgba(15, 23, 42, 0.95)"
         backdropFilter="blur(20px)"
-        borderBottom="1px solid"
+        borderBottom="2px solid"
         borderColor="blue.400"
-        borderBottomWidth="1px"
+        borderBottomWidth="2px"
         borderBottomStyle="solid"
-        borderBottomColor="rgba(59, 130, 246, 0.3)"
-        boxShadow="0 8px 32px rgba(0, 0, 0, 0.4)"
+        borderBottomColor="rgba(59, 130, 246, 0.5)"
+        boxShadow="0 12px 48px rgba(0, 0, 0, 0.6)"
         zIndex={10}
         position="relative"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
+        py={6}
+        minH="120px"
       >
         <Box px={{ base: 2, sm: 4 }} w="100%">
           <Flex justify="flex-start" align="center" position="relative" w="100%">
@@ -450,19 +499,19 @@ export default function Home() {
             >
               <MotionBox
                 position="relative"
-                w={14} h={14}
+                w={18} h={18}
                 bg="linear(to-br, blue.600, purple.600)"
                 borderRadius="lg"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                border="1px solid"
-                borderColor="rgba(59, 130, 246, 0.5)"
-                boxShadow="0 0 20px rgba(59, 130, 246, 0.3), inset 0 0 20px rgba(147, 51, 234, 0.2)"
+                border="2px solid"
+                borderColor="rgba(59, 130, 246, 0.7)"
+                boxShadow="0 0 30px rgba(59, 130, 246, 0.5), inset 0 0 25px rgba(147, 51, 234, 0.3)"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
-                <Box color="white" fontSize="xl">
+                <Box color="white" fontSize="2xl">
                   <Rocket />
                 </Box>
                 <MotionBox
@@ -478,22 +527,23 @@ export default function Home() {
                   transition={{ duration: 2, repeat: Infinity }}
                 />
               </MotionBox>
-              <VStack align="start" gap={0}>
+              <VStack align="start" gap={1}>
                 <Heading 
-                  size={{ base: "md", sm: "lg", md: "xl" }}
+                  size={{ base: "lg", sm: "xl", md: "2xl" }}
                   bgGradient="linear(to-r, blue.400, purple.400, cyan.400)"
                   bgClip="text"
                   display="flex"
                   alignItems="center"
-                  gap={2}
+                  gap={3}
                   textAlign="left"
                   justifyContent="flex-start"
+                  fontWeight="bold"
                 >
-                  <Stars />
+                  <Stars size="2rem" />
                   Space Cat Station
                 </Heading>
-                <Text color="blue.300" fontSize="sm" display={{ base: "none", sm: "flex" }} alignItems="center" gap={1}>
-                  <Sparkles />
+                <Text color="blue.300" fontSize={{ base: "sm", sm: "md" }} display="flex" alignItems="center" gap={2} fontWeight="medium">
+                  <Sparkles size="1.2rem" />
                   Presented by 拝啓ねこ様
                 </Text>
               </VStack>
@@ -531,7 +581,7 @@ export default function Home() {
         zIndex={10} 
         position="relative"
         bgGradient="linear(to-b, rgba(33, 27, 65, 0.95), rgba(90, 23, 139, 0.95))"
-        minH="calc(100vh - 120px)"
+        minH="calc(100vh - 140px)"
       >
         <Box
           maxW="7xl"
