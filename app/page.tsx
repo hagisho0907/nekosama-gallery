@@ -394,8 +394,48 @@ export default function Home() {
   return (
     <Box minH="100vh" bg={bgGradient} position="relative">
       <Box position="absolute" inset={0} overflow="hidden" className="star-field" zIndex={1}>
-        <Box className="stars" zIndex={1} />
-        <Box className="twinkling" zIndex={2} />
+        {/* Generate actual DOM stars */}
+        {Array.from({ length: 50 }, (_, i) => (
+          <Box
+            key={i}
+            position="absolute"
+            width="2px"
+            height="2px"
+            bg={['white', 'cyan', 'yellow', 'pink', 'lightblue'][Math.floor(Math.random() * 5)]}
+            borderRadius="50%"
+            top={`${Math.random() * 100}%`}
+            left={`${Math.random() * 100}%`}
+            opacity={0.5 + Math.random() * 0.5}
+            css={{
+              animation: `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`,
+              '@keyframes twinkle': {
+                '0%, 100%': { opacity: 0.3 },
+                '50%': { opacity: 1 }
+              }
+            }}
+          />
+        ))}
+        {/* Additional moving stars */}
+        {Array.from({ length: 30 }, (_, i) => (
+          <Box
+            key={`moving-${i}`}
+            position="absolute"
+            width="1px"
+            height="1px"
+            bg={['white', 'cyan', 'yellow'][Math.floor(Math.random() * 3)]}
+            borderRadius="50%"
+            top={`${Math.random() * 100}%`}
+            left={`${Math.random() * 100}%`}
+            opacity={0.7}
+            css={{
+              animation: `move ${20 + Math.random() * 40}s linear infinite`,
+              '@keyframes move': {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-100vw)' }
+              }
+            }}
+          />
+        ))}
       </Box>
       
       {/* Header */}
@@ -1262,7 +1302,7 @@ function FolderDetailView({
             </MotionBox>
           )}
 
-          <Grid templateColumns={{ base: "1fr", sm: "repeat(3, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(5, 1fr)" }} gap={{ base: 4, sm: 5, lg: 6 }}>
+          <Grid templateColumns={{ base: "1fr", sm: "repeat(3, 1fr)", lg: "repeat(4, 1fr)", xl: "repeat(5, 1fr)" }} gap={{ base: 2, sm: 5, lg: 6 }}>
             {currentPhotos.map((photo) => (
               <PhotoCard
                 key={photo.id}
@@ -1345,14 +1385,15 @@ function PhotoCard({
       }}
       transition={{ type: "spring", stiffness: 300 }}
     >
-      <Box position="relative" aspectRatio={{ base: 1.5, sm: 1 }} overflow="hidden">
-        <Image 
-          src={photo.url} 
-          alt={photo.originalName} 
-          fill
-          style={{ objectFit: 'cover' }}
-          sizes="(max-width: 768px) 75vw, (max-width: 1200px) 25vw, 20vw"
-          unoptimized
+      <Box position="relative" overflow="hidden">
+        <Box
+          as="img"
+          src={photo.url}
+          alt={photo.originalName}
+          w="100%"
+          h={{ base: "auto", sm: "300px" }}
+          objectFit={{ base: "contain", sm: "cover" }}
+          display="block"
         />
         <MotionBox
           position="absolute"
