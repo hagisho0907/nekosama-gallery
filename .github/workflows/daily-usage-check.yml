@@ -1,0 +1,49 @@
+name: Daily Usage Check
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日UTC 0時（日本時間9時）に実行
+  workflow_dispatch:     # 手動実行も可能
+
+jobs:
+  usage-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Daily Usage Monitoring
+        run: |
+          echo "🚀 Starting daily usage check for Nekosama Gallery..."
+          
+          # API呼び出し
+          response=$(curl -s -w "%{http_code}" -X POST \
+            "https://nekosama-gallery.pages.dev/api/daily-usage-check" \
+            -H "Content-Type: application/json" \
+            -H "User-Agent: github-actions" \
+            -d "{\"secret\": \"${{ secrets.DAILY_CHECK_SECRET }}\"}")
+          
+          # HTTPステータスコードを抽出
+          http_code="${response: -3}"
+          response_body="${response%???}"
+          
+          echo "📊 HTTP Status: $http_code"
+          echo "📝 Response: $response_body"
+          
+          # エラーハンドリング
+          if [ "$http_code" != "200" ]; then
+            echo "❌ Daily usage check failed with status $http_code"
+            echo "$response_body"
+            exit 1
+          else
+            echo "✅ Daily usage check completed successfully"
+          fi
+          
+      - name: Weekly Summary (Sundays)
+        if: github.event.schedule == '0 0 * * *' && format('{0}', github.event.schedule) == '0 0 * * *'
+        run: |
+          day_of_week=$(date +%u)  # 1=Monday, 7=Sunday
+          if [ "$day_of_week" = "7" ]; then
+            echo "📅 Today is Sunday - triggering weekly summary"
+            curl -X POST \
+              "https://nekosama-gallery.pages.dev/api/daily-usage-check" \
+              -H "Content-Type: application/json" \
+              -H "User-Agent: github-actions" \
+              -d "{\"secret\": \"${{ secrets.DAILY_CHECK_SECRET }}\", \"summaryOnly\": true}"
+          fi

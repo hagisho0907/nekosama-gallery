@@ -48,24 +48,28 @@
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/XXXXXXXXX/YYYYYYY/ZZZZZZZZZZZZZZ
 ```
 
-### 3. Cron Triggersの設定（オプション）
+### 3. 日次監視の設定
 
-定期的な自動監視を有効にするには：
+**🎯 1日1回の自動監視を設定する場合：**
 
-1. **Cloudflare Workers Dashboardにアクセス**
-   - https://dash.cloudflare.com → Workers & Pages → Overview
+詳細な設定方法は [`docs/DAILY-MONITORING-SETUP.md`](./DAILY-MONITORING-SETUP.md) をご覧ください。
 
-2. **新しいWorkerを作成またはPages Functionを使用**
-   - `functions/scheduled-usage-monitor.js` のコードを使用
+**簡易設定（GitHub Actions推奨）：**
 
-3. **Cron Triggersを追加**
-   - Worker設定画面で「Triggers」タブ
-   - 「Add Cron Trigger」をクリック
-   - 推奨スケジュール：
-     ```
-     0 */6 * * *   # 6時間ごと（アラート監視）
-     0 0 * * 0     # 毎週日曜日（週次サマリー）
-     ```
+1. **GitHub Secretsに秘密キーを追加**
+   - リポジトリの Settings → Secrets → Actions
+   - `DAILY_CHECK_SECRET` を追加
+
+2. **GitHub Actions ワークフローが自動実行**
+   - 毎日UTC 0時（日本時間9時）に実行
+   - 日曜日は週次サマリーも送信
+
+**手動実行：**
+```bash
+curl -X POST "https://your-domain.pages.dev/api/daily-usage-check" \
+  -H "Content-Type: application/json" \
+  -d '{"secret": "your_secret_key"}'
+```
 
 ## 📱 使用方法
 
