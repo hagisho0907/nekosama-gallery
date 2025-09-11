@@ -2,7 +2,7 @@
 // This endpoint can be called by external cron services or Cloudflare Workers
 import { d1Database } from '../../lib/d1-db';
 import { estimateUsage, generateUsageAlerts } from '../../lib/usage-monitor';
-import { sendSlackNotification, sendSlackSummary } from '../../lib/slack-notifier';
+import { sendDiscordNotification, sendDiscordSummary } from '../../lib/discord-notifier';
 import type { UsageData } from '../../lib/usage-monitor';
 
 export async function onRequestPost(context: any): Promise<Response> {
@@ -62,11 +62,11 @@ export async function onRequestPost(context: any): Promise<Response> {
     const alerts = generateUsageAlerts(usageData);
     console.log(`Generated ${alerts.length} usage alerts`);
 
-    let slackNotificationSent = false;
+    let discordNotificationSent = false;
     let notificationType = 'none';
 
-    // Slack通知の送信
-    if (env.SLACK_WEBHOOK_URL) {
+    // Discord通知の送信
+    if (env.DISCORD_WEBHOOK_URL) {
       try {
         const now = new Date();
         const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
@@ -74,15 +74,15 @@ export async function onRequestPost(context: any): Promise<Response> {
 
         if (summaryOnly || dayOfWeek === 0) {
           // 日曜日または強制サマリーモード：週次サマリーを送信
-          console.log('Sending weekly usage summary to Slack');
-          await sendSlackSummary(env.SLACK_WEBHOOK_URL, usageData);
-          slackNotificationSent = true;
+          console.log('Sending weekly usage summary to Discord');
+          await sendDiscordSummary(env.DISCORD_WEBHOOK_URL, usageData);
+          discordNotificationSent = true;
           notificationType = 'weekly_summary';
         } else if (forceDaily || alerts.length > 0) {
           // 平日でアラートがある場合、または強制実行の場合
           if (forceDaily) {
-            console.log('Sending forced daily summary to Slack');
-            await sendSlackSummary(env.SLACK_WEBHOOK_URL, usageData);
+            console.log('Sending forced daily summary to Discord');
+            await sendDiscordSummary(env.DISCORD_WEBHOOK_URL, usageData);
             notificationType = 'daily_summary';
           } else {
             // 重要なアラートのみ送信（medium以上）
@@ -91,23 +91,23 @@ export async function onRequestPost(context: any): Promise<Response> {
             );
             
             if (significantAlerts.length > 0) {
-              console.log(`Sending ${significantAlerts.length} significant alerts to Slack`);
-              await sendSlackNotification(env.SLACK_WEBHOOK_URL, significantAlerts);
+              console.log(`Sending ${significantAlerts.length} significant alerts to Discord`);
+              await sendDiscordNotification(env.DISCORD_WEBHOOK_URL, significantAlerts);
               notificationType = 'alerts';
             } else {
               console.log('No significant alerts to send');
             }
           }
-          slackNotificationSent = true;
+          discordNotificationSent = true;
         } else {
-          console.log('No alerts or special conditions, skipping Slack notification');
+          console.log('No alerts or special conditions, skipping Discord notification');
         }
-      } catch (slackError) {
-        console.error('Failed to send Slack notification:', slackError);
-        // Slackエラーでも処理は続行
+      } catch (discordError) {
+        console.error('Failed to send Discord notification:', discordError);
+        // Discordエラーでも処理は続行
       }
     } else {
-      console.log('Slack webhook URL not configured');
+      console.log('Discord webhook URL not configured');
     }
 
     // 使用量履歴をKVに保存（オプション）
@@ -119,7 +119,7 @@ export async function onRequestPost(context: any): Promise<Response> {
           usage: usageData,
           alerts: alerts.length,
           significantAlerts: alerts.filter(a => ['medium', 'high', 'critical', 'exceeded'].includes(a.level)).length,
-          slackNotificationSent,
+          discordNotificationSent,
           notificationType
         }), {
           expirationTtl: 90 * 24 * 60 * 60 // 90日間保持
@@ -137,7 +137,7 @@ export async function onRequestPost(context: any): Promise<Response> {
       usage: usageData,
       alerts: alerts.length,
       significantAlerts: alerts.filter(a => ['medium', 'high', 'critical', 'exceeded'].includes(a.level)).length,
-      slackNotificationSent,
+      discordNotificationSent,
       notificationType,
       nextCheck: 'Tomorrow at the same time'
     }), {
@@ -147,18 +147,18 @@ export async function onRequestPost(context: any): Promise<Response> {
   } catch (error: any) {
     console.error('Daily usage check failed:', error);
     
-    // エラーをSlackに通知
-    if (context.env.SLACK_WEBHOOK_URL) {
+    // エラーをDiscordに通知
+    if (context.env.DISCORD_WEBHOOK_URL) {
       try {
-        const { sendSlackError } = await import('../../lib/slack-notifier');
-        await sendSlackError(
-          context.env.SLACK_WEBHOOK_URL,
+        const { sendDiscordError } = await import('../../lib/discord-notifier');
+        await sendDiscordError(
+          context.env.DISCORD_WEBHOOK_URL,
           '日次使用量チェックでエラーが発生しました',
           `Error: ${error.message}\nStack: ${error.stack}`
         );
-        console.log('Error notification sent to Slack');
-      } catch (slackError) {
-        console.error('Failed to send error notification to Slack:', slackError);
+        console.log('Error notification sent to Discord');
+      } catch (discordError) {
+        console.error('Failed to send error notification to Discord:', discordError);
       }
     }
 

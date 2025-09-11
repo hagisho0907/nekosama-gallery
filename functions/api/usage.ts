@@ -1,7 +1,7 @@
 // Cloudflare Function for /api/usage
 import { d1Database } from '../../lib/d1-db';
 import { estimateUsage, generateUsageAlerts } from '../../lib/usage-monitor';
-import { sendSlackNotification } from '../../lib/slack-notifier';
+import { sendDiscordNotification, sendDiscordSummary, sendDiscordError } from '../../lib/discord-notifier';
 import type { UsageData } from '../../lib/usage-monitor';
 
 // Pages Functions用のクッキー認証チェック
@@ -39,18 +39,21 @@ export async function onRequestGet(context: any): Promise<Response> {
     // アラートを生成
     const alerts = generateUsageAlerts(usageData);
 
-    // 警告レベルが高いアラートがある場合、Slack通知を送信
-    if (alerts.length > 0 && env.SLACK_WEBHOOK_URL) {
+    // 警告レベルが高いアラートがある場合、通知を送信
+    if (alerts.length > 0) {
       const criticalAlerts = alerts.filter(alert => 
         ['high', 'critical', 'exceeded'].includes(alert.level)
       );
       
       if (criticalAlerts.length > 0) {
-        try {
-          await sendSlackNotification(env.SLACK_WEBHOOK_URL, criticalAlerts);
-          console.log(`Sent Slack notification for ${criticalAlerts.length} critical alerts`);
-        } catch (slackError) {
-          console.error('Failed to send Slack notification:', slackError);
+        // Discord通知を送信
+        if (env.DISCORD_WEBHOOK_URL) {
+          try {
+            await sendDiscordNotification(env.DISCORD_WEBHOOK_URL, criticalAlerts);
+            console.log(`Sent Discord notification for ${criticalAlerts.length} critical alerts`);
+          } catch (discordError) {
+            console.error('Failed to send Discord notification:', discordError);
+          }
         }
       }
     }
@@ -67,17 +70,16 @@ export async function onRequestGet(context: any): Promise<Response> {
   } catch (error: any) {
     console.error('Usage monitoring error:', error);
     
-    // エラーをSlackに通知
-    if (context.env.SLACK_WEBHOOK_URL) {
+    // エラーをDiscordに通知
+    if (context.env.DISCORD_WEBHOOK_URL) {
       try {
-        const { sendSlackError } = await import('../../lib/slack-notifier');
-        await sendSlackError(
-          context.env.SLACK_WEBHOOK_URL,
+        await sendDiscordError(
+          context.env.DISCORD_WEBHOOK_URL,
           '使用量監視APIでエラーが発生しました',
           error.message
         );
-      } catch (slackError) {
-        console.error('Failed to send error notification to Slack:', slackError);
+      } catch (discordError) {
+        console.error('Failed to send error notification to Discord:', discordError);
       }
     }
 
@@ -111,9 +113,9 @@ export async function onRequestPost(context: any): Promise<Response> {
     }
 
     const body = await request.json();
-    const { forceSlackNotification = false } = body;
+    const { forceNotification = false } = body;
 
-    console.log('Manual usage check requested, force Slack:', forceSlackNotification);
+    console.log('Manual usage check requested, force notification:', forceNotification);
 
     // D1データベースを初期化
     d1Database.setDatabase(env.DB);
@@ -124,25 +126,29 @@ export async function onRequestPost(context: any): Promise<Response> {
     // アラートを生成
     const alerts = generateUsageAlerts(usageData);
 
-    // Slack通知を送信（手動実行時は強制送信可能）
-    if (env.SLACK_WEBHOOK_URL) {
+    // Discord通知を送信（手動実行時は強制送信可能）
+    const shouldSendNotification = forceNotification || alerts.length > 0;
+    let notificationSent = false;
+    let notificationError: string | null = null;
+
+    if (shouldSendNotification && env.DISCORD_WEBHOOK_URL) {
       try {
-        if (forceSlackNotification || alerts.length > 0) {
-          if (forceSlackNotification) {
-            const { sendSlackSummary } = await import('../../lib/slack-notifier');
-            await sendSlackSummary(env.SLACK_WEBHOOK_URL, usageData);
-            console.log('Sent Slack usage summary (manual)');
-          } else {
-            await sendSlackNotification(env.SLACK_WEBHOOK_URL, alerts);
-            console.log(`Sent Slack notification for ${alerts.length} alerts`);
-          }
+        if (forceNotification) {
+          await sendDiscordSummary(env.DISCORD_WEBHOOK_URL, usageData);
+          console.log('Sent Discord usage summary (manual)');
+        } else {
+          await sendDiscordNotification(env.DISCORD_WEBHOOK_URL, alerts);
+          console.log(`Sent Discord notification for ${alerts.length} alerts`);
         }
-      } catch (slackError) {
-        console.error('Failed to send Slack notification:', slackError);
+        notificationSent = true;
+      } catch (discordError) {
+        console.error('Failed to send Discord notification:', discordError);
+        notificationError = discordError instanceof Error ? discordError.message : String(discordError);
+        
         return new Response(JSON.stringify({
           success: false,
-          error: 'Failed to send Slack notification',
-          details: slackError instanceof Error ? slackError.message : String(slackError),
+          error: 'Failed to send Discord notification',
+          details: notificationError,
           usage: usageData,
           alerts: alerts
         }), {
@@ -154,10 +160,11 @@ export async function onRequestPost(context: any): Promise<Response> {
 
     return new Response(JSON.stringify({
       success: true,
-      message: forceSlackNotification ? 'Usage summary sent to Slack' : 'Usage check completed',
+      message: forceNotification ? 'Usage summary sent to Discord' : 'Usage check completed',
       usage: usageData,
       alerts: alerts,
-      slackNotificationSent: !!(env.SLACK_WEBHOOK_URL && (forceSlackNotification || alerts.length > 0)),
+      notificationSent,
+      notificationChannel: env.DISCORD_WEBHOOK_URL ? 'Discord' : 'None',
       timestamp: new Date().toISOString()
     }), {
       headers: { 'Content-Type': 'application/json' }
