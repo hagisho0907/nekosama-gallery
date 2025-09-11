@@ -32,7 +32,7 @@ export class DiscordNotifier {
       color: this.getAlertColor(alerts),
       fields: alerts.map(alert => ({
         name: `${this.getAlertEmoji(alert.level)} ${alert.service}`,
-        value: `${alert.usage}% 使用中\n${alert.message}`,
+        value: `${Math.round(alert.percentage)}% 使用中\n${alert.message}`,
         inline: true
       })),
       timestamp: new Date().toISOString(),
