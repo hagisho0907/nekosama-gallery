@@ -52,7 +52,7 @@ export class DiscordNotifier {
       fields: [
         {
           name: '📄 Pages',
-          value: `月間ビルド: ${usage.pages.buildsMonthly}/500`,
+          value: `月間ビルド: ${usage.pages.buildsThisMonth}/500`,
           inline: true
         },
         {
@@ -62,12 +62,12 @@ export class DiscordNotifier {
         },
         {
           name: '🗄️ D1 Database',
-          value: `読取: ${usage.d1.readsDaily.toLocaleString()}/5M\n書込: ${usage.d1.writesDaily.toLocaleString()}/100K`,
+          value: `読取: ${usage.d1.readsToday.toLocaleString()}/5M\n書込: ${usage.d1.writesToday.toLocaleString()}/100K`,
           inline: true
         },
         {
           name: '⚡ Workers',
-          value: `日次リクエスト: ${usage.workers.requestsDaily.toLocaleString()}/100K`,
+          value: `日次リクエスト: ${usage.workers.requestsToday.toLocaleString()}/100K`,
           inline: true
         }
       ],
