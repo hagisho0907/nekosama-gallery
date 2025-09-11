@@ -3,16 +3,16 @@ export async function onRequestGet(context: any): Promise<Response> {
   try {
     const { env } = context;
     
-    // Check if SLACK_WEBHOOK_URL exists and show partial info for security
-    const slackUrl = env.SLACK_WEBHOOK_URL;
-    const hasSlackUrl = !!slackUrl;
-    const slackUrlPreview = slackUrl ? 
-      `${slackUrl.substring(0, 50)}...${slackUrl.substring(slackUrl.length - 10)}` : 
+    // Check if DISCORD_WEBHOOK_URL exists and show partial info for security
+    const discordUrl = env.DISCORD_WEBHOOK_URL;
+    const hasDiscordUrl = !!discordUrl;
+    const discordUrlPreview = discordUrl ? 
+      `${discordUrl.substring(0, 50)}...${discordUrl.substring(discordUrl.length - 10)}` : 
       'NOT_SET';
     
     return new Response(JSON.stringify({
-      hasSlackWebhookUrl: hasSlackUrl,
-      slackUrlPreview,
+      hasDiscordWebhookUrl: hasDiscordUrl,
+      discordUrlPreview,
       envKeys: Object.keys(env).filter(key => !key.includes('SECRET') && !key.includes('PASSWORD')),
       timestamp: new Date().toISOString()
     }), {
