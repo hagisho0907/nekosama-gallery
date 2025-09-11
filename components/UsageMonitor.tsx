@@ -21,7 +21,7 @@ export default function UsageMonitor() {
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [sendingSlack, setSendingSlack] = useState(false);
+  const [sendingNotification, setSendingNotification] = useState(false);
 
   useEffect(() => {
     fetchUsageData();
@@ -53,28 +53,28 @@ export default function UsageMonitor() {
     }
   };
 
-  const sendSlackSummary = async () => {
+  const sendNotificationSummary = async () => {
     try {
-      setSendingSlack(true);
+      setSendingNotification(true);
       const response = await fetch('/api/usage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ forceSlackNotification: true }),
+        body: JSON.stringify({ forceNotification: true }),
       });
       
       const data = await response.json();
       if (response.ok && data.success) {
-        alert('Slackに使用量サマリーを送信しました！');
+        alert('Discordに使用量サマリーを送信しました！');
       } else {
-        alert(`エラー: ${data.error || 'Slack通知の送信に失敗しました'}`);
+        alert(`エラー: ${data.error || 'Discord通知の送信に失敗しました'}`);
       }
     } catch (err) {
-      console.error('Failed to send Slack notification:', err);
-      alert('Slack通知の送信に失敗しました');
+      console.error('Failed to send Discord notification:', err);
+      alert('Discord通知の送信に失敗しました');
     } finally {
-      setSendingSlack(false);
+      setSendingNotification(false);
     }
   };
 
@@ -164,12 +164,12 @@ export default function UsageMonitor() {
         </h3>
         <div className="flex items-center gap-2">
           <button
-            onClick={sendSlackSummary}
-            disabled={sendingSlack}
+            onClick={sendNotificationSummary}
+            disabled={sendingNotification}
             className="text-blue-400 hover:text-blue-300 disabled:opacity-50 transition-colors"
-            title="Slackに送信"
+            title="Discordに送信"
           >
-            <Send className={`w-5 h-5 ${sendingSlack ? 'animate-pulse' : ''}`} />
+            <Send className={`w-5 h-5 ${sendingNotification ? 'animate-pulse' : ''}`} />
           </button>
           <button
             onClick={fetchUsageData}
