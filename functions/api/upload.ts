@@ -4,7 +4,7 @@ import { R2Storage } from '../../lib/r2';
 import type { CloudflareEnv } from '../../types/cloudflare';
 
 // Rate limiting configuration
-const UPLOAD_RATE_LIMIT = 20; // 20 uploads per minute
+const UPLOAD_RATE_LIMIT = 30; // 30 uploads per minute
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute in milliseconds
 
 // Rate limiting using KV store or in-memory for simple implementation
