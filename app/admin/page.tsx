@@ -20,7 +20,8 @@ import {
   Square,
   CheckSquare,
   Info,
-  Star
+  Star,
+  BarChart3
 } from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
 import UsageMonitor from '@/components/UsageMonitor';
@@ -57,7 +58,7 @@ export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
   const [draggedFolder, setDraggedFolder] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'enrolled' | 'graduated'>('enrolled');
+  const [activeTab, setActiveTab] = useState<'enrolled' | 'graduated' | 'monitoring'>('enrolled');
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
   const [showPhotoSelection, setShowPhotoSelection] = useState(false);
   const [pendingStatusChange, setPendingStatusChange] = useState<{folderId: string, newStatus: 'enrolled' | 'graduated'} | null>(null);
@@ -547,7 +548,7 @@ export default function AdminPage() {
   };
 
   // フィルター済みフォルダを取得
-  const filteredFolders = folders.filter(folder => folder.status === activeTab);
+  const filteredFolders = activeTab === 'monitoring' ? [] : folders.filter(folder => folder.status === activeTab);
 
   if (!authenticated || loading) {
     return (
@@ -793,10 +794,6 @@ export default function AdminPage() {
               管理センター
             </h2>
 
-            {/* 使用量モニター */}
-            <div className="mb-8">
-              <UsageMonitor />
-            </div>
             
             {/* タブナビゲーション */}
             <div className="border-b border-blue-500/30 mb-4">
@@ -829,13 +826,29 @@ export default function AdminPage() {
                     卒業生 ({folders.filter(f => f.status === 'graduated').length})
                   </span>
                 </motion.button>
+                <motion.button
+                  onClick={() => setActiveTab('monitoring')}
+                  className={`py-3 px-6 border-b-2 font-medium text-sm sm:text-base transition-all duration-200 min-h-[48px] flex items-center justify-center ${
+                    activeTab === 'monitoring'
+                      ? 'border-purple-400 text-purple-300'
+                      : 'border-transparent text-blue-300/70 hover:text-blue-300 hover:border-blue-400/50'
+                  }`}
+                  whileHover={{ y: -2 }}
+                >
+                  <span className="flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4" />
+                    使用量モニター
+                  </span>
+                </motion.button>
               </nav>
             </div>
             
-            <p className="text-xs sm:text-sm text-blue-300/70 flex items-center gap-2">
-              <GripVertical className="w-4 h-4" />
-              フォルダをドラッグ&ドロップして表示順序を変更
-            </p>
+            {activeTab !== 'monitoring' && (
+              <p className="text-xs sm:text-sm text-blue-300/70 flex items-center gap-2">
+                <GripVertical className="w-4 h-4" />
+                フォルダをドラッグ&ドロップして表示順序を変更
+              </p>
+            )}
           </div>
           <motion.div 
             className="space-y-4 transition-all duration-300"
@@ -1077,6 +1090,17 @@ export default function AdminPage() {
             )}
           </motion.div>
         </motion.div>
+
+        {/* Usage Monitor Section */}
+        {activeTab === 'monitoring' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            <UsageMonitor />
+          </motion.div>
+        )}
 
         {/* Photo Management Section */}
         {selectedFolder && (
