@@ -39,7 +39,7 @@
 2. 「Settings」→「Environment variables」
 3. 以下の変数を追加：
    ```
-   SLACK_WEBHOOK_URL=ttps://hooks.slack.com/services/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
+   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
    ```
 
 #### ローカル開発

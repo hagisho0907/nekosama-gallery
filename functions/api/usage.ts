@@ -1,16 +1,24 @@
 // Cloudflare Function for /api/usage
 import { d1Database } from '../../lib/d1-db';
-import { checkAuth } from '../../lib/auth';
 import { estimateUsage, generateUsageAlerts } from '../../lib/usage-monitor';
 import { sendSlackNotification } from '../../lib/slack-notifier';
 import type { UsageData } from '../../lib/usage-monitor';
+
+// Pages Functions用のクッキー認証チェック
+function checkPagesAuth(request: Request): boolean {
+  const cookieHeader = request.headers.get('Cookie');
+  if (!cookieHeader) return false;
+  
+  return cookieHeader.includes('admin-auth=authenticated') || 
+         cookieHeader.includes('admin-auth-client=authenticated');
+}
 
 export async function onRequestGet(context: any): Promise<Response> {
   try {
     const { request, env } = context;
     
     // 認証チェック（管理者のみアクセス可能）
-    if (!checkAuth(request)) {
+    if (!checkPagesAuth(request)) {
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }), 
         { 
@@ -92,7 +100,7 @@ export async function onRequestPost(context: any): Promise<Response> {
     const { request, env } = context;
     
     // 認証チェック（管理者のみアクセス可能）
-    if (!checkAuth(request)) {
+    if (!checkPagesAuth(request)) {
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }), 
         { 
