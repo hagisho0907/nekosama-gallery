@@ -11,6 +11,7 @@ interface UsageResponse {
   usage: UsageData;
   alerts: UsageAlert[];
   timestamp: string;
+  error?: string;
 }
 
 export default function UsageMonitor() {
