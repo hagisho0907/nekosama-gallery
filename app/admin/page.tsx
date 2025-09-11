@@ -23,6 +23,7 @@ import {
   Star
 } from 'lucide-react';
 import { isAuthenticated } from '@/lib/auth';
+import UsageMonitor from '@/components/UsageMonitor';
 
 type CatFolder = {
   id: string;
@@ -791,6 +792,11 @@ export default function AdminPage() {
               <Settings className="w-6 h-6 text-blue-400" />
               管理センター
             </h2>
+
+            {/* 使用量モニター */}
+            <div className="mb-8">
+              <UsageMonitor />
+            </div>
             
             {/* タブナビゲーション */}
             <div className="border-b border-blue-500/30 mb-4">
