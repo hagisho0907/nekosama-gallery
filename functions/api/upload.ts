@@ -79,10 +79,10 @@ export async function onRequestPost(context: any): Promise<Response> {
     const buffer = await file.arrayBuffer();
     
     // Upload to R2 using direct binding
-    if (env.R2_BUCKET) {
+    if (env.BUCKET) {
       try {
         console.log('Uploading to R2 using binding:', key);
-        await env.R2_BUCKET.put(key, buffer, {
+        await env.BUCKET.put(key, buffer, {
           httpMetadata: {
             contentType: file.type,
           },
@@ -121,11 +121,11 @@ export async function onRequestPost(context: any): Promise<Response> {
       for (const oldPhoto of oldestPhotos) {
         try {
           // Delete from R2
-          if (env.R2_BUCKET && oldPhoto.url) {
+          if (env.BUCKET && oldPhoto.url) {
             const urlParts = oldPhoto.url.split('/');
             const oldKey = urlParts.slice(-2).join('/'); // Get "photos/filename" part
             console.log('Deleting old photo from R2:', oldKey);
-            await env.R2_BUCKET.delete(oldKey);
+            await env.BUCKET.delete(oldKey);
           }
           
           // Delete from database

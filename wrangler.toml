@@ -1,12 +1,20 @@
 name = "nekosama-gallery"
 main = "src/index.js"
 compatibility_date = "2024-08-21"
+compatibility_flags = ["nodejs_compat"]
 account_id = "6cd645a137d7c4b4b83226e2bbb973e3"
+
+# Cloudflare Pages configuration
+pages_build_output_dir = "out"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "nekosama-gallery-db"
 database_id = "b8161388-f20f-4b5c-8e9f-d80134119524"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "nekosama-gallery"
 
 [env.production]
 name = "nekosama-gallery-production"
@@ -15,3 +23,7 @@ name = "nekosama-gallery-production"
 binding = "DB"
 database_name = "nekosama-gallery-db"
 database_id = "b8161388-f20f-4b5c-8e9f-d80134119524"
+
+[[env.production.r2_buckets]]
+binding = "BUCKET"
+bucket_name = "nekosama-gallery"
