@@ -134,7 +134,7 @@ export async function onRequestPost(context: any): Promise<Response> {
         return new Response(JSON.stringify({
           success: false,
           error: 'Failed to send Slack notification',
-          details: slackError.message,
+          details: slackError instanceof Error ? slackError.message : String(slackError),
           usage: usageData,
           alerts: alerts
         }), {
