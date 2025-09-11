@@ -3,11 +3,80 @@ import { d1Database } from '../../lib/d1-db';
 import { R2Storage } from '../../lib/r2';
 import type { CloudflareEnv } from '../../types/cloudflare';
 
+// Rate limiting configuration
+const UPLOAD_RATE_LIMIT = 20; // 20 uploads per minute
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute in milliseconds
+
+// Rate limiting using KV store or in-memory for simple implementation
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+// Rate limiting helper function
+function checkRateLimit(clientId: string): { allowed: boolean; resetTime?: number } {
+  const now = Date.now();
+  const clientData = rateLimitStore.get(clientId);
+  
+  if (!clientData || now > clientData.resetTime) {
+    // New window or expired window - reset counter
+    rateLimitStore.set(clientId, {
+      count: 1,
+      resetTime: now + RATE_LIMIT_WINDOW
+    });
+    return { allowed: true };
+  }
+  
+  if (clientData.count >= UPLOAD_RATE_LIMIT) {
+    // Rate limit exceeded
+    return { 
+      allowed: false, 
+      resetTime: clientData.resetTime 
+    };
+  }
+  
+  // Increment counter
+  rateLimitStore.set(clientId, {
+    ...clientData,
+    count: clientData.count + 1
+  });
+  
+  return { allowed: true };
+}
+
 export async function onRequestPost(context: any): Promise<Response> {
   console.log('Upload API called - checking environment variables...');
   
   try {
     const { request, env } = context;
+    
+    // Rate limiting check
+    const clientIP = request.headers.get('CF-Connecting-IP') || request.headers.get('X-Forwarded-For') || 'unknown';
+    const userAgent = request.headers.get('User-Agent') || '';
+    const clientId = `${clientIP}:${userAgent.substring(0, 50)}`; // Combine IP and partial user agent for identification
+    
+    const rateLimitCheck = checkRateLimit(clientId);
+    
+    if (!rateLimitCheck.allowed) {
+      const resetTimeSeconds = rateLimitCheck.resetTime ? Math.ceil((rateLimitCheck.resetTime - Date.now()) / 1000) : 60;
+      console.log(`Rate limit exceeded for client: ${clientId}`);
+      
+      return new Response(
+        JSON.stringify({ 
+          error: 'Rate limit exceeded',
+          message: `Too many upload requests. Please wait ${resetTimeSeconds} seconds before trying again.`,
+          rateLimitExceeded: true,
+          resetIn: resetTimeSeconds
+        }),
+        { 
+          status: 429,
+          headers: { 
+            'Content-Type': 'application/json',
+            'Retry-After': resetTimeSeconds.toString(),
+            'X-RateLimit-Limit': UPLOAD_RATE_LIMIT.toString(),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Reset': rateLimitCheck.resetTime?.toString() || ''
+          }
+        }
+      );
+    }
     
     console.log('Environment variables status:', {
       hasAccessKey: !!env.R2_ACCESS_KEY_ID,
@@ -150,6 +219,10 @@ export async function onRequestPost(context: any): Promise<Response> {
       ? `写真をアップロードしました。古い写真を自動削除して最大${maxPhotos}枚を維持しています。`
       : '写真をアップロードしました。';
 
+    // Calculate remaining rate limit
+    const currentRateData = rateLimitStore.get(clientId);
+    const remainingRequests = currentRateData ? Math.max(0, UPLOAD_RATE_LIMIT - currentRateData.count) : UPLOAD_RATE_LIMIT - 1;
+
     return new Response(JSON.stringify({ 
       success: true, 
       message: responseMessage,
@@ -161,7 +234,12 @@ export async function onRequestPost(context: any): Promise<Response> {
       },
       totalPhotos: Math.min(currentPhotos.length + 1, maxPhotos)
     }), {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-RateLimit-Limit': UPLOAD_RATE_LIMIT.toString(),
+        'X-RateLimit-Remaining': remainingRequests.toString(),
+        'X-RateLimit-Reset': currentRateData?.resetTime?.toString() || ''
+      }
     });
 
   } catch (error: any) {

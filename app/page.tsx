@@ -312,6 +312,10 @@ export default function Home() {
         const data = await response.json();
         
         if (!response.ok) {
+          // Handle rate limiting specifically
+          if (response.status === 429 && data.rateLimitExceeded) {
+            throw new Error(`レート制限に達しました。${data.resetIn}秒後に再試行してください。`);
+          }
           throw new Error(data.error || 'Upload failed');
         }
         
@@ -337,7 +341,15 @@ export default function Home() {
       
     } catch (err) {
       console.error('Upload error:', err);
-      setError('Upload failed. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed. Please try again.';
+      setError(errorMessage);
+      
+      // Clear error message after longer time for rate limit errors
+      if (errorMessage.includes('レート制限')) {
+        setTimeout(() => setError(null), 10000); // 10 seconds for rate limit errors
+      } else {
+        setTimeout(() => setError(null), 5000); // 5 seconds for other errors
+      }
     } finally {
       setUploadingFolder(null);
       // Clear the file input
