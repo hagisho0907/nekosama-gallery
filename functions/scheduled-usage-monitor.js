@@ -5,9 +5,11 @@
  * 1. In Cloudflare Dashboard, go to Workers & Pages > Overview
  * 2. Create a new Worker or use existing one
  * 3. Add Cron Triggers:
- *    - Every 6 hours: "0 */6 * * *"
- *    - Daily at 9 AM JST: "0 0 * * *" (UTC midnight = 9 AM JST)
- *    - Weekly summary: "0 0 * * 0" (Sunday at UTC midnight)
+ *    - Every 6 hours: 0 [star][slash]6 [star] [star] [star]
+ *    - Daily at 9 AM JST: 0 0 [star] [star] [star]
+ *    - Weekly summary: 0 0 [star] [star] 0
+ * 
+ * Note: Replace [star] with * and [slash] with / in actual cron expressions
  */
 
 import { d1Database } from '../lib/d1-db';
