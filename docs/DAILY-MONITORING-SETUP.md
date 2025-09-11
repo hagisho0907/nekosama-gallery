@@ -12,14 +12,14 @@ Cloudflare Pages Functionsでは直接Cron Triggersが使用できないため�
 2. 「Settings」→「Environment variables」
 3. 以下の変数を追加：
    ```
-   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
+   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
    DAILY_CHECK_SECRET=your_random_secret_key_here_32_chars_min
    ```
 
 #### ローカル開発
 `.env.local`に追加：
 ```env
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/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
 DAILY_CHECK_SECRET=your_random_secret_key_here_32_chars_min
 ```
 
