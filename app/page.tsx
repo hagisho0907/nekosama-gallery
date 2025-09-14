@@ -593,6 +593,20 @@ export default function Home() {
               </p>
             </motion.div>
 
+            {/* LINE Browser Warning */}
+            <motion.div 
+              className="mb-6"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+            >
+              <div className="mx-4 p-4 border-2 border-red-500 bg-red-500/10 rounded-lg backdrop-blur-sm">
+                <p className="text-red-400 text-center font-medium text-sm sm:text-base">
+                  ※現在LINEのブラウザでアップロードできない不具合が発生しています。他のブラウザをご使用ください。
+                </p>
+              </div>
+            </motion.div>
+
             {/* Tab Navigation */}
             <motion.div 
               className="mb-8"
