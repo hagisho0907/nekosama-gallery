@@ -168,9 +168,9 @@ export async function onRequestPost(context: any): Promise<Response> {
     const url = env.R2_PUBLIC_URL ? `${env.R2_PUBLIC_URL}/${key}` : `${env.R2_ENDPOINT}/${env.R2_BUCKET_NAME}/${key}`;
 
     // Check current photo count for this folder
-    // 在籍生: 100枚制限, 卒業生: 10枚制限
+    // 在籍生: 100枚制限, 卒業生: 50枚制限
     const MAX_PHOTOS_ENROLLED = 100;
-    const MAX_PHOTOS_GRADUATED = 10;
+    const MAX_PHOTOS_GRADUATED = 50;
     const maxPhotos = folder.status === 'graduated' ? MAX_PHOTOS_GRADUATED : MAX_PHOTOS_ENROLLED;
     const currentPhotos = await d1Database.getPhotos(folderId);
     
