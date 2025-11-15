@@ -676,7 +676,7 @@ export default function Home() {
                     ) : (
                       <>
                         <Sparkles className="w-6 h-6 text-yellow-400" />
-                        卒業生（最大10枚）
+                        卒業生（最大50枚）
                       </>
                     )}
                   </motion.h3>
