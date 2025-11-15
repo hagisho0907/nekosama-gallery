@@ -188,10 +188,10 @@ export default function AdminPage() {
         setSelectedFolder(folderId);
         setSelectedPhotos([]);
         
-        // Check if graduated folder has 10+ photos and needs selection
+        // Check if graduated folder has 50+ photos and needs selection
         // Use updatedFolder if provided, otherwise find from current folders state
         const folder = updatedFolder || folders.find(f => f.id === folderId);
-        if (folder?.status === 'graduated' && data.photos?.length > 10) {
+        if (folder?.status === 'graduated' && data.photos?.length > 50) {
           setShowPhotoSelection(true);
         } else {
           setShowPhotoSelection(false);
@@ -239,10 +239,10 @@ export default function AdminPage() {
 
   const handlePhotoSelection = (photoId: string, selected: boolean) => {
     if (selected) {
-      if (selectedPhotos.length < 10) {
+      if (selectedPhotos.length < 50) {
         setSelectedPhotos(prev => [...prev, photoId]);
       } else {
-        setError('残す写真は10枚まで選択できます');
+        setError('残す写真は50枚まで選択できます');
       }
     } else {
       setSelectedPhotos(prev => prev.filter(id => id !== photoId));
@@ -250,13 +250,13 @@ export default function AdminPage() {
   };
 
   const handleBulkDeletePhotos = async () => {
-    if (selectedPhotos.length !== 10) {
-      setError('残す写真を10枚選択してください');
+    if (selectedPhotos.length !== 50) {
+      setError('残す写真を50枚選択してください');
       return;
     }
 
     const photosToDelete = photos.filter(photo => !selectedPhotos.includes(photo.id));
-    const confirmMessage = `${photosToDelete.length}枚の写真を削除して、選択した10枚を残しますか？この操作は取り消せません。`;
+    const confirmMessage = `${photosToDelete.length}枚の写真を削除して、選択した50枚を残しますか？この操作は取り消せません。`;
     
     if (!confirm(confirmMessage)) return;
 
@@ -444,8 +444,8 @@ export default function AdminPage() {
     
     const newStatus = folder.status === 'enrolled' ? 'graduated' : 'enrolled';
     
-    // If changing to graduated status, check if folder has more than 10 photos and show selection first
-    if (newStatus === 'graduated' && folder.photoCount > 10) {
+    // If changing to graduated status, check if folder has more than 50 photos and show selection first
+    if (newStatus === 'graduated' && folder.photoCount > 50) {
       // First load photos to show selection interface
       await fetchPhotos(folderId);
       setActiveTab('graduated');
@@ -453,7 +453,7 @@ export default function AdminPage() {
       await fetchPhotos(folderId, updatedFolder);
       
       // Show confirmation after selection interface is displayed
-      const confirmMessage = `このフォルダには${folder.photoCount}枚の写真があります。卒業生に変更するには10枚まで削減する必要があります。写真を選択して削減しますか？`;
+      const confirmMessage = `このフォルダには${folder.photoCount}枚の写真があります。卒業生に変更するには50枚まで削減する必要があります。写真を選択して削減しますか？`;
       if (!confirm(confirmMessage)) {
         // Reset photo selection state if cancelled
         setSelectedFolder(null);
@@ -751,7 +751,7 @@ export default function AdminPage() {
               onChange={(e) => setNewFolderName(e.target.value)}
               placeholder="ねこ様の名前を入力..."
               className="flex-1 px-3 py-2 sm:px-4 sm:py-2 bg-slate-700/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200 text-sm sm:text-base"
-              onKeyPress={(e) => e.key === 'Enter' && handleAddFolder()}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddFolder()}
               disabled={submitting}
             />
             <motion.button
@@ -890,7 +890,7 @@ export default function AdminPage() {
                 </p>
               </motion.div>
             ) : (
-              filteredFolders.map((folder, index) => (
+              filteredFolders.map((folder) => (
                 <motion.div 
                   key={folder.id} 
                   variants={{
@@ -930,7 +930,7 @@ export default function AdminPage() {
                             value={editingName}
                             onChange={(e) => setEditingName(e.target.value)}
                             className="flex-1 px-3 py-2 bg-slate-600/50 border border-blue-500/30 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 text-white placeholder-blue-300/50 backdrop-blur transition-all duration-200 text-sm sm:text-base"
-                            onKeyPress={(e) => e.key === 'Enter' && handleSaveEdit()}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSaveEdit()}
                             disabled={submitting}
                             autoFocus
                           />
@@ -1146,12 +1146,12 @@ export default function AdminPage() {
                     </h3>
                     <p className="text-sm mb-2">
                       {pendingStatusChange 
-                        ? `このフォルダを卒業生に変更するため、${photos.length}枚の写真から10枚を選択してください。選択されなかった写真は削除され、その後卒業生ステータスに変更されます。`
-                        : `このフォルダには${photos.length}枚の写真があります。卒業生フォルダは最大10枚まで保存できるため、残したい10枚の写真を選択してください。選択されなかった写真は削除されます。`
+                        ? `このフォルダを卒業生に変更するため、${photos.length}枚の写真から50枚を選択してください。選択されなかった写真は削除され、その後卒業生ステータスに変更されます。`
+                        : `このフォルダには${photos.length}枚の写真があります。卒業生フォルダは最大50枚まで保存できるため、残したい50枚の写真を選択してください。選択されなかった写真は削除されます。`
                       }
                     </p>
                     <p className="text-xs text-yellow-400/80">
-                      選択済み: {selectedPhotos.length}/10枚
+                      選択済み: {selectedPhotos.length}/50枚
                     </p>
                   </div>
                 </div>
@@ -1169,20 +1169,20 @@ export default function AdminPage() {
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-2">写真選択モード</h3>
                     <p className="text-sm text-blue-300">
-                      残したい写真をクリックして選択してください ({selectedPhotos.length}/10枚選択済み)
+                      残したい写真をクリックして選択してください ({selectedPhotos.length}/50枚選択済み)
                     </p>
                   </div>
                   <div className="flex gap-2">
                     <motion.button
                       onClick={handleBulkDeletePhotos}
-                      disabled={selectedPhotos.length !== 10 || submitting}
+                      disabled={selectedPhotos.length !== 50 || submitting}
                       className={`px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-lg ${
-                        selectedPhotos.length === 10 && !submitting
+                        selectedPhotos.length === 50 && !submitting
                           ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white'
                           : 'bg-slate-600 cursor-not-allowed text-slate-400'
                       }`}
-                      whileHover={selectedPhotos.length === 10 && !submitting ? { scale: 1.05 } : {}}
-                      whileTap={selectedPhotos.length === 10 && !submitting ? { scale: 0.95 } : {}}
+                      whileHover={selectedPhotos.length === 50 && !submitting ? { scale: 1.05 } : {}}
+                      whileTap={selectedPhotos.length === 50 && !submitting ? { scale: 0.95 } : {}}
                     >
                       {submitting ? (
                         <span className="flex items-center gap-2">
